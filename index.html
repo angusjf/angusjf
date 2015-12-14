@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="icon" href="http://i.imgur.com/c8gpm3g.png" type="image/gif" sizes="16x16">
+		<link rel="icon" href="icon.png" type="image/gif" sizes="16x16">
 		</img>
 		<title>
 			games by findlang
 		</title>
 		<style>
+		#site-container {
+			font-family: Helvetica,Arial,sans-serif;
+			font-weight: normal;
+			font-size: 12px;
+			color: #7b7b7b;
+		}
 		h1, h2, a, p {
 			font-family: Helvetica,Arial,sans-serif;
 			font-weight: normal;
@@ -27,7 +33,7 @@
 		}
 		.game {
 			margin-top: 80px;
-			margin-left: 20%	;
+			margin-left: 20%;
 		}
 		#twitter {
 			letter-spacing:  1px;
@@ -35,41 +41,35 @@
 			color:  #78bdf8;
 			font-family: courier,sans-serif;
 		}
+    	.col-1 {
+    		width: 215px;
+		}
 		</style>
 	</head>
 	<body>
 		<div id="site-container">
-			<img src=http://i.imgur.com/c8gpm3g.png>
-			<h1>
-				VIDEO GAMES BY ANGUS FINDLAY
-			</h1>
-			<a href=http://www.twitter.com/findlang_ id ="twitter">
-				@findlang_
-			</a>
-			<div class="game">
-			<img src=http://i.imgur.com/vCsSYZb.png height = 112px>
-			<h2>
-				HeliHop
-			</h2>
-			<p>
-				Two button helicopter game made in Unity.
-			</p>
-			<a href=https://play.google.com/store/apps/details?id=com.findlang.HeliHop>
-				GOOGLE PLAY
-			</a>
-			</div>
-			<div class="game">
-			<img src=http://i.imgur.com/dyYyMqM.png height = 112px>
-			<h2>
-				Solskib
-			</h2>
-			<p>
-				Space Shooter for Android.  Made in Unity.
-			</p>
-			<a href=http://findlang.itch.io/solskib>
-				ITCH.IO
-			</a>
-			</div>
+			
+			<table style="width:100%">
+				<tr>
+					<td class="col-1"><p><img src="http://i.imgur.com/c8gpm3g.png"><h1>VIDEO GAMES BY ANGUS FINDLAY</h1><a href=http://www.twitter.com/findlang_ id ="twitter">@findlang_</a></td>
+				</tr>
+				<tr>
+					<td class="col-1"></td>
+					<td><img src="http://i.imgur.com/xTW1iki.png" height = 112px></td>
+				</tr>
+				<tr>
+					<td class="col-1"></td>
+					<td><h2>HeliHop</h2></td>
+				</tr>
+				<tr>
+					<td class="col-1"></td>
+					<td><p>Two button helicopter game made in Unity.</p></td>
+				</tr>
+				<tr>
+					<td class="col-1"></td>
+					<td><a href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop">GOOGLE PLAY</a></td>
+				</tr>
+			</table>
 		</div>
 	</body>
 </html>
