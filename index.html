@@ -1,7 +1,8 @@
 <html>
 	<head>
-		<title>games by findlang</title>		
+		<title>games by findlang</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"><!--makes responsive-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<style>
 			body {
 				background-color: #FAFAFA;
@@ -45,8 +46,9 @@
 			ol {
 				list-style-type: lower-alpha;
 			}
-			#one #two {
-			/*	display: inline-block;*/
+			#one, #two, #three{
+				display: inline-block;
+				vertical-align: top;
 			}
 			.twitter {
 				color:  #78bdf8;
@@ -56,6 +58,16 @@
 				margin-bottom: 10px;
 			}
 		</style>
+		<script>
+			$(document).ready(function () {
+				$("#one").hide();
+				$("#one").fadeIn(500);
+				$("#two").hide();
+				$("#two").fadeIn(1000);
+				$("#three").hide();
+				$("#three").fadeIn(1500);
+			});
+		</script>
 	</head>
 	<body>
 		<div id="container">
