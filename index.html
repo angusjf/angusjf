@@ -3,6 +3,8 @@
 		<title>games by findlang</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"><!--makes responsive-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 		<style>
 			body {
 				background-color: #FAFAFA;
@@ -13,6 +15,7 @@
 				
 				padding: 20 20 20 20;
 				margin: 0 50px 10px 0;
+
 				max-width: 172px;
 				min-width: 100px;
 				max-height: 350px;
@@ -35,6 +38,17 @@
 				color: #67db6d;
 				font-weight: bold;
 			}
+			.link:hover {
+				background-color: #67db6d;
+				color: #f0f0f0;
+			}
+			.twitter {
+				color:  #78bdf8;
+			}
+			.twitter:hover {
+				background-color: #78bdf8;
+				color: #f0f0f0;
+			}
 			.title {
 				font-style: italic;
 				color: #757575;
@@ -49,20 +63,20 @@
 				display: inline-block;
 				vertical-align: top;
 			}
-			.twitter {
-				color:  #78bdf8;
-			}
 			.image {
 				border-radius: 0.5em;
 				margin-bottom: 10px;
 			}
+			#twitter {
+				
+			}
 		</style>
 		<script>
-			$(document).ready(function () {
-				$("#one").hide();
-				$("#one").fadeIn(1500);
-				$("#two").hide();
-				$("#two").fadeIn(1500);
+			$(document).ready(function() {
+				$('#one').click(function() {
+	    			$(this).animate({ 'height': '323' }, 300, 'swing');
+	    			$(this).toggle({ 'height': '323' }, 300, 'swing');
+				});
 			});
 		</script>
 	</head>
@@ -75,7 +89,7 @@
 
 				<div class="words">video games by angus findlay</div>
 				
-				<a href="http://www.twitter.com/findlang_" class="link twitter">
+				<a id ='twitter' href="http://www.twitter.com/findlang_" class="link twitter">
 					<br>
 					@findlang_
 				</a>
@@ -96,7 +110,6 @@
 					<br>
 					google play
 				</a>
-
 			</div>
 		</div>
 	</body>
