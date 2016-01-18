@@ -5,77 +5,11 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-		<style>
-			body {
-				background-color: #FAFAFA;
-			}
-			.box {
-				background-color: #F0F0F0;
-				border-radius: 0.4em;
-				
-				padding: 20 20 20 20;
-				margin: 0 50px 10px 0;
-
-				max-width: 172px;
-				min-width: 100px;
-				max-height: 350px;
-				min-height: 50px;
-			}
-			#container {
-				color: #777777;
-				text-align: left;
-				font-family: monospace;
-				margin-top: 40px;
-				margin-bottom: 20px;
-				margin-left: 75px;
-			}
-			.words,.title {
-				font-style: normal;
-				font-size: 16px;
-				color: #A7A7A7;
-			}
-			.link {
-				color: #67db6d;
-				font-weight: bold;
-			}
-			.link:hover {
-				background-color: #67db6d;
-				color: #f0f0f0;
-			}
-			.twitter {
-				color:  #78bdf8;
-			}
-			.twitter:hover {
-				background-color: #78bdf8;
-				color: #f0f0f0;
-			}
-			.title {
-				font-style: italic;
-				color: #757575;
-			}
-			a {
-			    text-decoration: none;
-			}
-			ol {
-				list-style-type: lower-alpha;
-			}
-			#one, #two, #three{
-				display: inline-block;
-				vertical-align: top;
-			}
-			.image {
-				border-radius: 0.5em;
-				margin-bottom: 10px;
-			}
-			#twitter {
-				
-			}
-		</style>
+		<link rel="stylesheet" href="stylesheet.css">
 		<script>
 			$(document).ready(function() {
-				$('#one').click(function() {
-	    			$(this).animate({ 'height': '323' }, 300, 'swing');
-	    			$(this).toggle({ 'height': '323' }, 300, 'swing');
+					$('#one').click(function() {
+					$(this).animate({ 'height': '323' }, 300, 'swing');
 				});
 			});
 		</script>
@@ -84,32 +18,19 @@
 		<div id="container">
 			
 			<div id="one" class="box words">
-
-				<img class ="" src="http://i.imgur.com/c8gpm3g.png">
-
+				<img class ="" src="http://i.imgur.com/c8gpm3g.png" alt="logo">
 				<div class="words">video games by angus findlay</div>
-				
-				<a id ='twitter' href="http://www.twitter.com/findlang_" class="link twitter">
-					<br>
-					@findlang_
-				</a>
-
+				<a id ='twitter' href="http://www.twitter.com/findlang_" class="link twitter"><br>@findlang</a>
 			</div>
 			
 			<div id="two" class="box words">
 				<div class="title">HeliHop</div>
-				<div class="words">
-					<br>
+				<div class="words"><br>
 					<img class ="image" src="http://i.imgur.com/xTW1iki.png" height="170px">
-						<br>
-						one button android game about helicopters and hopping
+						<br>one button android game about helicopters and hopping
 					</img>
 				</div>
-
-				<a href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop" class="link">
-					<br>
-					google play
-				</a>
+				<a href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop" class="link"><br>google play</a>
 			</div>
 		</div>
 	</body>
