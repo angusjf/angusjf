@@ -1,0 +1,66 @@
+body {
+	background-color: #FAFAFA;
+}
+
+.box {
+	background-color: #F0F0F0;
+	border-radius: 0.4em;
+	
+	padding: 20 20 20 20;
+	margin: 0 50px 10px 0;
+	
+	max-width: 172px;
+	min-width: 100px;
+	max-height: 350px;
+	min-height: 50px;
+	
+	display: inline-block;
+	vertical-align: top;
+}
+
+#container {
+	color: #777;
+	text-align: left;
+	font-family: monospace;
+	margin: 40px 0 20px 75px;
+}
+
+.title {
+	font-style: italic;
+	color: #757575;
+}
+
+.words,.title {
+	font-style: normal;
+	font-size: 16px;
+	color: #A7A7A7;
+}
+
+.link {
+	color: #67db6d;
+	font-weight: bold;
+}
+
+.link:hover {
+	background-color: #67db6d;
+	color: #f0f0f0;
+}
+
+.twitter {
+	color:  #78bdf8;
+}
+
+.twitter:hover {
+	background-color: #78bdf8;
+	color: #f0f0f0;
+}
+
+
+a {
+	text-decoration: none;
+}
+
+.image {
+	border-radius: 0.5em;
+	margin-bottom: 10px;
+}
