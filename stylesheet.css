@@ -55,7 +55,6 @@ body {
 	color: #f0f0f0;
 }
 
-
 a {
 	text-decoration: none;
 }
@@ -63,4 +62,8 @@ a {
 .image {
 	border-radius: 0.5em;
 	margin-bottom: 10px;
+}
+
+.magic {
+	font-size: 64px;
 }
