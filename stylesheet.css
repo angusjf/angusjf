@@ -25,6 +25,12 @@ body {
 	margin: 40px 0 20px 75px;
 }
 
+/*
+#footer {
+	margin: 2px auto 0 auto;}
+
+*/
+
 .title {
 	font-style: italic;
 	color: #757575;
@@ -66,4 +72,6 @@ a {
 
 .magic {
 	font-size: 64px;
+	font-family: cursive;
+	color: #FF00FF;
 }
