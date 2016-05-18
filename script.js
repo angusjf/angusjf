@@ -1,8 +1,5 @@
 var ctx;
 var c;
-var xLimit = 10;
-var yLimit = 10;
-var xOffset = 0;
 var color = 0;
 var textPosX = 0;
 var textPosY = -20;
