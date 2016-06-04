@@ -1,5 +1,6 @@
 body {
 	background-color: #FAFAFA;
+	margin: 0 0;
 }
 
 .box {
@@ -16,20 +17,16 @@ body {
 	
 	display: inline-block;
 	vertical-align: top;
+
+	box-shadow: rgba(0,0,0,0.1) 4px 4px;
 }
 
 #container {
 	color: #777;
 	text-align: left;
-	font-family: monospace;
+	font-family: Menlo;
 	margin: 40px 0 20px 75px;
 }
-
-/*
-#footer {
-	margin: 2px auto 0 auto;}
-
-*/
 
 .title {
 	font-style: italic;
@@ -70,8 +67,19 @@ a {
 	margin-bottom: 10px;
 }
 
-.magic {
-	font-size: 64px;
-	font-family: cursive;
-	color: #FF00FF;
+#magicCanvas {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	margin-top: -40px;
+	right: 0px;
+	display: none;
+}
+
+.button {
+	border: none;
+	background-color: inherit;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
 }

@@ -1,42 +1,62 @@
 var ctx;
 var c;
-var color = 0;
-var textPosX = 0;
-var textPosY = -20;
+var textPosY = 0;
+
+var tick = 0;
+var currency;
+var dollar = "$";
+var pound = "\u00A3";
+var yen = "\u00A5";
+var euro = "\u20AC";
 
 window.onload = function () {
 	c = document.getElementById("magicCanvas");
 	ctx = c.getContext("2d");
-	c.width = 1000;
 
-	ctx.font = "50px Monospace";
-	ctx.fillStyle = "gold";
-	ctx.fillText("MAKE APPS GET MONEY", c.width / 2 - 300, c.height / 2);
-	
-	ctx.font = "20px Monospace";
-	setInterval(placeBlock, 25);
+	c.width = document.body.clientWidth;
+	c.height = document.body.clientHeight;
+
+	ctx.fillStyle = "green";
+	ctx.font = "30px Menlo";
+}
+
+function startFill () {
+	setInterval(placeBlock, 80);
+	c.style.display = "inline";
 }
 
 function placeBlock () {
+	ctx.fillStyle = "rgb(" + (255 + Math.floor(Math.random()*-100)) + ", 215, 0)";
+ 
+	switch (tick) {
+		case 0:
+			currency = dollar;	
+			break;
+		case 1:
+			currency = pound;	
+			break;
+		case 2:
+			currency = yen;	
+			break;
+		case 3:
+			currency = euro;
+			break;
+		default:
+			currency = "?";	
+			break;
+	}
 
-	ctx.fillText("$",textPosX,textPosY);
+	tick++;
+	if (tick > 3) {
+		tick = 0;
+	}
 
-	textPosX += Math.floor((Math.random() * 8) + 1);
-	textPosY += 13;
+	for (var textPosX = 0; textPosX < c.width; textPosX += 50) {
+		ctx.fillText(currency,textPosX + Math.random() * 50,textPosY + Math.random() * 50);
+	}
+	textPosY += 50;
 
-	ctx.fillStyle = "#" + color;
-	
 	if (textPosY > c.height + 20) {
-		textPosY = -20;
-	}
-	
-	if (textPosX > c.width + 20) {
-		textPosX = -20;
-	}
-
-	color -= 1;
-
-	if (color < 0) {
-		color = 999;
+		textPosY = -20 + Math.floor((Math.random() * 20));
 	}
 }
