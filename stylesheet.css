@@ -3,6 +3,13 @@ body {
 	margin: 0 0;
 }
 
+#container {
+	color: #777;
+	text-align: left;
+	font-family: Menlo;
+	margin: 40px 0 20px 75px;
+}
+
 .box {
 	background-color: #F0F0F0;
 	border-radius: 0.4em;
@@ -19,13 +26,25 @@ body {
 	vertical-align: top;
 
 	box-shadow: rgba(0,0,0,0.1) 4px 4px;
+
+	-webkit-animation-name: glidein; /* Chrome, Safari, Opera */
+	-webkit-animation-duration: 0.5s; /* Chrome, Safari, Opera */
+	animation-name: glidein;
+	animation-duration: 0.5s;
 }
 
-#container {
-	color: #777;
-	text-align: left;
-	font-family: Menlo;
-	margin: 40px 0 20px 75px;
+
+@-webkit-keyframes glidein {
+	from {
+		-webkit-transform: translateY(-400px);
+	}
+}
+
+/* Standard syntax */
+@keyframes glidein {
+	from {
+		-webkit-transform: translateY(-400px);
+	}
 }
 
 .title {
@@ -65,6 +84,9 @@ a {
 .image {
 	border-radius: 0.5em;
 	margin-bottom: 10px;
+	height: 170px;
+	width: 170px;
+	background-color: #BBDBCF;
 }
 
 #magicCanvas {
