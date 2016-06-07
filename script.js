@@ -25,6 +25,10 @@ function startFill () {
 	c.style.display = "inline";
 }
 
+function stopFill () {
+	c.style.display = "none";
+}
+
 function placeBlock () {
 	ctx.fillStyle = "rgb(" + (255 + Math.floor(Math.random()*-100)) + ", 215, 0)";
  
@@ -51,7 +55,7 @@ function placeBlock () {
 		tick = 0;
 	}
 
-	for (var textPosX = 0; textPosX < c.width; textPosX += 50) {
+	for (var textPosX = -20; textPosX < c.width; textPosX += 50) {
 		ctx.fillText(currency,textPosX + Math.random() * 50,textPosY + Math.random() * 50);
 	}
 	textPosY += 50;
