@@ -16,7 +16,7 @@ window.onload = function () {
 	c.width = document.body.clientWidth;
 	c.height = document.body.clientHeight;
 
-	ctx.fillStyle = "green";
+	ctx.fillStyle = "orange";
 	ctx.font = "30px Menlo";
 }
 
@@ -31,6 +31,10 @@ function stopFill () {
 
 function placeBlock () {
 	ctx.fillStyle = "rgb(" + (255 + Math.floor(Math.random()*-100)) + ", 215, 0)";
+	/*var r = 55 + Math.floor(Math.random()*200);
+	var g = 55 + Math.floor(Math.random()*200);
+	var b = 55 + Math.floor(Math.random()*200);
+	ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";*/
  
 	switch (tick) {
 		case 0:
