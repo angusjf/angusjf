@@ -6,7 +6,7 @@ body {
 #container {
 	color: #777;
 	text-align: left;
-	font-family: Menlo;
+	font-family: Menlo, monospace;
 	margin: 40px 0 20px 75px;
 }
 
