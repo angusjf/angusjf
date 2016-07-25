@@ -10,7 +10,7 @@ var yen = "\u00A5";
 var euro = "\u20AC";
 
 window.onload = function () {
-	c = document.getElementById("magicCanvas");
+	c = document.getElementById("magic-canvas");
 	ctx = c.getContext("2d");
 
 	c.width = document.body.clientWidth;

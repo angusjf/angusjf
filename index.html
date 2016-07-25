@@ -1,42 +1,37 @@
 <html>
-	<!-- no easter eggs here mate-->
 	<head>
-		<title>games by findlang</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"><!--makes responsive-->
-		<link rel="stylesheet" href="stylesheet.css"><!--stylesheet-->
-		<script src="script.js"></script><!--javascript-->
+		<!--page title--><title>games by findlang</title>
+		<!--responsive--><meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--stylesheet--><link rel="stylesheet" href="stylesheet.css">
+		<!--javascript--><script src="script.js"></script>
 	</head>
 	
 	<body>
-		<canvas id="magicCanvas" onclick="stopFill();"></canvas>
+		<canvas id="magic-canvas" onclick="stopFill();"></canvas>
+
 		<div id="container">
 			
 			<div class="box">
-				<img class="" src="http://i.imgur.com/c8gpm3g.png" alt="logo">
+				<img class="logo" src="http://i.imgur.com/c8gpm3g.png" alt="logo">
 				<div class="words">video games by angus findlay</div>
-				<a href="http://www.twitter.com/findlang_" class="link twitter">@findlang_</a>
+				<a class="link twitter" href="http://www.twitter.com/findlang_">@findlang_</a>
 			</div>
 			
 			<div class="box">
 				<div class="title">HeliHop</div>
-				<div class="words">
-					<img class="image" src="http://i.imgur.com/xTW1iki.png">
-						one button android game about helicopters and hopping
-					</img>
-				</div>
-				<a href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop" class="link">google play</a>
+				<img class="image" src="http://i.imgur.com/xTW1iki.png"></img>
+				<div class="words">one button android game about helicopters and hopping</div>
+				<a class="link" href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop">google play</a>
 			</div>
 
 			<div class="box">
 				<div class="title">Super Secret Project</div>
-				<div class="words">
-					<img class="image" src="http://i.imgur.com/utJc68D.png">
-						its like a local vs game wowee <i>coming soon</i>
-					</img>
-				</div>
-				<a href="http://www.github.com/findlang/homemade-II" class="link">github</a>
+				<img class="image" src="http://i.imgur.com/utJc68D.png"></img>
+				<div class="words">its like a local vs game wowee <i>coming soon</i></div>
+				<a class="link" href="http://www.github.com/findlang/homemade-II">github</a>
 			</div>
-			<button class="button link" onclick="startFill();">$</button>
+
+			<button class="money-button link" onclick="startFill();">$</button>
 		</div>
 	</body>
 </html>
