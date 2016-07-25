@@ -1,6 +1,8 @@
 body {
 	background-color: #FAFAFA;
 	margin: 0 0;
+	font-style: normal;
+	font-size: 16px;
 }
 
 #container {
@@ -12,15 +14,12 @@ body {
 
 .box {
 	background-color: #F0F0F0;
-	border-radius: 0.4em;
+	border-radius: 4px;
 	
 	padding: 20 20 20 20;
 	margin: 0 50px 10px 0;
 	
 	max-width: 172px;
-	min-width: 100px;
-	max-height: 350px;
-	min-height: 50px;
 	
 	display: inline-block;
 	vertical-align: top;
@@ -49,36 +48,45 @@ body {
 
 .title {
 	font-style: italic;
+	font-weight: bold;
 	color: #757575;
 }
 
 .words,.title {
-	font-style: normal;
-	font-size: 16px;
 	color: #A7A7A7;
 	margin-bottom: 15px;
 }
 
-.words {
-}
+.words { }
 
 .link {
-	color: #67db6d;
+	color: #f0f0f0;
+	padding: 4px 8px;
+	border-radius: 4px;
 	font-weight: bold;
+	background-color: #67db6d;
+	box-shadow: #57cb5d 0px 4px;
 }
 
 .link:hover {
-	background-color: #67db6d;
-	color: #f0f0f0;
+	position: relative;
+	top: 2px;
+	box-shadow: #57cb5d 0px 2px;
 }
 
 .twitter {
-	color:  #78bdf8;
+	color: #f0f0f0;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-weight: bold;
+	background-color: #78bdf8;
+	box-shadow: #68ade8 0px 4px;
 }
 
 .twitter:hover {
-	background-color: #78bdf8;
-	color: #f0f0f0;
+	position: relative;
+	top: 2px;
+	box-shadow: #68ade8 0px 2px;
 }
 
 a {
@@ -104,8 +112,15 @@ a {
 
 .button {
 	border: none;
-	background-color: inherit;
 	cursor: pointer;
-	margin: 0;
-	padding: 0;
+	font-size: 16px;
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+}
+
+.button:hover {
+	position: absolute;
+	top: auto;
+	bottom: 13px;
 }
