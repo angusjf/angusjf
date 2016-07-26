@@ -119,13 +119,13 @@ a {
 	border: none;
 	cursor: pointer;
 	font-size: 16px;
-	position: absolute;
+	position: fixed;
 	bottom: 15px;
 	right: 15px;
 }
 
 .money-button:hover {
-	position: absolute;
+	position: fixed;
 	top: auto;
 	bottom: 13px;
 }
