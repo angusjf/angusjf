@@ -46,7 +46,7 @@ function draw() {
 	ctx.clearRect(0, 0, c.width, c.height); //clear screen
 	objects.forEach(function(i) {
 		ctx.beginPath();
-		ctx.fillStyle = 'rgba(0,0,0,' + i.a + ')'; //transparency
+		ctx.fillStyle = 'rgba(0, 0, 0, ' + i.a + ')'; //transparency
 		ctx.arc(i.x, i.y, i.r, 0, 2 * Math.PI);
 		ctx.fill();
 	});
