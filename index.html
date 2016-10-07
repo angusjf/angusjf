@@ -7,7 +7,6 @@
 	</head>
 	
 	<body>
-		<canvas id="magic-canvas" onclick="stopFill();"></canvas>
 
 		<div id="container">
 			
@@ -20,18 +19,24 @@
 			<div class="box">
 				<div class="title">HeliHop</div>
 				<img class="image" src="images/helihop.png"></img>
-				<div class="words">one button android game about helicopters and hopping</div>
+				<div class="words">one button android game about helicopters and hopping.</div>
 				<a class="link" href="https://play.google.com/store/apps/details?id=com.findlang.HeliHop">google play</a>
 			</div>
 
 			<div class="box">
-				<div class="title">Super Secret Project</div>
+				<div class="title">Secret Project?</div>
 				<img class="image" src="images/recoilrumble.png"></img>
-				<div class="words">its like a local vs game wowee <i>coming soon</i></div>
+				<div class="words">its like a local vs game - <i>coming 'soon'.</i></div>
 				<a class="link" href="http://www.github.com/findlang/homemade-II">github</a>
 			</div>
 
-			<button class="money-button link" onclick="startFill();">$</button>
+			<div class="box">
+				<div class="title">what is this?!</div>
+				<canvas id="magic-canvas" class="image" onclick="clicked();"></canvas>
+				<div class="words">wowzers that's <b>super cool.</b></div>
+			</div>
+
+			<!--<button class="money-button link" onclick="startFill();">$</button> RIP cash button-->
 		</div>
 	</body>
 </html>

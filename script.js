@@ -1,70 +1,53 @@
-var ctx;
-var c;
-var textPosY = 0;
+var ctx, c;
+var running = false;
+var objects = [];
 
-var tick = 0;
-var currency;
-var dollar = "$";
-var pound = "\u00A3";
-var yen = "\u00A5";
-var euro = "\u20AC";
+function Ball(x, y, vx, vy, r, a) { //like a class for ball objects
+	this.x = x;
+	this.y = y;
+	this.vx = vx;
+	this.vy = vy;
+	this.r = r;
+	this.a = a;
+}
 
-window.onload = function () {
+window.onload = function () { //called when page is loaded
 	c = document.getElementById("magic-canvas");
+	c.width = 170;
+	c.height = 170;
 	ctx = c.getContext("2d");
-
-	c.width = document.body.clientWidth;
-	c.height = document.body.clientHeight;
-
-	ctx.fillStyle = "orange";
-	ctx.font = "30px Menlo";
+	ctx.font = "20px Menlo";
+	ctx.fillStyle = 'rgba(0,0,0, 0.1)'; //transparency
+	ctx.fillText("click me", 34, c.height / 2 + 5);
+	setInterval(update, 33); //call update at 30fps (every 33ms)
 }
 
-function startFill () {
-	setInterval(placeBlock, 80);
-	c.style.display = "inline";
+function clicked() { //called on click in html
+	if (!running) running = true;
+	objects.push(new Ball((Math.random() * (c.width - 16)) + 8, 16, Math.random() * 6 - 3, 0, 8, 0.5));
 }
 
-function stopFill () {
-	c.style.display = "none";
-}
+function update() { if (running) {
+	objects.forEach(function(i) { //cycle through every object
+		i.vy += 2.5; //gravity
+		i.x += i.vx;
+		i.y += i.vy;
+		if (i.y + i.r > c.height) { //collisions
+			i.y = c.height - i.r; 
+			i.vy *= -0.9;
+		}
+		i.a -= 0.0045;
+		if (i.a <= 0) objects.shift(); //if faded, remove it
+	});
+	draw();
+}}
 
-function placeBlock () {
-	ctx.fillStyle = "rgb(" + (255 + Math.floor(Math.random()*-100)) + ", 215, 0)";
-	/*var r = 55 + Math.floor(Math.random()*200);
-	var g = 55 + Math.floor(Math.random()*200);
-	var b = 55 + Math.floor(Math.random()*200);
-	ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";*/
- 
-	switch (tick) {
-		case 0:
-			currency = dollar;	
-			break;
-		case 1:
-			currency = pound;	
-			break;
-		case 2:
-			currency = yen;	
-			break;
-		case 3:
-			currency = euro;
-			break;
-		default:
-			currency = "?";	
-			break;
-	}
-
-	tick++;
-	if (tick > 3) {
-		tick = 0;
-	}
-
-	for (var textPosX = -20; textPosX < c.width; textPosX += 50) {
-		ctx.fillText(currency,textPosX + Math.random() * 50,textPosY + Math.random() * 50);
-	}
-	textPosY += 50;
-
-	if (textPosY > c.height + 20) {
-		textPosY = -20 + Math.floor((Math.random() * 20));
-	}
+function draw() {
+	ctx.clearRect(0, 0, c.width, c.height); //clear screen
+	objects.forEach(function(i) {
+		ctx.beginPath();
+		ctx.fillStyle = 'rgba(0,0,0,' + i.a + ')'; //transparency
+		ctx.arc(i.x, i.y, i.r, 0, 2 * Math.PI);
+		ctx.fill();
+	});
 }
