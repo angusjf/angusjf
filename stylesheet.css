@@ -26,27 +26,40 @@ body {
 
 	box-shadow: rgba(0,0,0,0.1) 4px 4px;
 
-	-webkit-animation-name: glidein; /* Chrome, Safari, Opera */
-	-webkit-animation-duration: 0.5s; /* Chrome, Safari, Opera */
-	animation-name: glidein;
+	/*animation-name: enter;*/
+	animation-duration: 1.0s;
+}
+.box:hover {
+	animation-name: mouseover;
 	animation-duration: 0.5s;
 }
 
+#about-box {
+	width: 113px;
+}
 
-@-webkit-keyframes glidein {
+@keyframes enter {
 	from {
-		-webkit-transform: translateY(-400px);
+		-webkit-transform: scale(0.5, 0.5);
 	}
 }
 
-/* Standard syntax */
-@keyframes glidein {
-	from {
-		-webkit-transform: translateY(-400px);
+@keyframes mouseover {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	33% {
+		-webkit-transform: rotate(5deg);
+	}
+	66% {
+		-webkit-transform: rotate(-5deg);
+	}
+	100% {
+		-webkit-transform: rotate(0deg);
 	}
 }
 
-.words,.title {
+.words, .title {
 	color: #A7A7A7;
 	margin: 18px 0px;
 }
@@ -117,7 +130,6 @@ a {
 	height: 100%;
 	width: 100%;
 }
-#magic-canvas:hover { cursor: pointer; } 
 
 .money-button {
 	border: none;
@@ -132,4 +144,24 @@ a {
 	position: fixed;
 	top: auto;
 	bottom: 13px;
+}
+
+#close-button {
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	position: fixed;
+	top: 15px;
+	right: 15px;
+	background-color: #e84545;
+	padding: 0px 4px 1px 4px;
+	box-shadow: #af3434 0px 4px;
+	outline: none;
+}
+
+#close-button:hover {
+	position: fixed;
+	bottom: auto;
+	top: 17px;
+	box-shadow: #af3434 0px 2px;
 }

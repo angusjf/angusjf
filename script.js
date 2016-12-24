@@ -1,10 +1,16 @@
+var canvasName = "magic-canvas";
 var ctx, c;
+var running = true;
 var objects = [];
-var grav = 0.45;
-var startFade = 0.5, fadeAmount = 0.00015;
-var minSize = 8, maxSize = 12;
+var grav = 0.03;
+var startFade = 0.1, fadeAmount = 0.00015;
+var minSize = 4, maxSize = 8;
+var closeButton;
 
-function Ball(x, y, vx, vy, r, a) { //like a class for ball objects
+/*
+ * like a class for ball objects
+ */
+function Ball(x, y, vx, vy, r, a) {
 	this.x = x;
 	this.y = y;
 	this.vx = vx;
@@ -16,7 +22,9 @@ function Ball(x, y, vx, vy, r, a) { //like a class for ball objects
 }
 
 function start() {
-	c = document.getElementById("magic-canvas");
+	closeButton = document.getElementById("close-button");
+	closeButton.onclick = stop;
+	c = document.getElementById(canvasName);
 	c.width = document.body.clientWidth;
 	c.height = document.body.clientHeight;
 	c.onselectstart = function () { return false; }
@@ -26,15 +34,15 @@ function start() {
 	setTimeout(spawnBall,2000);
 }
 
-function spawnBall() { //called on click in html
+function spawnBall() {
 	objects.push(
 		new Ball(
-			c.width, 8, //pos
-			Math.random() * -4, 0, //vel
+			Math.random() * c.width, -8, //pos
+			Math.random() - 0.5, 0, //vel
 			Math.random() * (maxSize - minSize) + minSize, startFade //size / alpha
 		)
 	);
-	setTimeout(spawnBall,(Math.random() + 1) * 500);
+	if (running) setTimeout(spawnBall,(Math.random() + 1) * 500);
 }
 
 function update() {
@@ -42,11 +50,16 @@ function update() {
 	draw();
 }
 
-function updateObject(i) { //cycle through every object
-	i.vx += i.ax;
-	i.vy += i.ay;
+function updateObject(i) {
 
-	//collisions
+	/*
+	 * Acceleration
+	 */
+	i.vx = i.ax * 80;
+	i.vy = i.ay * 80;
+
+	/*
+	 * Collisions
 	if (i.y + i.r + i.vy > c.height) { //ground
 		i.vx *= -0.1; i.vy *= -0.1;
 		//i.ax = 0; i.ay = 0;
@@ -63,14 +76,22 @@ function updateObject(i) { //cycle through every object
 			}
 		}
 	});
+	 */
 
+	/*
+	 * Velocity
+	 */
 	i.x += i.vx; //add velocity
 	i.y += i.vy;
 	
+	/*
+	 * Fade
 	i.a -= fadeAmount;
 	if (i.a <= 0) {
 		objects.shift();
 	}
+	 */
+	if (i.y > c.height) objects.shift();
 }
 
 function draw() {
@@ -82,6 +103,11 @@ function draw() {
 		ctx.fill();
 	});
 	window.requestAnimationFrame(update);
+}
+
+function stop() {
+	running = false;
+	closeButton.style.visibility = 'hidden';
 }
 
 //start called when page is loaded
