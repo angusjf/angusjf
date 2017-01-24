@@ -7,15 +7,15 @@ body {
 }
 
 #container {
-	margin: 48px 48px;
+	margin: 48px;
 }
 
 .box {
 	background-color: #F0F0F0;
 	border-radius: 4px;
 	
-	padding: 20px 20px 28px 20px;
-	margin: 10px 24px;
+	padding: 20px;
+	margin: 24px;
 	
 	max-width: 172px;
 	
