@@ -1,15 +1,13 @@
 body {
 	background-color: #FAFAFA;
-	margin: 0 0;
-	font-style: normal;
+	margin: 0;
 	font-family: Menlo, monospace;
 	color: #777;
-	text-align: left;
 	font-size: 16px;
 }
 
 #container {
-	margin: 40px 0 20px 75px;
+	margin: 48px 48px;
 }
 
 .box {
@@ -17,7 +15,7 @@ body {
 	border-radius: 4px;
 	
 	padding: 20px 20px 28px 20px;
-	margin: 0 50px 10px 0;
+	margin: 10px 24px;
 	
 	max-width: 172px;
 	
@@ -75,10 +73,14 @@ body {
 }
 
 .link {
+	font-size: inherit;
+	font-family: inherit;
+	border:none;
 	font-weight: bold;
 	color: #f7f7f7;
 	background-color: #67db6d;
 	padding: 4px 8px;
+	margin: 4px 0;
 	border-radius: 4px;
 	box-shadow: #57cb5d 0px 4px;
 }
@@ -154,7 +156,7 @@ a {
 	top: 15px;
 	right: 15px;
 	background-color: #e84545;
-	padding: 0px 4px 1px 4px;
+	padding: 0px 5px 1px 5px;
 	box-shadow: #af3434 0px 4px;
 	outline: none;
 }
