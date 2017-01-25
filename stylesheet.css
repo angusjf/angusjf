@@ -28,12 +28,12 @@ body {
 	animation-duration: 1.0s;
 }
 .box:hover {
-	animation-name: mouseover;
-	animation-duration: 0.5s;
+	/*animation-name: mouseover;
+	animation-duration: 0.5s;*/
 }
 
 #about-box {
-	width: 113px;
+	/*width: 113px;*/
 }
 
 @keyframes enter {
@@ -111,7 +111,7 @@ a {
 	text-decoration: none;
 }
 
-.logo {
+#logo {
 	margin-bottom: -12px;
 }
 
