@@ -17,50 +17,23 @@ body {
 	padding: 20px;
 	margin: 24px;
 	
-	max-width: 172px;
+	width: 172px;
 	
 	display: inline-block;
 	vertical-align: top;
 
-	box-shadow: rgba(0,0,0,0.1) 4px 4px;
-
-	/*animation-name: enter;*/
-	animation-duration: 1.0s;
-}
-.box:hover {
-	/*animation-name: mouseover;
-	animation-duration: 0.5s;*/
+	box-shadow: #E0E0E0 4px 4px;
 }
 
-#about-box {
-	/*width: 113px;*/
-}
-
-@keyframes enter {
-	from {
-		-webkit-transform: scale(0.5, 0.5);
-	}
-}
-
-@keyframes mouseover {
-	0% {
-		-webkit-transform: rotate(0deg);
-	}
-	33% {
-		-webkit-transform: rotate(5deg);
-	}
-	66% {
-		-webkit-transform: rotate(-5deg);
-	}
-	100% {
-		-webkit-transform: rotate(0deg);
-	}
-}
+#about-box { }
 
 .words, .title {
 	color: #A7A7A7;
 	margin: 18px 0px;
+	word-wrap: break-word;
 }
+
+.words { }
 
 .title {
 	font-style: italic;
@@ -68,19 +41,15 @@ body {
 	margin-top: 0px;
 }
 
-.words {
-
-}
-
 .link {
+	display: inherit;
 	font-size: inherit;
 	font-family: inherit;
-	border:none;
 	font-weight: bold;
 	color: #f7f7f7;
 	background-color: #67db6d;
 	padding: 4px 8px;
-	margin: 4px 0;
+	margin: 4px 0px;
 	border-radius: 4px;
 	box-shadow: #57cb5d 0px 4px;
 }
@@ -89,26 +58,22 @@ body {
 	position: relative;
 	top: 2px;
 	box-shadow: #57cb5d 0px 2px;
-	cursor: pointer;
 }
 
 .twitter {
 	font-weight: bold;
 	color: #f0f0f0;
 	background-color: #78bdf8;
-	padding: 4px 8px;
-	border-radius: 4px;
 	box-shadow: #68ade8 0px 4px;
 }
 
 .twitter:hover {
-	position: relative;
-	top: 2px;
 	box-shadow: #68ade8 0px 2px;
 }
 
 a {
 	text-decoration: none;
+	color: inherit;
 }
 
 #logo {
@@ -119,33 +84,16 @@ a {
 	height: 170px;
 	width: 170px;
 	border-radius: 5px;
-	background-color: #BBDBCF;
+	background-color: #e0e0e0;
 }
 
 #magic-canvas {
-	/*border: 2px solid #D9D9D9;
-	background-color: #F0F0F0;*/
 	z-index: -1;
 	position: fixed;
 	left: 0;
 	top: 0;
 	height: 100%;
 	width: 100%;
-}
-
-.money-button {
-	border: none;
-	cursor: pointer;
-	font-size: 16px;
-	position: fixed;
-	bottom: 15px;
-	right: 15px;
-}
-
-.money-button:hover {
-	position: fixed;
-	top: auto;
-	bottom: 13px;
 }
 
 #close-button {
