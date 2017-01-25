@@ -2,7 +2,6 @@ body {
 	background-color: #FAFAFA;
 	margin: 0;
 	font-family: Menlo, monospace;
-	color: #777;
 	font-size: 16px;
 }
 
@@ -13,15 +12,11 @@ body {
 .box {
 	background-color: #F0F0F0;
 	border-radius: 4px;
-	
 	padding: 20px;
 	margin: 24px;
-	
 	width: 172px;
-	
 	display: inline-block;
 	vertical-align: top;
-
 	box-shadow: #E0E0E0 4px 4px;
 }
 
@@ -39,6 +34,7 @@ body {
 	font-style: italic;
 	color: #757575;
 	margin-top: 0px;
+	font-weight: bold;
 }
 
 .link {
@@ -46,7 +42,7 @@ body {
 	font-size: inherit;
 	font-family: inherit;
 	font-weight: bold;
-	color: #f7f7f7;
+	color: #fafafa;
 	background-color: #67db6d;
 	padding: 4px 8px;
 	margin: 4px 0px;
@@ -58,6 +54,7 @@ body {
 	position: relative;
 	top: 2px;
 	box-shadow: #57cb5d 0px 2px;
+	cursor: pointer;
 }
 
 .twitter {
