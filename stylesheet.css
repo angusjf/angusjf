@@ -9,6 +9,11 @@ body {
 	margin: 48px;
 }
 
+.full {
+	text-align: center;
+	padding: 0 0 28px 0;
+}
+
 .box {
 	background-color: #F0F0F0;
 	border-radius: 4px;
@@ -38,7 +43,6 @@ body {
 }
 
 .link {
-	display: inherit;
 	font-size: inherit;
 	font-family: inherit;
 	font-weight: bold;
@@ -50,6 +54,10 @@ body {
 	box-shadow: #57cb5d 0px 4px;
 }
 
+.box .link {
+	display: inherit;
+}
+
 .link:hover {
 	position: relative;
 	top: 2px;
@@ -58,8 +66,6 @@ body {
 }
 
 .twitter {
-	font-weight: bold;
-	color: #f0f0f0;
 	background-color: #78bdf8;
 	box-shadow: #68ade8 0px 4px;
 }
