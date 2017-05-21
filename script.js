@@ -34,9 +34,9 @@ function togglePaused() {
 //start called when page is loaded
 window.onload = start;
 
-var initialT = 0;
-var speed = 0.03;
-var maxT = Math.PI * 30;
+var initialT = -6;
+var speed = 0.05;
+var maxT = Math.PI * 3;
 var delay = 500;
 
 var circ = {
@@ -58,7 +58,7 @@ var circ = {
 		}
 		this.x1 =		Math.sin(this.t + this.a) * this.xScale;
 		this.y1 =		Math.sin(this.t + this.b) * this.yScale;
-		this.radius =  Math.abs(Math.pow(this.t + this.c, 2) * this.rScale);
+		this.radius =  Math.abs(Math.exp(this.t + this.c) * this.rScale);
 		this.t += speed;
 	},
 	'draw': function() {
