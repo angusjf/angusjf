@@ -20,67 +20,63 @@ function start() {
 	//ANIMATION SPECIFIC
 	togglePaused();
 	ctx.lineWidth = 0.1;
-	rect.offsetX = c.width / 2;
-	rect.offsetY = c.height / 2;
+	circ.offsetX = c.width / 2;
+	circ.offsetY = c.height / 1.75;
 	//ANIMATION SPECIFIC
 }
 
 function togglePaused() {
 	paused = !paused;
+	if (paused) ctx.clearRect(0, 0, c.width, c.height); //clear screen
 	closeButton.innerHTML = paused ? "&#9654;" : "&times";
 }
 
 //start called when page is loaded
 window.onload = start;
 
-//ANIMATION SPECIFIC
-var rect = {
-	't': 0,
-	'cwidth': 100, 'cheight': 100,
+var initialT = 0;
+var speed = 0.03;
+var maxT = Math.PI * 30;
+var delay = 500;
+
+var circ = {
+	't': initialT,
+	'xScale': 100, 'yScale': 100, 'rScale': 1,
 	'offsetX': 530, 'offsetY': 400,
-	'a': Math.random() * Math.PI*2, 'b': Math.random() * Math.PI*2,
+	'a': 1 * Math.random() * Math.PI*2,
+	'b': 1 * Math.random() * Math.PI*2,
+	'c': 1 * Math.random() * Math.PI*2,
 	'update': function() {
-		this.t += 0.01;
-		this.x1 =	Math.sin(this.t + this.a) * this.cwidth;
-		this.y1 =	Math.sin(this.t + this.b) * this.cheight;
-		this.width =	Math.sin(this.t + this.a) * this.cwidth;
-		this.height =	Math.sin(this.t + this.b) * this.cheight;
-		if (this.t > Math.PI*2) {
+		if (this.t > maxT) {
 			paused = true;
-			this.t = 0;
-			this.a = Math.random() * Math.PI*2;
-			this.b = Math.random() * Math.PI*2;
+			this.t = initialT;
+			this.a = 1 * Math.random() * Math.PI*2;
+			this.b = 1 * Math.random() * Math.PI*2;
 			window.setTimeout(function() {
 				paused = false;
-				ctx.clearRect(0, 0, c.width, c.height); //clear screen
-			}, 1500);
+			}, delay);
 		}
+		this.x1 =		Math.sin(this.t + this.a) * this.xScale;
+		this.y1 =		Math.sin(this.t + this.b) * this.yScale;
+		this.radius =  Math.abs(Math.pow(this.t + this.c, 2) * this.rScale);
+		this.t += speed;
 	},
 	'draw': function() {
-		ctx.strokeRect(
-			this.x1 + this.offsetX,
-			this.y1 + this.offsetY,
-			this.width,
-			this.height
-		);
+		ctx.beginPath();
+		ctx.arc(this.x1 + this.offsetX, this.y1 + this.offsetY, this.radius, 0, 2 * Math.PI);
+		ctx.stroke();
 	}
 }
-//ANIMATION SPECIFIC
 
 function update() {
 	if (!paused) {
-		// ANIMATION SPECIFIC //
-		rect.update();
+		circ.update();
 		draw();
-		// ANIMATION SPECIFIC //
 	}
 	window.requestAnimationFrame(update);
 }
 
 
 function draw() {
-	//ctx.clearRect(0, 0, c.width, c.height); //clear screen
-	// ANIMATION SPECIFIC //
-	rect.draw(); 
-	// ANIMATION SPECIFIC //
+	circ.draw(); 
 }

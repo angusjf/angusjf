@@ -118,3 +118,8 @@ a {
 	top: 17px;
 	box-shadow: #af3434 0px 2px;
 }
+
+mark {
+	background-color: #FAFAFA;
+	color: inherit;
+}
