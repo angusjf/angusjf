@@ -20,7 +20,7 @@ body {
 	padding: 20px;
 	margin: 24px;
 	width: 172px;
-	display: inline-block;
+	display: none;/* inline-block; */
 	vertical-align: top;
 	box-shadow: #E0E0E0 4px 4px;
 }
