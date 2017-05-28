@@ -40,16 +40,16 @@ function start() {
 	}
 }
 
+var time = 0, dt = 0.06;
 function update() {
 	ctx.clearRect(0, 0, c.width, c.height);
 
 	for (var i = 0; i < gridSize; i ++) {
 		for (var j = 0; j < gridSize; j ++) {
-
 			points[i*gridSize + j].x = points[i*gridSize + j].gridX;
 			points[i*gridSize + j].y = points[i*gridSize + j].gridY
 				- 20 * Math.min(2,Math.pow(Math.abs((mouse.x - points[i*gridSize + j].gridX) * 0.04), -2))
-				* (0.6 + 0.4 * Math.abs(Math.sin(points[i*gridSize + j].rand)));
+				* (0.7 + 0.3*Math.pow(Math.sin(points[i*gridSize + j].rand + time), 2));
 
 			if (j > 0) {
 				ctx.beginPath();
@@ -59,6 +59,8 @@ function update() {
 			}
 		}
 	}
+	
+	time += dt;
 
 	window.requestAnimationFrame(update);
 }
