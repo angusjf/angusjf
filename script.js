@@ -1,10 +1,15 @@
-function toggleBoxes() {
+'use strict';
+
+window.onload = function () {
 	var boxes = document.getElementsByClassName("box");
 	Array.prototype.forEach.call(boxes, function (box) {
-		if (box.style.display === "inline-block") {
+		var closeButton = document.createElement("button");
+		closeButton.classList.add('close-button');
+		closeButton.onclick = function () {
 			box.style.display = "none";
-		} else {
-			box.style.display = "inline-block";
-		}
+		};
+		closeButton.innerHTML = '&times;';
+		box.appendChild(closeButton);
 	});
+	setup();
 }

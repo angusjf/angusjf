@@ -20,9 +20,10 @@ body {
 	padding: 20px;
 	margin: 24px;
 	width: 172px;
-	display: none;/* inline-block; */
+	display: inline-block;
 	vertical-align: top;
 	box-shadow: #E0E0E0 4px 4px;
+	position: relative;
 }
 
 #about-box { }
@@ -99,24 +100,26 @@ a {
 	width: 100%;
 }
 
-#close-button {
-	border: none;
-	cursor: pointer;
-	font-size: 16px;
-	position: fixed;
-	top: 15px;
-	right: 15px;
+.close-button {
 	background-color: #e84545;
-	padding: 0px 5px 1px 5px;
-	box-shadow: #af3434 0px 4px;
+	border-radius: 4px;
+	border: none;
+	color: #fafafa;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: bold;
+	margin: 2px;
 	outline: none;
+	padding: 1px 5px 1px 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
-#close-button:hover {
-	position: fixed;
-	bottom: auto;
-	top: 17px;
-	box-shadow: #af3434 0px 2px;
+.close-button:hover {
+	background-color: #d83535;
+	cursor: pointer;
 }
 
 mark {
