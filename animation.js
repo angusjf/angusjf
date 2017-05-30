@@ -2,7 +2,7 @@
 
 var canvasName = "animation-canvas";
 var ctx, c;
-var mouse = { x: 0, y: 0 };
+var mouse = {onCanvas: false, x: 0, y: 0 };
 
 function setup() {
 	//canvas
@@ -14,6 +14,12 @@ function setup() {
 	//loops
 	start();
 	window.requestAnimationFrame(update);
+	c.onmouseleave = function (e) {
+		mouse.onCanvas = false;
+	};
+	c.onmouseenter = function (e) {
+		mouse.onCanvas = true;
+	};
 }
 
 document.onmousemove = function (e) {
@@ -24,7 +30,7 @@ document.onmousemove = function (e) {
 var points = [];
 var gridSize = 16;
 var offset = {'x': 0, 'y': 0};
-var separation = {'x': 8, 'y': 8};
+var separation = {'x': 16, 'y': 16};
 
 function start() {
 	ctx.lineWidth = 1;
@@ -44,39 +50,37 @@ function start() {
 	}
 }
 
-var time = 0, dt = 0.06;
+var time = 0, dt = 0.02;
 function update() {
 	ctx.clearRect(0, 0, c.width, c.height);
 
+	ctx.beginPath();
 	for (var i = 0; i < gridSize; i ++) {
 		for (var j = 0; j < gridSize; j ++) {
 			points[i*gridSize + j].x = lerp(
 				points[i*gridSize + j].x,
-				points[i*gridSize + j].gridX + (mouse.x - c.width / 2) * (0.3 * points[i*gridSize + j].rand + 0.7),
+				points[i*gridSize + j].gridX + ((mouse.onCanvas ? (mouse.x - c.width / 2) : Math.cos(time) * c.width / 10)) * (0.3 * points[i*gridSize + j].rand + 0.7),
 				0.1
 			);
 			points[i*gridSize + j].y = lerp(
 				points[i*gridSize + j].y,
-				points[i*gridSize + j].gridY + (mouse.y - c.height / 2) * (0.3 * points[i*gridSize + j].rand + 0.7),
+				points[i*gridSize + j].gridY + ((mouse.onCanvas ? (mouse.y - c.height / 2) : Math.sin(time) * c.height / 10)) * (0.3 * points[i*gridSize + j].rand + 0.7),
 				0.1
 			);
 
 			if (j > 0 && points[i*gridSize + j]) {
-				ctx.beginPath();
 				ctx.moveTo(points[i*gridSize + j - 1].x, points[i*gridSize + j - 1].y);
 				ctx.lineTo(points[i*gridSize + j].x, points[i*gridSize + j].y);
-				ctx.stroke();
 			}
 
 			if (i > 0 && points[i*gridSize + j]) {
-				ctx.beginPath();
 				ctx.moveTo(points[(i - 1)*gridSize + j].x, points[(i - 1)*gridSize + j].y);
 				ctx.lineTo(points[i*gridSize + j].x, points[i*gridSize + j].y);
-				ctx.stroke();
 			}
 		}
 	}
-	
+	ctx.stroke();
+
 	time += dt;
 
 	window.requestAnimationFrame(update);

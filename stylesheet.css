@@ -24,7 +24,7 @@ body {
 	vertical-align: top;
 	box-shadow: #E0E0E0 4px 4px;
 	position: relative;
-	transition: height 1s;
+	transition: height 0.4s;
 	overflow: hidden;
 }
 
