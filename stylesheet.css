@@ -1,17 +1,17 @@
 body {
 	background-color: #FAFAFA;
-	margin: 0;
-	font-family: Menlo, monospace;
-	font-size: 16px;
-}
-
-#container {
-	margin: 48px;
+	margin: 48px 0 0 0;
+	font-family: Menlo, futura, ariel;
 }
 
 .full {
 	text-align: center;
 	padding: 0 0 28px 0;
+}
+
+.boxes {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .box {
@@ -24,26 +24,38 @@ body {
 	vertical-align: top;
 	box-shadow: #E0E0E0 4px 4px;
 	position: relative;
+	transition: height 1s;
+	overflow: hidden;
 }
 
-#about-box { }
-
-.words, .title {
-	color: #A7A7A7;
-	margin: 18px 0px;
-	word-wrap: break-word;
+@media (max-width: 531px) {
+	.boxes {
+		width: 212px;
+	}
+	.box {
+		margin-left: 0px;
+		margin-right: 0px;
+	}
 }
 
-.words { }
-
-.title {
+h1 {
 	font-style: italic;
 	color: #757575;
 	margin-top: 0px;
+	margin-bottom: 18px;
 	font-weight: bold;
+	font-size: 16px;
 }
 
-.link {
+p {
+	color: #A7A7A7;
+	margin-top: 18px;
+	margin-bottom: 18px;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+a {
 	font-size: inherit;
 	font-family: inherit;
 	font-weight: bold;
@@ -53,13 +65,15 @@ body {
 	margin: 4px 0px;
 	border-radius: 4px;
 	box-shadow: #57cb5d 0px 4px;
+	text-decoration: none;
+	display: inline-block;
 }
 
-.box .link {
-	display: inherit;
+.box p {
+	word-wrap: break-word;
 }
 
-.link:hover {
+a:hover {
 	position: relative;
 	top: 2px;
 	box-shadow: #57cb5d 0px 2px;
@@ -75,29 +89,20 @@ body {
 	box-shadow: #68ade8 0px 2px;
 }
 
-a {
-	text-decoration: none;
-	color: inherit;
-}
-
-#logo {
-	margin-bottom: -12px;
-}
-
-.image {
+img {
 	height: 170px;
 	width: 170px;
 	border-radius: 5px;
 	background-color: #e0e0e0;
 }
 
-#magic-canvas {
-	z-index: -1;
+#animation-canvas {
+	/*z-index: -1;
 	position: fixed;
 	left: 0;
-	top: 0;
-	height: 100%;
-	width: 100%;
+	top: 0;*/
+	height: 170px;
+	width: 170px;
 }
 
 .close-button {
@@ -109,20 +114,19 @@ a {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: bold;
-	margin: 2px;
+	margin: 0px;
 	outline: none;
 	padding: 1px 5px 1px 5px;
 	position: absolute;
-	right: 5px;
-	top: 5px;
+	right: 18px;
+	top: 18px;
 }
 
 .close-button:hover {
-	background-color: #d83535;
+	background-color: #c82525;
 	cursor: pointer;
 }
 
-mark {
+.full h1, .full h2 {
 	background-color: #FAFAFA;
-	color: inherit;
 }
