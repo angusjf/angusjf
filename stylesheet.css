@@ -17,6 +17,7 @@ a {
 	color: inherit;
 	text-decoration: none;
 	cursor: pointer;
+	word-wrap: break-word;
 }
 
 canvas {
