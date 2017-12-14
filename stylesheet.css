@@ -1,132 +1,29 @@
 body {
-	background-color: #FAFAFA;
-	margin: 48px 0 0 0;
-	font-family: Menlo, futura, ariel;
+	margin: 0 10% 0 0px;
+	background: #000000;
+	font-family: Helvetica Neue;
+	font-size: 20px;
+	color: #fbfbfb;
+	letter-spacing: 2px;
+	text-align: right;
+	text-transform: lowercase;
 }
 
-.full {
-	text-align: center;
-	padding: 0 0 28px 0;
-}
-
-.boxes {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.box {
-	background-color: #F0F0F0;
-	border-radius: 4px;
-	padding: 20px;
-	margin: 24px;
-	width: 172px;
-	display: inline-block;
-	vertical-align: top;
-	box-shadow: #E0E0E0 4px 4px;
-	position: relative;
-	transition: height 0.4s;
-	overflow: hidden;
-}
-
-@media (max-width: 531px) {
-	.boxes {
-		width: 212px;
-	}
-	.box {
-		margin-left: 0px;
-		margin-right: 0px;
-	}
-}
-
-h1 {
-	font-style: italic;
-	color: #757575;
-	margin-top: 0px;
-	margin-bottom: 18px;
-	font-weight: bold;
-	font-size: 16px;
-}
-
-p {
-	color: #A7A7A7;
-	margin-top: 18px;
-	margin-bottom: 18px;
-	font-size: 16px;
-	font-weight: normal;
+div {
+	margin: 6% 12%;
 }
 
 a {
-	font-size: inherit;
-	font-family: inherit;
-	font-weight: bold;
-	color: #fafafa;
-	background-color: #67db6d;
-	padding: 4px 8px;
-	margin: 4px 0px;
-	border-radius: 4px;
-	box-shadow: #57cb5d 0px 4px;
+	color: inherit;
 	text-decoration: none;
-	display: inline-block;
-}
-
-.box p {
-	word-wrap: break-word;
-}
-
-a:hover {
-	position: relative;
-	top: 2px;
-	box-shadow: #57cb5d 0px 2px;
 	cursor: pointer;
 }
 
-.twitter {
-	background-color: #78bdf8;
-	box-shadow: #68ade8 0px 4px;
-}
-
-.twitter:hover {
-	box-shadow: #68ade8 0px 2px;
-}
-
-img {
-	height: 170px;
-	width: 170px;
-	border-radius: 5px;
-	background-color: #e0e0e0;
-}
-
-#animation-canvas {
-	/*z-index: -1;
+canvas {
+	z-index: -1;
 	position: fixed;
 	left: 0;
-	top: 0;*/
-	height: 170px;
-	width: 170px;
-}
-
-.close-button {
-	background-color: #e84545;
-	border-radius: 4px;
-	border: none;
-	color: #fafafa;
-	cursor: pointer;
-	font-family: inherit;
-	font-size: inherit;
-	font-weight: bold;
-	margin: 0px;
-	outline: none;
-	padding: 1px 5px 1px 5px;
-	position: absolute;
-	right: 18px;
-	top: 18px;
-}
-
-.close-button:hover {
-	background-color: #c82525;
-	cursor: pointer;
-}
-
-.full h1, .full h2 {
-	background-color: #FAFAFA;
+	top: 0;
+	height: 100%;
+	width: 100%;
 }
