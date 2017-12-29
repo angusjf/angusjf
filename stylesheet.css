@@ -18,6 +18,8 @@ a {
 	text-decoration: none;
 	cursor: pointer;
 	word-wrap: break-word;
+	padding: 2px 6px;
+	border: 1px dashed white;
 }
 
 canvas {
