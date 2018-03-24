@@ -1,60 +1,44 @@
-:root {
-	--alpha: #FBFBFB;
-	--beta: #BCC6C8;
-	--paddinga: 16px;
-}
-
 body {
-	width: 420px;
 	margin: 0 auto;
-	background: var(--beta);
-	font-family: Helvetica Neue, sans-serif;
-	font-weight: bold;
-	font-size: 16px;
-	color: var(--alpha);
-	letter-spacing: 2px;
-	text-transform: uppercase;
-	grid-gap: var(--paddinga);
-	padding: var(--paddinga) 0;
-	display: grid;
-	grid-template-areas:
-		"title title title"
-		"bio bio image"
-		"info info info";
-}
+	padding: 16px;
+	max-width: 460px;
 
-.title { grid-area: title; }
-.bio { grid-area: bio; }
-.info { grid-area: info; }
-.image { grid-area: image;
-	padding: 0 0;
+	display: grid;
+	grid-template-columns: 5fr 3fr;
+	grid-gap: 16px;
+	background: #bdc7ca;
 }
 
 body > div {
-	padding: var(--paddinga);
-	border: 3px solid var(--alpha);
-	background: var(--beta);
+	padding: 16px;
+
+	border: 3px solid #fbfbfb;
+
+	font-family: helvetica neue, sans-serif;
+	color: #fbfbfb;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+	letter-spacing: 2px;
+
+	grid-column: 1 / 3;
 }
 
-body > div > div {
-	margin-bottom: var(--paddinga);
+#bio {
+	grid-column: 1 / 2;
 }
 
-body > div > div:last-of-type {
-	margin-bottom: 0px;
+#photo {
+	grid-column: 2 / 3;
+	padding: 0px;
 }
 
-body > div > img {
-	width: 160px;
+img {
+	width: 100%;
 }
 
 a {
 	color: inherit;
 	text-decoration: none;
-	cursor: pointer;
-	word-wrap: break-word;
-	padding: 3px 6px 2px 6px;
-	border: 3px solid var(--alpha);
-	display: inline-block;
-	margin-top: 3px;
-} 
+	border-bottom: 2px solid #fbfbfb;
+}
