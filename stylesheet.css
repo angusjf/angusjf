@@ -1,4 +1,6 @@
 body {
+	height: 0px; /* hack for safari */
+
 	margin: 0 auto;
 	padding: 16px;
 	max-width: 460px;
