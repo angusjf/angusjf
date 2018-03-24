@@ -22,6 +22,7 @@ body > div {
 	font-size: 16px;
 	font-weight: bold;
 	letter-spacing: 2px;
+	line-height: 19px;
 
 	grid-column: 1 / 3;
 }
