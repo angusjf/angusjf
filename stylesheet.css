@@ -9,7 +9,6 @@ body {
 	grid-template-columns: 5fr 3fr;
 	grid-gap: 16px;
 	background: #bdc7ca;
-	word-break: break-all;
 }
 
 body > div, body > img {
@@ -68,6 +67,7 @@ img {
 }
 
 a {
+	word-break: break-all;
 	color: inherit;
 	text-decoration: none;
 	border-bottom: 2px solid #fbfbfb;
