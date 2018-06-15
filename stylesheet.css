@@ -1,10 +1,15 @@
 body {
 	font-family: helvetica neue;
-	width: 900px;
-	margin: 60px auto;
+	margin: 60px 60px;
 	background-color: rgba(0, 0, 0, 0.02);
 	display: flex;
 	display: -webkit-flex; 
+}
+
+@media screen and (max-width: 500px) {
+	img {
+		display: none !important;
+	}
 }
 
 #info > div, img {
