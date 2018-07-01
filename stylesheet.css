@@ -1,5 +1,5 @@
 html {
-	background: #ffe1d7;
+	background: #949c99;
 	padding: 0px 10px;
 }
 
@@ -10,7 +10,7 @@ body {
 	padding: 32px;
 	background-color: #FFFFFF;
 	color: rgb(0,0,0);
-	max-width: 600px;
+	max-width: 540px;
 	height: 300px;
 	box-shadow: 0px 12px 20px 7px #00000012;
 }
