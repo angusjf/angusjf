@@ -1,24 +1,29 @@
 html {
-	background: #949c99;
+	background: #1D2951;
 	padding: 0px 10px;
 }
 
 body {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	grid-column-gap: 32px;
 	border-radius: 10px;
 	font-family: helvetica neue;
 	margin: 60px auto;
 	padding: 32px;
 	background-color: #FFFFFF;
 	color: rgb(0,0,0);
-	max-width: 540px;
-	height: 300px;
+	max-width: 572px;
 	box-shadow: 0px 12px 20px 7px #00000012;
 }
 
 img {
-	float: left;
-	margin-right: 32px;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: auto;
 	width: 200px;
+	border-radius: 100px;
 }
 
 #list {
