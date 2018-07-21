@@ -15,6 +15,7 @@ body {
 	color: rgb(0,0,0);
 	max-width: 572px;
 	box-shadow: 0px 12px 20px 7px #00000012;
+	height: 320px;
 }
 
 img {
@@ -53,4 +54,5 @@ svg {
 
 @media screen and (max-width: 500px) {
 	img { display: none !important; }
+	body { grid-template-columns: 1fr; }
 }
