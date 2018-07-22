@@ -3,7 +3,7 @@ html {
 	padding: 0px 10px;
 }
 
-body {
+.card {
 	display: grid;
 	grid-template-columns: 1fr 2fr;
 	grid-column-gap: 32px;
@@ -15,7 +15,6 @@ body {
 	color: rgb(0,0,0);
 	max-width: 572px;
 	box-shadow: 0px 12px 20px 7px #00000012;
-	height: 320px;
 }
 
 img {
@@ -34,6 +33,7 @@ img {
 h1 {
 	font-size: 32px;
 	font-family: 'Playfair Display', serif;
+	margin-top: 13px;
 }
 
 p {
@@ -54,5 +54,5 @@ svg {
 
 @media screen and (max-width: 500px) {
 	img { display: none !important; }
-	body { grid-template-columns: 1fr; }
+	.card { grid-template-columns: 1fr; }
 }
