@@ -10,7 +10,7 @@ html {
 	border-radius: 10px;
 	font-family: helvetica neue;
 	margin: 60px auto;
-	padding: 32px;
+	padding: 24px 40px;
 	background-color: #FFFFFF;
 	color: rgb(0,0,0);
 	max-width: 572px;
@@ -52,7 +52,14 @@ svg {
 	margin-right: 16px;
 }
 
-@media screen and (max-width: 500px) {
-	img { display: none !important; }
-	.card { grid-template-columns: 1fr; }
+@media screen and (max-width: 650px) {
+	img {
+		width: 100% !important;
+		margin-bottom: 14px;
+	}
+	.card {
+		grid-template-columns: 1fr;
+		margin-top: 20px;
+		padding: 40px 40px;
+	}
 }
