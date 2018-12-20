@@ -58,8 +58,10 @@ svg {
 		margin-bottom: 14px;
 	}
 	.card {
+		max-width: 260px;
 		grid-template-columns: 1fr;
 		margin-top: 20px;
 		padding: 40px 40px;
+		padding-bottom: 20px;
 	}
 }
