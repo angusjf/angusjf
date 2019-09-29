@@ -29,17 +29,22 @@ const lineColor = 'rgba(179, 170, 172, 100)'
 let liveT = 0.4 // only need to score liveT to live
 let splitT = 0.4 // need to score 1 - splitT to split
 
+
 window.onload = () => {
     canvas = document.getElementById('canvas')
     ctx = canvas.getContext('2d')
-    ctx.scale(2, 2)
-    canvas.width = canvas.clientWidth
-    canvas.height = canvas.clientHeight
+    let width = canvas.clientWidth
+    let height = canvas.clientHeight
+    canvas.width = width * 4
+    canvas.height = height * 4
+    canvas.style.width = width
+    canvas.style.height = height
     canvas.addEventListener('mousemove', evt => {
         mousePos = getMousePos(canvas, evt)
     }, false)
     mousePos.x = canvas.clientWidth / 1.5
     mousePos.y = canvas.clientHeight / 1.5
+    ctx.scale(4, 4)
     window.requestAnimationFrame(loop)
 }
 
