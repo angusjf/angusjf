@@ -26,8 +26,8 @@ const leafColor = 'rgba(255, 201, 181, 255)'
 const stemColor = 'rgba(109, 100, 102, 255)'
 const lineColor = 'rgba(179, 170, 172, 100)'
 
-let liveT = 0.0 // only need to score 0.2 to live
-let splitT = 0.6 // need to score 0.9 to split
+let liveT = 0.4 // only need to score liveT to live
+let splitT = 0.4 // need to score 1 - splitT to split
 
 window.onload = () => {
     canvas = document.getElementById('canvas')
@@ -52,8 +52,6 @@ function loop() {
 function update() {
     updatePlant(plant0)
 
-    if (headX - mousePos.x > 0.1 && headY - mousePos.y > 0.1) {
-    }
     plantHead.angle = lerp(plantHead.angle, safeatan2(headX - mousePos.x, headY - 0/*mousePos.y*/), 0.05)
 }
 
@@ -71,23 +69,18 @@ function draw() {
     ctx.setLineDash([])
 
     if (lockStatus === "triggered") {
-            cameraOffsetY += 0.5
+            cameraOffsetY += 2.5
     }
 
     if (lockStatus === "free") {
-        if (headY + cameraOffsetY < canvas.clientHeight / 2) {
-            console.log('triggered @ ' + headY + ' ' + cameraOffsetY + ' < ' + canvas.clientHeight / 2)
+        if (headY < canvas.clientHeight / 8) {
             lockStatus = "triggered"
             setTimeout(() => {
-                console.log('locking again')
                 lockStatus = "locked"
                 setTimeout(() => {
-                    console.log('freeing again')
                     lockStatus = "free"
                 }, 1000)
-            }, 1000)
-        } else {
-            console.log('not triggered, ' + headY + ' ' + cameraOffsetY + ' < ' + canvas.clientHeight / 2)
+            }, 1500)
         }
     }
 }
@@ -115,7 +108,11 @@ function newRandomMaxLength() {
 }
 
 function newRandomAngle() {
-    return (Math.random() - 0.5) * 2
+    if (Math.random() > 0.5) {
+        return 0.1745329252 + 0.6108652382 * Math.random()
+    } else {
+        return (0.1745329252 + 0.6108652382 * Math.random()) * -1
+    }
 }
 
 function newRandomVelocity() {
@@ -127,15 +124,21 @@ function updatePlant(plant) {
         plant.length += plant.velocity
         if (plant.length >= plant.maxLength) {
             let r = Math.random()
-            if (r > splitT) {
+            if (r > (1 - splitT)) {
+                splitT /= 1.5
                 plant.children = [generateRandomPlant(), generateRandomPlant()]
                 plant.children[0].angle = plant.angle
-                if (plant == plantHead) plantHead = plant.children[0]
+                if (plant == plantHead) {
+                    plantHead = plant.children[0]
+                }
             } else if (r > liveT) {
                 plant.children = [generateRandomPlant()]
-                if (plant == plantHead) plantHead = plant.children[0]
+                if (plant == plantHead) {
+                    plantHead = plant.children[0]
+                }
             } else {
                 if (plant != plantHead) {
+                    splitT *= 1.7
                     plant.children = []
                 }
             }
@@ -169,7 +172,7 @@ function drawPlant(plant, x, y) {
     } else {
         ctx.fillStyle = stemColor
         ctx.beginPath()
-        ctx.arc(endx, endy, 2.5, 0, Math.PI * 2)
+        ctx.arc(endx, endy, 1.3, 0, Math.PI * 2)
         ctx.fill()
         plant.children.forEach(p => {
             drawPlant(p, endx, endy)
