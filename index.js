@@ -121,7 +121,7 @@ function newRandomAngle() {
 }
 
 function newRandomVelocity() {
-    return 0.25 + Math.random() * 0.1
+    return (0.2 + Math.random() * 0.15) * 3
 }
 
 function updatePlant(plant) {
@@ -143,7 +143,7 @@ function updatePlant(plant) {
                 }
             } else {
                 if (plant != plantHead) {
-                    splitT *= 1.7
+                    splitT *= 1.5
                     plant.children = []
                 }
             }
