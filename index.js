@@ -32,7 +32,6 @@ let splitT = 0.4 // need to score 1 - splitT to split
 window.onload = () => {
     canvas = document.getElementById('canvas')
     ctx = canvas.getContext('2d')
-    ctx.imageSmoothingEnabled = false
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
     canvas.addEventListener('mousemove', evt => {
