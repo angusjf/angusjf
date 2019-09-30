@@ -3,23 +3,17 @@
 let ctx = null
 let canvas = null
 let mousePos = { x: 0, y: 0 }
-let plant0 = 0
-let plantHead = 0
 let headX = 0, headY = 0
 let cameraOffsetY = 0
 let lockStatus = "free"
-
-function init() {
-    plant0 = {
-        length: 0,
-        maxLength: 10,
-        angle: 0,
-        velocity: 1,
-        children: null
-    }
-    plantHead = plant0
+let plant0 = {
+    length: 0,
+    maxLength: 10,
+    angle: 0,
+    velocity: 1,
+    children: null
 }
-init()
+let plantHead = plant0
 
 const backgroundColor = 'rgba(212, 206, 201, 255)'
 const leafColor = 'rgba(255, 201, 181, 255)'
@@ -28,7 +22,6 @@ const lineColor = 'rgba(179, 170, 172, 100)'
 
 let liveT = 0.4 // only need to score liveT to live
 let splitT = 0.4 // need to score 1 - splitT to split
-
 
 window.onload = () => {
     canvas = document.getElementById('canvas')
@@ -57,7 +50,11 @@ function loop() {
 function update() {
     updatePlant(plant0)
 
-    plantHead.angle = lerp(plantHead.angle, safeatan2(headX - mousePos.x, headY - 0/*mousePos.y*/), 0.05)
+    plantHead.angle = lerp(
+        plantHead.angle,
+        Math.atan2(headX - mousePos.x, headY - 0/*mousePos.y*/),
+        0.05
+    )
 }
 
 function draw() {
@@ -121,7 +118,7 @@ function newRandomAngle() {
 }
 
 function newRandomVelocity() {
-    return (0.2 + Math.random() * 0.15) * 3
+    return (0.2 + Math.random() * 0.15) * 2
 }
 
 function updatePlant(plant) {
@@ -183,11 +180,6 @@ function drawPlant(plant, x, y) {
             drawPlant(p, endx, endy)
         })
     }
-}
-
-function safeatan2(a, b) {
-    let ret = Math.atan2(a, b)
-    return ret
 }
 
 function lerp(a, b, t) {
