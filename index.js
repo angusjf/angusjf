@@ -15,21 +15,28 @@ let plant0 = {
 }
 let plantHead = plant0
 
-const backgroundColor = 'rgba(212, 206, 201, 255)'
-const leafColor = 'rgba(255, 201, 181, 255)'
-const stemColor = 'rgba(109, 100, 102, 255)'
-const lineColor = 'rgba(179, 170, 172, 100)'
+/*
+const backgroundColor = 'rgba(212, 206, 201)'
+const leafColor = 'rgba(255, 201, 181)'
+const stemColor = 'rgba(109, 100, 102)'
+const lineColor = 'rgba(179, 170, 172)'
+*/
+const backgroundColor = '#FFF5F6'
+const leafColor       = '#7ABD91'
+const stemColor       = '#554259'
+const lineColor       = '#F9D4D5'
 
 let liveT = 0.4 // only need to score liveT to live
 let splitT = 0.4 // need to score 1 - splitT to split
 
 window.onload = () => {
+    const scale = 2
     canvas = document.getElementById('canvas')
     ctx = canvas.getContext('2d')
     let width = canvas.clientWidth
     let height = canvas.clientHeight
-    canvas.width = width * 4
-    canvas.height = height * 4
+    canvas.width = width * scale
+    canvas.height = height * scale
     canvas.style.width = width
     canvas.style.height = height
     canvas.addEventListener('mousemove', evt => {
@@ -37,7 +44,7 @@ window.onload = () => {
     }, false)
     mousePos.x = canvas.clientWidth / 1.5
     mousePos.y = canvas.clientHeight / 1.5
-    ctx.scale(4, 4)
+    ctx.scale(scale, scale)
     window.requestAnimationFrame(loop)
 }
 
@@ -135,6 +142,7 @@ function updatePlant(plant) {
                 }
             } else if (r > liveT) {
                 plant.children = [generateRandomPlant()]
+                plant.children[0].angle = lerp(plant.children[0].angle, plant.angle, 0.3)
                 if (plant == plantHead) {
                     plantHead = plant.children[0]
                 }
