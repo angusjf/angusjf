@@ -46,7 +46,7 @@
                         aImg.src = e.target.result
                         setTimeout(
                             () => app.ports.toElm.send(getImageData()),
-                            10
+                            50
                         );
                     }) (img)
                     reader.readAsDataURL(img.file)
