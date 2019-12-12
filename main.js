@@ -4355,6 +4355,43 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5372,8 +5409,8 @@ var $author$project$Image$jsonToImage = function (json) {
 		return _Debug_todo(
 			'Image',
 			{
-				start: {line: 64, column: 20},
-				end: {line: 64, column: 30}
+				start: {line: 66, column: 20},
+				end: {line: 66, column: 30}
 			})(
 			$elm$json$Json$Decode$errorToString(error));
 	}
@@ -5383,6 +5420,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (json) {
 	return _Utils_Tuple2(
 		{
+			filters: _List_Nil,
 			image: $author$project$Image$jsonToImage(json)
 		},
 		$elm$core$Platform$Cmd$none);
@@ -5395,6 +5433,215 @@ var $author$project$Main$toElm = _Platform_incomingPort('toElm', $elm$json$Json$
 var $author$project$Main$subscriptions = function (model) {
 	return $author$project$Main$toElm($author$project$Main$NewImage);
 };
+var $author$project$Main$SendToJs = {$: 'SendToJs'};
+var $author$project$Main$applyAll = F2(
+	function (functions, input) {
+		applyAll:
+		while (true) {
+			if (functions.b) {
+				var f = functions.a;
+				var fs = functions.b;
+				var $temp$functions = fs,
+					$temp$input = f(input);
+				functions = $temp$functions;
+				input = $temp$input;
+				continue applyAll;
+			} else {
+				return input;
+			}
+		}
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $author$project$Image$flattenRow = function (pixels) {
+	if (pixels.b) {
+		var p = pixels.a;
+		var ps = pixels.b;
+		return A2(
+			$elm$core$List$cons,
+			p.red,
+			A2(
+				$elm$core$List$cons,
+				p.green,
+				A2(
+					$elm$core$List$cons,
+					p.blue,
+					A2(
+						$elm$core$List$cons,
+						p.alpha,
+						$author$project$Image$flattenRow(ps)))));
+	} else {
+		return _List_Nil;
+	}
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $author$project$Image$encodeRow = function (data) {
+	return A2(
+		$elm$json$Json$Encode$list,
+		$elm$json$Json$Encode$int,
+		$elm$core$List$concat(
+			A2($elm$core$List$map, $author$project$Image$flattenRow, data)));
+};
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var $author$project$Image$imageToJson = function (image) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'width',
+				$elm$json$Json$Encode$int(image.width)),
+				_Utils_Tuple2(
+				'height',
+				$elm$json$Json$Encode$int(image.height)),
+				_Utils_Tuple2(
+				'data',
+				$author$project$Image$encodeRow(image.data))
+			]));
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $GlobalWebIndex$cmd_extra$Cmd$Extra$perform = A2(
+	$elm$core$Basics$composeL,
+	$elm$core$Task$perform($elm$core$Basics$identity),
+	$elm$core$Task$succeed);
+var $elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(xs);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm_community$list_extra$List$Extra$removeAt = F2(
+	function (index, l) {
+		if (index < 0) {
+			return l;
+		} else {
+			var tail = $elm$core$List$tail(
+				A2($elm$core$List$drop, index, l));
+			var head = A2($elm$core$List$take, index, l);
+			if (tail.$ === 'Nothing') {
+				return l;
+			} else {
+				var t = tail.a;
+				return A2($elm$core$List$append, head, t);
+			}
+		}
+	});
+var $author$project$Main$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		var _v0 = A2($elm$core$Debug$log, '[elm]', msg);
+		switch (_v0.$) {
+			case 'NewImage':
+				var newImage = _v0.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							image: $author$project$Image$jsonToImage(newImage)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'SendToJs':
+				var fns = A2(
+					$elm$core$List$map,
+					function ($) {
+						return $.glitch;
+					},
+					model.filters);
+				var _v1 = A2(
+					$author$project$Main$applyAll,
+					fns,
+					_Utils_Tuple2(
+						model.image,
+						$elm$random$Random$initialSeed(4)));
+				var newImage = _v1.a;
+				return _Utils_Tuple2(
+					model,
+					$author$project$Main$toJs(
+						$author$project$Image$imageToJson(newImage)));
+			case 'AddFilter':
+				var filter = _v0.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							filters: _Utils_ap(
+								model.filters,
+								_List_fromArray(
+									[filter]))
+						}),
+					$GlobalWebIndex$cmd_extra$Cmd$Extra$perform($author$project$Main$SendToJs));
+			default:
+				var n = _v0.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							filters: A2($elm_community$list_extra$List$Extra$removeAt, n, model.filters)
+						}),
+					$GlobalWebIndex$cmd_extra$Cmd$Extra$perform($author$project$Main$SendToJs));
+		}
+	});
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Glitches$Filter = F2(
+	function (desc, glitch) {
+		return {desc: desc, glitch: glitch};
+	});
 var $author$project$Glitches$applyRowFnsToRows = F2(
 	function (fs, rs) {
 		if (rs.b) {
@@ -5421,11 +5668,6 @@ var $author$project$Glitches$applyRowFnsToImage = F2(
 			{
 				data: A2($author$project$Glitches$applyRowFnsToRows, fns, img.data)
 			});
-	});
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
 	});
 var $elm$core$Basics$not = _Basics_not;
 var $elm_community$list_extra$List$Extra$dropWhile = F2(
@@ -5529,17 +5771,6 @@ var $author$project$Glitches$brightness = function (pixel) {
 	return ((r + g) + b) / 3;
 };
 var $elm$core$Basics$compare = _Utils_compare;
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
 var $elm$core$List$concatMap = F2(
 	function (f, list) {
 		return $elm$core$List$concat(
@@ -5582,109 +5813,500 @@ var $elm$core$List$repeat = F2(
 		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
 	});
 var $author$project$Glitches$asdfPixelSort = F2(
-	function (_break, img) {
+	function (_break, _v0) {
+		var img = _v0.a;
+		var seed = _v0.b;
 		var rowFns = A2(
 			$elm$core$List$repeat,
 			img.height,
 			$author$project$Glitches$asdfRowSort(_break));
-		return A2($author$project$Glitches$applyRowFnsToImage, rowFns, img);
+		return _Utils_Tuple2(
+			A2($author$project$Glitches$applyRowFnsToImage, rowFns, img),
+			seed);
 	});
-var $author$project$Image$flattenRow = function (pixels) {
-	if (pixels.b) {
-		var p = pixels.a;
-		var ps = pixels.b;
-		return A2(
-			$elm$core$List$cons,
-			p.red,
-			A2(
-				$elm$core$List$cons,
-				p.green,
-				A2(
-					$elm$core$List$cons,
-					p.blue,
-					A2(
-						$elm$core$List$cons,
-						p.alpha,
-						$author$project$Image$flattenRow(ps)))));
-	} else {
-		return _List_Nil;
-	}
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
 };
-var $elm$json$Json$Encode$int = _Json_wrap;
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(_Utils_Tuple0),
-				entries));
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$int = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
 	});
-var $author$project$Image$encodeRow = function (data) {
-	return A2(
-		$elm$json$Json$Encode$list,
-		$elm$json$Json$Encode$int,
-		$elm$core$List$concat(
-			A2($elm$core$List$map, $author$project$Image$flattenRow, data)));
-};
-var $elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v0, obj) {
-					var k = _v0.a;
-					var v = _v0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
-};
-var $author$project$Image$imageToJson = function (image) {
-	return $elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'width',
-				$elm$json$Json$Encode$int(image.width)),
-				_Utils_Tuple2(
-				'height',
-				$elm$json$Json$Encode$int(image.height)),
-				_Utils_Tuple2(
-				'data',
-				$author$project$Image$encodeRow(image.data))
-			]));
-};
-var $elm$core$Debug$log = _Debug_log;
-var $author$project$Main$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
-var $author$project$Main$update = F2(
-	function (msg, model) {
-		var _v0 = A2($elm$core$Debug$log, '[elm]', msg);
-		if (_v0.$ === 'NewImage') {
-			var newImage = _v0.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						image: $author$project$Image$jsonToImage(newImage)
-					}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			var newImage = A2(
-				$author$project$Glitches$asdfPixelSort,
-				function (p) {
-					return $author$project$Glitches$brightness(p) > 127;
-				},
-				model.image);
-			return _Utils_Tuple2(
-				model,
-				$author$project$Main$toJs(
-					$author$project$Image$imageToJson(newImage)));
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
 		}
 	});
-var $author$project$Main$SendToJS = {$: 'SendToJS'};
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $author$project$Glitches$repeatElemsSafe = F2(
+	function (numbers, elems) {
+		var _v0 = _Utils_Tuple2(numbers, elems);
+		if (_v0.a.b && _v0.b.b) {
+			var _v1 = _v0.a;
+			var n = _v1.a;
+			var ns = _v1.b;
+			var _v2 = _v0.b;
+			var x = _v2.a;
+			var rest = A2($elm$core$List$drop, n, elems);
+			var repeats = A2(
+				$elm$core$List$take,
+				$elm$core$List$length(elems),
+				A2($elm$core$List$repeat, n, x));
+			return _Utils_ap(
+				repeats,
+				A2($author$project$Glitches$repeatElemsSafe, ns, rest));
+		} else {
+			return elems;
+		}
+	});
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $author$project$Glitches$bleed = function (_v0) {
+	var img = _v0.a;
+	var s = _v0.b;
+	var _v1 = A2(
+		$elm$random$Random$step,
+		A2(
+			$elm$random$Random$list,
+			img.height,
+			A2(
+				$elm$random$Random$list,
+				img.width,
+				A2($elm$random$Random$int, 5, 15))),
+		s);
+	var rands2d = _v1.a;
+	var s1 = _v1.b;
+	return _Utils_Tuple2(
+		A2(
+			$author$project$Glitches$applyRowFnsToImage,
+			A2($elm$core$List$map, $author$project$Glitches$repeatElemsSafe, rands2d),
+			img),
+		s1);
+};
+var $author$project$Color$Blue = {$: 'Blue'};
+var $author$project$Color$Green = {$: 'Green'};
+var $author$project$Color$Red = {$: 'Red'};
+var $elm$random$Random$addOne = function (value) {
+	return _Utils_Tuple2(1, value);
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$random$Random$float = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
+			});
+	});
+var $elm$random$Random$getByWeight = F3(
+	function (_v0, others, countdown) {
+		getByWeight:
+		while (true) {
+			var weight = _v0.a;
+			var value = _v0.b;
+			if (!others.b) {
+				return value;
+			} else {
+				var second = others.a;
+				var otherOthers = others.b;
+				if (_Utils_cmp(
+					countdown,
+					$elm$core$Basics$abs(weight)) < 1) {
+					return value;
+				} else {
+					var $temp$_v0 = second,
+						$temp$others = otherOthers,
+						$temp$countdown = countdown - $elm$core$Basics$abs(weight);
+					_v0 = $temp$_v0;
+					others = $temp$others;
+					countdown = $temp$countdown;
+					continue getByWeight;
+				}
+			}
+		}
+	});
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $elm$random$Random$weighted = F2(
+	function (first, others) {
+		var normalize = function (_v0) {
+			var weight = _v0.a;
+			return $elm$core$Basics$abs(weight);
+		};
+		var total = normalize(first) + $elm$core$List$sum(
+			A2($elm$core$List$map, normalize, others));
+		return A2(
+			$elm$random$Random$map,
+			A2($elm$random$Random$getByWeight, first, others),
+			A2($elm$random$Random$float, 0, total));
+	});
+var $elm$random$Random$uniform = F2(
+	function (value, valueList) {
+		return A2(
+			$elm$random$Random$weighted,
+			$elm$random$Random$addOne(value),
+			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
+	});
+var $author$project$Color$gen = A2(
+	$elm$random$Random$uniform,
+	$author$project$Color$Red,
+	_List_fromArray(
+		[$author$project$Color$Green, $author$project$Color$Blue]));
+var $author$project$Color$keep = F2(
+	function (color, pixel) {
+		switch (color.$) {
+			case 'Red':
+				return {alpha: pixel.alpha, blue: 0, green: 0, red: pixel.red};
+			case 'Green':
+				return {alpha: pixel.alpha, blue: 0, green: pixel.green, red: 0};
+			default:
+				return {alpha: pixel.alpha, blue: pixel.blue, green: 0, red: 0};
+		}
+	});
+var $author$project$Glitches$colors = function (_v0) {
+	var img = _v0.a;
+	var s = _v0.b;
+	var _v1 = A2(
+		$elm$random$Random$step,
+		A2($elm$random$Random$list, 999, $author$project$Color$gen),
+		s);
+	var randomColors = _v1.a;
+	var s1 = _v1.b;
+	var rowFns = A2(
+		$elm$core$List$repeat,
+		999,
+		function (row) {
+			return A3($elm$core$List$map2, $author$project$Color$keep, randomColors, row);
+		});
+	return _Utils_Tuple2(
+		A2($author$project$Glitches$applyRowFnsToImage, rowFns, img),
+		s1);
+};
+var $author$project$Image$addPixel = F2(
+	function (p1, p2) {
+		return {alpha: p1.alpha + p2.alpha, blue: p1.blue + p2.blue, green: p1.green + p2.green, red: p1.red + p2.red};
+	});
+var $author$project$Image$map2 = F3(
+	function (fn, img1, img2) {
+		var go = F3(
+			function (f, list1, list2) {
+				var _v0 = _Utils_Tuple2(list1, list2);
+				if (_v0.a.b && _v0.b.b) {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var xs = _v1.b;
+					var _v2 = _v0.b;
+					var y = _v2.a;
+					var ys = _v2.b;
+					return A2(
+						$elm$core$List$cons,
+						A3($elm$core$List$map2, f, x, y),
+						A3(go, f, xs, ys));
+				} else {
+					return _List_Nil;
+				}
+			});
+		return _Utils_update(
+			img1,
+			{
+				data: A3(go, fn, img1.data, img2.data)
+			});
+	});
+var $author$project$Image$add = F2(
+	function (image1, image2) {
+		return A3($author$project$Image$map2, $author$project$Image$addPixel, image1, image2);
+	});
+var $author$project$Image$map = F2(
+	function (fn, img) {
+		return _Utils_update(
+			img,
+			{
+				data: A2(
+					$elm$core$List$map,
+					$elm$core$List$map(fn),
+					img.data)
+			});
+	});
+var $author$project$Glitches$rgb = function (img) {
+	var red = A2(
+		$author$project$Image$map,
+		$author$project$Color$keep($author$project$Color$Red),
+		img);
+	var green = A2(
+		$author$project$Image$map,
+		$author$project$Color$keep($author$project$Color$Green),
+		img);
+	var blue = A2(
+		$author$project$Image$map,
+		$author$project$Color$keep($author$project$Color$Blue),
+		img);
+	return _Utils_Tuple3(red, green, blue);
+};
+var $author$project$Glitches$applyRgb = function (_v0) {
+	var f1 = _v0.a;
+	var f2 = _v0.b;
+	var f3 = _v0.c;
+	return function (_v1) {
+		var img = _v1.a;
+		var s = _v1.b;
+		var _v2 = $author$project$Glitches$rgb(img);
+		var red = _v2.a;
+		var green = _v2.b;
+		var blue = _v2.c;
+		var _v3 = f1(
+			_Utils_Tuple2(red, s));
+		var r = _v3.a;
+		var s1 = _v3.b;
+		var _v4 = f2(
+			_Utils_Tuple2(green, s1));
+		var g = _v4.a;
+		var s2 = _v4.b;
+		var _v5 = f3(
+			_Utils_Tuple2(blue, s2));
+		var b = _v5.a;
+		var s3 = _v5.b;
+		return _Utils_Tuple2(
+			A2(
+				$author$project$Image$add,
+				A2($author$project$Image$add, r, g),
+				b),
+			s3);
+	};
+};
+var $author$project$Glitches$rgbize = function (glitch) {
+	return $author$project$Glitches$applyRgb(
+		_Utils_Tuple3(glitch, glitch, glitch));
+};
+var $author$project$Glitches$randomRepeatElems = F3(
+	function (gen, s, xs) {
+		if (!xs.b) {
+			return _Utils_Tuple2(_List_Nil, s);
+		} else {
+			var x = xs.a;
+			var rest = xs.b;
+			var _v1 = A2($elm$random$Random$step, gen, s);
+			var rand = _v1.a;
+			var s1 = _v1.b;
+			var _v2 = A3($author$project$Glitches$randomRepeatElems, gen, s1, rest);
+			var repeatedRest = _v2.a;
+			var s2 = _v2.b;
+			return _Utils_Tuple2(
+				_Utils_ap(
+					A2($elm$core$List$repeat, rand, x),
+					repeatedRest),
+				s2);
+		}
+	});
+var $author$project$Glitches$rotate = F2(
+	function (n, xs) {
+		return _Utils_ap(
+			A2($elm$core$List$drop, n, xs),
+			$elm$core$List$reverse(
+				A2($elm$core$List$take, n, xs)));
+	});
+var $author$project$Glitches$shift = function (_v0) {
+	var img = _v0.a;
+	var s = _v0.b;
+	var _v1 = A2(
+		$elm$random$Random$step,
+		A2(
+			$elm$random$Random$list,
+			img.height,
+			A2($elm$random$Random$int, -360, 360)),
+		s);
+	var randomDegrees = _v1.a;
+	var s1 = _v1.b;
+	var rowFns = A2($elm$core$List$map, $author$project$Glitches$rotate, randomDegrees);
+	var _v2 = A3(
+		$author$project$Glitches$randomRepeatElems,
+		A2($elm$random$Random$int, 1, 10),
+		s1,
+		rowFns);
+	var draggedRowFns = _v2.a;
+	var s2 = _v2.b;
+	return _Utils_Tuple2(
+		A2($author$project$Glitches$applyRowFnsToImage, draggedRowFns, img),
+		s2);
+};
+var $elm_community$list_extra$List$Extra$rowsLength = function (listOfLists) {
+	if (!listOfLists.b) {
+		return 0;
+	} else {
+		var x = listOfLists.a;
+		return $elm$core$List$length(x);
+	}
+};
+var $elm_community$list_extra$List$Extra$transpose = function (listOfLists) {
+	return A3(
+		$elm$core$List$foldr,
+		$elm$core$List$map2($elm$core$List$cons),
+		A2(
+			$elm$core$List$repeat,
+			$elm_community$list_extra$List$Extra$rowsLength(listOfLists),
+			_List_Nil),
+		listOfLists);
+};
+var $author$project$Glitches$transpose = function (img) {
+	return _Utils_update(
+		img,
+		{
+			data: $elm_community$list_extra$List$Extra$transpose(img.data),
+			height: img.width,
+			width: img.height
+		});
+};
+var $author$project$Glitches$verticalize = function (glitch) {
+	return function (_v0) {
+		var img = _v0.a;
+		var seed = _v0.b;
+		var _v1 = glitch(
+			_Utils_Tuple2(
+				$author$project$Glitches$transpose(img),
+				seed));
+		var output = _v1.a;
+		var seed1 = _v1.b;
+		return _Utils_Tuple2(
+			$author$project$Glitches$transpose(output),
+			seed1);
+	};
+};
+var $author$project$Glitches$filters = function () {
+	var horizontals = _List_fromArray(
+		[
+			A2(
+			$author$project$Glitches$Filter,
+			'asdf pixel sort',
+			$author$project$Glitches$asdfPixelSort(
+				function (p) {
+					return $author$project$Glitches$brightness(p) > 127;
+				})),
+			A2($author$project$Glitches$Filter, 'row shift', $author$project$Glitches$shift),
+			A2($author$project$Glitches$Filter, 'colors', $author$project$Glitches$colors),
+			A2($author$project$Glitches$Filter, 'bleed', $author$project$Glitches$bleed)
+		]);
+	var rgbs = A2(
+		$elm$core$List$map,
+		function (f) {
+			return _Utils_update(
+				f,
+				{
+					desc: 'rgb' + f.desc,
+					glitch: $author$project$Glitches$rgbize(f.glitch)
+				});
+		},
+		horizontals);
+	var verticals = A2(
+		$elm$core$List$map,
+		function (f) {
+			return _Utils_update(
+				f,
+				{
+					desc: 'v' + f.desc,
+					glitch: $author$project$Glitches$verticalize(f.glitch)
+				});
+		},
+		horizontals);
+	return _List_fromArray(
+		[
+			_Utils_Tuple2('horizontal functions', horizontals),
+			_Utils_Tuple2('vertical functions', verticals),
+			_Utils_Tuple2('rgb functions', rgbs)
+		]);
+}();
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $author$project$Main$RemoveFilter = function (a) {
+	return {$: 'RemoveFilter', a: a};
+};
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5704,6 +6326,60 @@ var $elm$html$Html$Events$onClick = function (msg) {
 };
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Main$viewFilter = F2(
+	function (n, filter) {
+		return A2(
+			$elm$html$Html$ul,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(filter.desc),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$RemoveFilter(n))
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('x')
+						]))
+				]));
+	});
+var $author$project$Main$AddFilter = function (a) {
+	return {$: 'AddFilter', a: a};
+};
+var $author$project$Main$viewAddFilterButton = function (filter) {
+	var buttonText = 'Add \'' + (filter.desc + '\'!');
+	return A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Main$AddFilter(filter))
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(buttonText)
+			]));
+};
+var $author$project$Main$viewFilters = function (_v0) {
+	var groupName = _v0.a;
+	var fs = _v0.b;
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(groupName),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				A2($elm$core$List$map, $author$project$Main$viewAddFilterButton, fs))
+			]));
+};
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5711,15 +6387,13 @@ var $author$project$Main$view = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Main$SendToJS)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('glitch!')
-					]))
+				$elm$html$Html$li,
+				_List_Nil,
+				A2($elm$core$List$indexedMap, $author$project$Main$viewFilter, model.filters)),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				A2($elm$core$List$map, $author$project$Main$viewFilters, $author$project$Glitches$filters))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
