@@ -42,8 +42,8 @@ window.onload = () => {
     canvas.addEventListener('mousemove', evt => {
         mousePos = getMousePos(canvas, evt)
     }, false)
-    mousePos.x = canvas.clientWidth / 1.5
-    mousePos.y = canvas.clientHeight / 1.5
+    mousePos.x = canvas.clientWidth / 2
+    mousePos.y = canvas.clientHeight / 2
     ctx.scale(scale, scale)
     window.requestAnimationFrame(loop)
 }
