@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
+p a {
+  display: inline;
+}
+
 html {
   background: rgb(243, 246, 243);
   padding: 0px 10px;
@@ -30,6 +34,7 @@ img {
   width: 240px;
   height: 280px;
   border-radius: 10px;
+  object-fit: scale-down;
 }
 
 .list {
