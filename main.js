@@ -11639,7 +11639,7 @@ var $author$project$Main$close = F2(
 	function (real, attempt) {
 		return A2($elm$core$String$contains, attempt, real) || A2($elm$core$String$contains, real, attempt);
 	});
-var $author$project$Main$cursorPos = _Utils_Tuple2(3, 4);
+var $author$project$Main$cursorPos = _Utils_Tuple2(3, 3);
 var $author$project$Main$green = A3($mdgriffith$elm_ui$Element$rgb255, 100, 170, 100);
 var $author$project$Main$grey = A3($mdgriffith$elm_ui$Element$rgb255, 130, 130, 130);
 var $author$project$Main$orange = A3($mdgriffith$elm_ui$Element$rgb255, 220, 180, 80);
