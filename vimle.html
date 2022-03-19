@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script src="./main.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="elm" />
+    </body>
+    <script>
+        const start = new Date("03/19/2022")
+        const now = new Date()
+        const daysDiff = Math.floor((now.getTime() - start.getTime()) / (1000 * 3600 * 24))
+        const app = Elm.Main.init({ node: document.getElementById('elm'), flags: daysDiff + 1 })
+        app.ports.copyToClipboard.subscribe(text => {
+            navigator.clipboard.write(
+                [new ClipboardItem({ "text/plain": new Blob([text], { type: "text/plain" }) })]
+            )
+        })
+    </script>
+<html>
+
