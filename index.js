@@ -69,6 +69,8 @@ export default {
     load: async function(elmLoaded) {
         const app = await elmLoaded;
         Array.from(document.querySelectorAll('*'))
+            .forEach(dom => console.log(dom.href))
+            .filter(dom => dom.href?.endsWith(".html"))
             .forEach(dom =>
                 dom.getEventListeners().click?.forEach(clk =>
                     dom.removeEventListener("click", clk.listener)
