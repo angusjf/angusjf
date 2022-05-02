@@ -1,3 +1,10 @@
+/*
+ * MAKE ART
+ *
+ * NOT SOFTWARE
+ *
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@500&family=Work+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 html {
@@ -10,12 +17,29 @@ html {
     color: var(--black);
 }
 
+::selection {
+  background-color: var(--black);
+  color: var(--white);
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
         --white: black;
-        --black: red;
+        --black: white;
     }
+}
+
+a {
+    transition: border 0.1s;
+}
+
+a:hover {
+    border: 2px solid var(--black);
+    border-radius: 3px;
+    margin: 1px;
+    color: var(--white);
+    background-color: var(--black);
 }
 
 body {
@@ -60,6 +84,11 @@ pre.elmsh * {
 
 /* less objective truths */
 
+.homepage {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .wrapper {
     padding: 2rem 6rem;
     margin: 0 auto;
@@ -69,54 +98,32 @@ pre.elmsh * {
     margin: 0rem auto;
 }
 
-/* .homepage { */
-/*     justify-content: center; */
-/*     flex-wrap: wrap; */
-/*     display: flex; */
-/* } */
-
 .card {
-    max-width: 20rem;
-    margin: 1rem;
+    width: 17rem;
     padding: 1rem;
     height: 100%;
-    box-sizing: border-box;
 }
 
-:root {
-    --spx: 2px;
-    --sp_x: 0;
-    --sp_y: 0;
-}
-
-.card, .blog {
-    border: var(--spx) solid var(--black);
-    box-shadow:
-        calc(1  * var(--spx) * var(--sp_x)) calc(1  * var(--spx) * var(--sp_y)) 0 var(--white),
-        calc(2  * var(--spx) * var(--sp_x)) calc(2  * var(--spx) * var(--sp_y)) 0 var(--black),
-        calc(3  * var(--spx) * var(--sp_x)) calc(3  * var(--spx) * var(--sp_y)) 0 var(--white),
-        calc(4  * var(--spx) * var(--sp_x)) calc(4  * var(--spx) * var(--sp_y)) 0 var(--black),
-        calc(-1 * var(--spx) * var(--sp_x)) calc(-1 * var(--spx) * var(--sp_y)) 0 var(--white),
-        calc(-2 * var(--spx) * var(--sp_x)) calc(-2 * var(--spx) * var(--sp_y)) 0 var(--black),
-        calc(-3 * var(--spx) * var(--sp_x)) calc(-3 * var(--spx) * var(--sp_y)) 0 var(--white),
-        calc(-4 * var(--spx) * var(--sp_x)) calc(-4 * var(--spx) * var(--sp_y)) 0 var(--black);
-    /* margin: calc(6 * var(--spx) * (var(--sp_y) + 1)) calc(6 * var(--spx)) calc(6 * var(--spx)) 0; */
-    margin: calc(6 * var(--spx)) calc(6 * var(--spx)) calc(6 * var(--spx)) 0;
-    transition: margin 0.1s, box-shadow 0.1s;
-}
-
-.card:hover {
-    --sp_x: 1;
-    --sp_y: 1;
+.card img {
+    height: 12rem;
+    width: 12rem;
 }
 
 .card h2 {
     font-style: italic;
     text-transform: uppercase;
     font-weight: 900;
-    color: var(--white);
-    background-color: var(--black);
     display: inline;
+}
+
+.card * {
+    transition: margin 0.1s, border 0.1s;
+}
+
+.card *:hover {
+    border: 2px solid var(--black);
+    border-radius: 3px;
+    margin: 1px;
 }
 
 .card img {
@@ -127,18 +134,3 @@ pre.elmsh * {
     max-width: 40rem;
     padding: 2rem;
 }
-
-.homepage > div {
-    width: 100%;
-    display: inline-block;
-} 
-
-.homepage {
-  columns: 6 auto;
-}
-
-@media (max-width: 1400px) { .homepage { columns: 5 auto; } }
-@media (max-width: 1000px) { .homepage { columns: 4 auto; } }
-@media (max-width:  900px) { .homepage { columns: 3 auto; } }
-@media (max-width:  700px) { .homepage { columns: 2 auto; } }
-@media (max-width:  500px) { .homepage { columns: 1 auto; } }
