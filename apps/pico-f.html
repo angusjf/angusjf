@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <script src="./pico-f.js"></script>
+    <link rel="stylesheet" href="./pico-f.css" />
+</head>
+
+<body>
+    <div id="main" />
+    <script>
+        const app = Elm.Main.init({node: document.getElementById("main"), flags: null});
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        const mainGainNode = audioContext.createGain();
+        mainGainNode.connect(audioContext.destination);
+        mainGainNode.gain.value = 0.1;
+
+        app.ports.playSound.subscribe(({frequency, duration, wave}) => {
+            const osc = audioContext.createOscillator();
+            osc.connect(mainGainNode);
+            osc.type = wave;
+            osc.frequency.value = frequency;
+            osc.start();
+            setTimeout(() => osc.stop(), duration);
+        });
+    </script>
+</body>
+
+</html>

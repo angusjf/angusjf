@@ -1,0 +1,119 @@
+:root {
+    font-family: system-ui;
+    background: #e2eafa;
+    --gap: 16px;
+}
+
+body { 
+    margin: 0;
+    margin: var(--gap);
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2fr;
+    grid-template-areas: 
+        "init view play"
+        "flow flow flow";
+    column-gap: var(--gap);
+    row-gap: var(--gap);
+}
+
+.app > div:last-child {
+    grid-area: flow;
+}
+
+
+.event-graph svg {
+    width: 100%;
+    height: 100%;
+}
+
+.event-graph {
+    position: relative;
+    overflow: hidden;
+}
+
+.app > * {
+    background-color: white;
+    border-radius: 6px;
+    border: none;
+}
+
+textarea {
+    resize: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+div.editor, div.variables {
+    padding: 10px;
+}
+
+.view-node > span > span:first-child {
+    margin-right: 6px;
+}
+
+.view-node span {
+    align-self: center;
+}
+.view-node > span {
+    margin-left: 6px;
+    display: flex;
+    border-radius: 4px;
+    background: rgba(255, 100, 100, 0.1);
+    border: 1px dashed lightpink;
+    padding: 3px;
+}
+
+.view-node {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    padding: 3px;
+}
+
+div > table {
+    width: 100%;
+    border-radius: 3px;
+}
+
+table, th, td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgrey;
+    margin-bottom: 10px;
+}
+
+th, td {
+    padding: 8px 16px;
+    width: 33%;
+    height: fit-content;
+}
+
+.event-graph input {
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: lightblue;
+    font-family: monospace;
+}
+
+.event-graph input.error {
+    border-color: red;
+}
+
+.event-graph input {
+    margin: 2px 0;
+}
+
+.flow-output {
+    background: white;
+    border: 3px solid lightblue;
+    border-radius: 5px;
+    padding: 2px;
+}
+

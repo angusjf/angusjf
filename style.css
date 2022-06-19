@@ -124,7 +124,16 @@ pre.elmsh * {
 .card *:hover {
   border: 2px solid var(--black);
   border-radius: 3px;
-  margin: 1px;
+  /* margin: 1px; */
+  transform: scale(1.05);
+}
+
+.card h2 {
+    display: block;
+}
+
+.card p:hover, .card h2:hover, .card div:hover {
+  background-color: white;
 }
 
 .card img {
