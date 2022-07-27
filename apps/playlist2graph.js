@@ -6073,40 +6073,6 @@ var $elm$url$Url$Parser$query = function (_v0) {
 			]);
 	};
 };
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
-var $elm$url$Url$Parser$slash = F2(
-	function (_v0, _v1) {
-		var parseBefore = _v0;
-		var parseAfter = _v1;
-		return function (state) {
-			return A2(
-				$elm$core$List$concatMap,
-				parseAfter,
-				parseBefore(state));
-		};
-	});
-var $elm$url$Url$Parser$questionMark = F2(
-	function (parser, queryParser) {
-		return A2(
-			$elm$url$Url$Parser$slash,
-			parser,
-			$elm$url$Url$Parser$query(queryParser));
-	});
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (!maybe.$) {
@@ -6139,16 +6105,10 @@ var $elm$url$Url$Parser$Query$string = function (key) {
 			}
 		});
 };
-var $elm$url$Url$Parser$top = function (state) {
-	return _List_fromArray(
-		[state]);
-};
 var $author$project$Main$tokens = function (url) {
 	var _v0 = A2(
 		$elm$url$Url$Parser$parse,
-		A2(
-			$elm$url$Url$Parser$questionMark,
-			$elm$url$Url$Parser$top,
+		$elm$url$Url$Parser$query(
 			A3(
 				$elm$url$Url$Parser$Query$map2,
 				$elm$core$Tuple$pair,
@@ -6831,6 +6791,22 @@ var $author$project$Spotify$playlistDecoder = A2(
 		$elm$json$Json$Decode$field,
 		'items',
 		$elm$json$Json$Decode$list($author$project$Spotify$itemDecoder)));
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
 var $author$project$Spotify$playlistsArtists = function (playlist) {
 	return A2(
 		$elm$core$List$concatMap,
@@ -8851,6 +8827,17 @@ var $elm$url$Url$Parser$s = function (str) {
 		}
 	};
 };
+var $elm$url$Url$Parser$slash = F2(
+	function (_v0, _v1) {
+		var parseBefore = _v0;
+		var parseAfter = _v1;
+		return function (state) {
+			return A2(
+				$elm$core$List$concatMap,
+				parseAfter,
+				parseBefore(state));
+		};
+	});
 var $elm$url$Url$Parser$custom = F2(
 	function (tipe, stringToSomething) {
 		return function (_v0) {
