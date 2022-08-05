@@ -11,6 +11,7 @@ html {
   font-family: system-ui, sans-serif;
   --white: white;
   --black: black;
+  --codebg: #f7faf7;
   background-color: var(--white);
   color: var(--black);
 }
@@ -24,6 +25,7 @@ html {
   :root {
     --white: black;
     --black: white;
+    --codebg: #302040;
   }
 }
 
@@ -72,6 +74,7 @@ pre.elmsh {
 
 code, pre {
   font-family: "Fira Mono", monospace;
+  background-color: var(--codebg);
 }
 
 

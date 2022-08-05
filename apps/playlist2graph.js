@@ -6073,65 +6073,6 @@ var $elm$url$Url$Parser$query = function (_v0) {
 			]);
 	};
 };
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
-var $elm$url$Url$Parser$slash = F2(
-	function (_v0, _v1) {
-		var parseBefore = _v0;
-		var parseAfter = _v1;
-		return function (state) {
-			return A2(
-				$elm$core$List$concatMap,
-				parseAfter,
-				parseBefore(state));
-		};
-	});
-var $elm$url$Url$Parser$questionMark = F2(
-	function (parser, queryParser) {
-		return A2(
-			$elm$url$Url$Parser$slash,
-			parser,
-			$elm$url$Url$Parser$query(queryParser));
-	});
-var $elm$url$Url$Parser$s = function (str) {
-	return function (_v0) {
-		var visited = _v0.a$;
-		var unvisited = _v0.aH;
-		var params = _v0.aU;
-		var frag = _v0.aQ;
-		var value = _v0.ao;
-		if (!unvisited.b) {
-			return _List_Nil;
-		} else {
-			var next = unvisited.a;
-			var rest = unvisited.b;
-			return _Utils_eq(next, str) ? _List_fromArray(
-				[
-					A5(
-					$elm$url$Url$Parser$State,
-					A2($elm$core$List$cons, next, visited),
-					rest,
-					params,
-					frag,
-					value)
-				]) : _List_Nil;
-		}
-	};
-};
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (!maybe.$) {
@@ -6167,17 +6108,12 @@ var $elm$url$Url$Parser$Query$string = function (key) {
 var $author$project$Main$tokens = function (url) {
 	var _v0 = A2(
 		$elm$url$Url$Parser$parse,
-		A2(
-			$elm$url$Url$Parser$slash,
-			$elm$url$Url$Parser$s('apps'),
-			A2(
-				$elm$url$Url$Parser$questionMark,
-				$elm$url$Url$Parser$s('playlist2graph.html'),
-				A3(
-					$elm$url$Url$Parser$Query$map2,
-					$elm$core$Tuple$pair,
-					$elm$url$Url$Parser$Query$string('access_token'),
-					$elm$url$Url$Parser$Query$string('refresh_token')))),
+		$elm$url$Url$Parser$query(
+			A3(
+				$elm$url$Url$Parser$Query$map2,
+				$elm$core$Tuple$pair,
+				$elm$url$Url$Parser$Query$string('access_token'),
+				$elm$url$Url$Parser$Query$string('access_token'))),
 		url);
 	if (((!_v0.$) && (!_v0.a.a.$)) && (!_v0.a.b.$)) {
 		var _v1 = _v0.a;
@@ -6855,6 +6791,22 @@ var $author$project$Spotify$playlistDecoder = A2(
 		$elm$json$Json$Decode$field,
 		'items',
 		$elm$json$Json$Decode$list($author$project$Spotify$itemDecoder)));
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
 var $author$project$Spotify$playlistsArtists = function (playlist) {
 	return A2(
 		$elm$core$List$concatMap,
@@ -8849,6 +8801,42 @@ var $elm$core$List$member = F2(
 				return _Utils_eq(a, x);
 			},
 			xs);
+	});
+var $elm$url$Url$Parser$s = function (str) {
+	return function (_v0) {
+		var visited = _v0.a$;
+		var unvisited = _v0.aH;
+		var params = _v0.aU;
+		var frag = _v0.aQ;
+		var value = _v0.ao;
+		if (!unvisited.b) {
+			return _List_Nil;
+		} else {
+			var next = unvisited.a;
+			var rest = unvisited.b;
+			return _Utils_eq(next, str) ? _List_fromArray(
+				[
+					A5(
+					$elm$url$Url$Parser$State,
+					A2($elm$core$List$cons, next, visited),
+					rest,
+					params,
+					frag,
+					value)
+				]) : _List_Nil;
+		}
+	};
+};
+var $elm$url$Url$Parser$slash = F2(
+	function (_v0, _v1) {
+		var parseBefore = _v0;
+		var parseAfter = _v1;
+		return function (state) {
+			return A2(
+				$elm$core$List$concatMap,
+				parseAfter,
+				parseBefore(state));
+		};
 	});
 var $elm$url$Url$Parser$custom = F2(
 	function (tipe, stringToSomething) {
