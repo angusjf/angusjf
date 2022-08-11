@@ -2,6 +2,7 @@
     "name": "angusjf.github.io",
     "version": "1.0.0",
     "devDependencies": {
+        "elm": "^0.19.1-5",
         "elm-optimize-level-2": "^0.3.5",
         "elm-pages": "^2.1.11",
         "elm-review": "^2.7.3"
