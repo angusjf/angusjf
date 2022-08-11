@@ -1,0 +1,14 @@
+{
+    "title": "PICO-F",
+    "summary": "Experimenting with interactive creative coding & creating a friendly interface for the Elm Architecture.",
+    "urls": [
+        {
+            "href": "/apps/pico-f.html",
+            "label": "/pico-f",
+            "icon": "fas fa-code"
+        }
+    ],
+    "img_url": "images/pico-f.webp",
+    "img_alt": "PICO-F Event Graph",
+    "date": "2022-06-19"
+}

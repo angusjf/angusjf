@@ -1,0 +1,14 @@
+{
+    "title": "playlist2graph",
+    "summary": "See your Spotify artists as a connected network (currently awaiting approval)",
+    "urls": [
+        {
+            "href": "https://www.github.com/angusjf/playlist2graph",
+            "label": "/playlist2graph",
+            "icon": "fas fa-music"
+        }
+    ],
+    "img_url": "images/playlist2graph.webp",
+    "img_alt": "Playlist To Graph",
+    "date": "2022-07-26"
+}
