@@ -1,5 +1,11 @@
 name: generate & deploy
+
 on: [push]
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
