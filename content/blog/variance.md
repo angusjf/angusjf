@@ -9,7 +9,7 @@ tags: ["rust", "variance", "java", "javascript", "typescript"]
 hidden: false
 ---
 
-![Pyright](images/pyright.webp)
+![Pyright](/images/pyright.webp)
 
 # Fixing Dan and Aydın's Pyright Error
 
