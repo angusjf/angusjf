@@ -151,6 +151,7 @@ pre.elmsh * {
   max-width: 48rem;
   padding: 1rem;
   margin: 0rem auto 4rem auto;
+  overflow: hidden;
 }
 
 .blog img {

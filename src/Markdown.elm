@@ -8,7 +8,7 @@ import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
 import MimeType exposing (MimeImage(..))
-import SyntaxHighlight exposing (elm, gitHub, javascript, monokai, toBlockHtml, useTheme)
+import SyntaxHighlight exposing (css, elm, gitHub, javascript, json, monokai, python, sql, toBlockHtml, useTheme, xml)
 
 
 customRenderer : Markdown.Renderer.Renderer (Html msg)
@@ -112,6 +112,12 @@ customRenderer =
             let
                 lang =
                     case Maybe.map String.words language of
+                        Just ("html" :: _) ->
+                            xml
+
+                        Just ("xml" :: _) ->
+                            xml
+
                         Just ("elm" :: _) ->
                             elm
 
