@@ -234,6 +234,10 @@ me =
                   , icon = "fab fa-linkedin"
                   , label = "linkedin/angus-findlay"
                   }
+                , { url = "https://webdev.london/"
+                  , icon = "fas fa-comment"
+                  , label = "webdev.london"
+                  }
                 ]
             ]
         }
