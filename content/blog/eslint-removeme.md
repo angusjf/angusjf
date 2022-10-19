@@ -29,7 +29,7 @@ Thankfully you've set up a feature flag service:
 const showFcaNumber = useFlag('show-fca-number');
 
 if (showFcaNumber) {
-    return <p>We are reuglated by the Financial Conduct Authority [FRN: 580101]</p>
+    return <p>We are regulated by the Financial Conduct Authority [FRN: 580101]</p>
 } else {
     return <p>We are not regulated yet...</p>
 }
