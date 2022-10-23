@@ -1,6 +1,9 @@
 name: generate & deploy
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
 
 permissions:
   contents: read
