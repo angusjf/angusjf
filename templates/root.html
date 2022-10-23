@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/style.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{title}</title>
+    <title>{{title}}</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#ffffff" />
@@ -13,22 +13,19 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <link rel="canonical" href="https://angusjf.com/14kb" />
-    <meta
-      name="description"
-      content="A response to 'Why your website should be under 14kB in size', considering http streaming"
-    />
-    <meta property="og:image" content="https://angusjf.com/images/14kb.webp" />
+    <link rel="canonical" href="{{url}}" />
+    <meta name="description" content="{{description}}" />
+    <meta property="og:image" content="{{image}}" />
     <meta
       property="og:image:secure_url"
-      content="https://angusjf.com/images/14kb.webp"
+      content="{{image}}"
     />
-    <meta property="og:image:alt" content="TCP slow start graph" />
-    <meta property="og:title" content="The 14kB Website Myth" />
-    <meta property="og:url" content="https://angusjf.com/14kb" />
+    <meta property="og:image:alt" content="{{img_alt}}" />
+    <meta property="og:title" content="{{title}}" />
+    <meta property="og:url" content="{{url}}" />
     <meta
       property="og:description"
-      content="A response to 'Why your website should be under 14kB in size', considering http streaming"
+      content="{{description}}"
     />
     <meta property="og:site_name" content="angusjf" />
     <meta property="twitter:card" content="summary" />
@@ -49,14 +46,13 @@
     <meta property="article:tag" content="performance" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" type="image/png" href="https://angusjf.com/favicon.png" />
-    <link rel="icon" sizes="16x16" type="image/png" href=/favicon-16x16.png" />
-    <link rel="icon" sizes="32x32" type="image/png" href=/favicon-32x32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href=/apple-touch-icon.png" />
+    <link rel="icon" sizes="16x16" type="image/png" href="/favicon-16x16.png" />
+    <link rel="icon" sizes="32x32" type="image/png" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
-    <div data-url="" display="none"></div>
-    <main><article>{content}</article></main>
+    {{body}}
   </body>
 </html>

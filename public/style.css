@@ -1,10 +1,3 @@
-/*
- * MAKE ART
- *
- * NOT SOFTWARE
- *
- */
-
 html {
   background-color: white;
   font-size: 16px;
@@ -72,7 +65,8 @@ pre.elmsh {
   overflow: auto;
 }
 
-code, pre {
+code,
+pre {
   font-family: "Fira Mono", monospace;
   background-color: var(--codebg);
 }
@@ -134,10 +128,12 @@ pre.elmsh * {
 }
 
 .card h2 {
-    display: block;
+  display: block;
 }
 
-.card p:hover_, .card h2:hover_, .card div:hover_ {
+.card p:hover_,
+.card h2:hover_,
+.card div:hover_ {
   background-color: white;
 }
 
