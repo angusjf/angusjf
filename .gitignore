@@ -3,3 +3,8 @@ node_modules
 elm-stuff
 .elm-pages
 dist
+
+
+# Added by cargo
+
+/target
