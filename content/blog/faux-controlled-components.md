@@ -9,7 +9,7 @@ tags: ["react"]
 hidden: false
 ---
 
-![Node Package Manager](images/npm.jpg)
+![Node Package Manager](/images/npm.jpg)
 
 # Faux-Controlled Components
 
