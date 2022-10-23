@@ -3,7 +3,7 @@
     "summary": "Wordle for vim fans.",
     "urls": [
         {
-            "href": "/apps/vimle.html",
+            "href": "/apps/vimle",
             "label": "/vimle",
             "icon": "fas fa-code"
         },

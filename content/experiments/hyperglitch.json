@@ -3,7 +3,7 @@
     "summary": "Some small programs for intentional aesthetic image-glitching, written in Haskell & Elm.",
     "urls": [
         {
-            "href": "/apps/glitch.html",
+            "href": "/apps/glitch",
             "label": "/glitch",
             "icon": "fas fa-bolt"
         },

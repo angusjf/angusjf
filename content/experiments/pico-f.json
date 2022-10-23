@@ -3,7 +3,7 @@
     "summary": "Experimenting with interactive creative coding & creating a friendly interface for the Elm Architecture.",
     "urls": [
         {
-            "href": "/apps/pico-f.html",
+            "href": "/apps/pico-f",
             "label": "/pico-f",
             "icon": "fas fa-code"
         }

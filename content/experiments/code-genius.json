@@ -3,7 +3,7 @@
     "summary": "A Rap Genius inspired website for people learning to code.",
     "urls": [
         {
-            "href": "/apps/code-genius.html",
+            "href": "/apps/code-genius",
             "label": "/code-genius",
             "icon": "fas fa-code"
         }

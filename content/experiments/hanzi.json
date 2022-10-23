@@ -3,7 +3,7 @@
     "summary": "A tiny quiz web app for Hanzi/Kanji, written in Elm.",
     "urls": [
         {
-            "href": "/apps/hanzi.html",
+            "href": "/apps/hanzi",
             "label": "/hanzi",
             "icon": "fas fa-trophy"
         }
