@@ -3,7 +3,7 @@ name: generate & deploy
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 
 permissions:
   contents: read
