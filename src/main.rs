@@ -40,6 +40,7 @@ struct BlogMetadata {
     tags: Vec<String>,
     hidden: bool,
     seo_description: String,
+    urls: Vec<Link>,
 }
 
 struct Card {
@@ -48,7 +49,8 @@ struct Card {
     title: String,
     content: String,
     links_to: Option<String>,
-    date: NaiveDate,
+    date: Option<NaiveDate>,
+    links: Vec<Link>,
 }
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
@@ -70,24 +72,64 @@ fn blogpost(metadata: &BlogMetadata, content: String) -> String {
     let body = BLOG_TEMPLATE.replace("{{content}}", content.as_str());
     ROOT_TEMPLATE
         .replace("{{body}}", &body)
-        .replace("{{title}}", "X")
+        .replace("{{title}}", &metadata.title)
 }
 
 fn index(cards: Vec<Card>) -> String {
     let mut content = String::new();
 
     cards.iter().for_each(|card| {
+        let mut html_output = String::new();
+        let parser = pulldown_cmark::Parser::new(&card.content);
+        pulldown_cmark::html::push_html(&mut html_output, parser);
         content.push_str(
             &CARD_TEMPLATE
-                .replace("{{title}}", &card.title)
+                .replace(
+                    "{{title}}",
+                    &match &card.links_to {
+                        Some(href) => {
+                            let href = &href.clone();
+                            let title = &card.title.clone();
+                            format!("<a href=\"{}\">{}</a>", &href, title)
+                        }
+                        None => card.title.clone(),
+                    },
+                )
                 .replace("{{img_alt}}", &card.img_alt)
                 .replace("{{img_src}}", &card.img_url)
-                .replace("{{summary}}", &card.content)
+                .replace("{{summary}}", &html_output)
+                .replace("{{links}}", {
+                    let links = &card
+                        .links
+                        .iter()
+                        .map(|link| {
+                            format!(
+                                "<li><i class=\"{}\"></i><a href=\"{}\">{}</a></li>",
+                                link.icon, link.url, link.label
+                            )
+                        })
+                        .collect::<String>();
+
+                    &if links.len() > 0 {
+                        format!("<ul>{}</ul>", &links).to_string()
+                    } else {
+                        "".to_string()
+                    }
+                })
                 .replace(
                     "{{href}}",
-                    &card.links_to.as_ref().unwrap_or(&String::from("")),
+                    &card.links_to.as_ref().unwrap_or(&"".to_string()),
                 )
-                .replace("{{date}}", &card.date.to_string()),
+                .replace(
+                    "{{date}}",
+                    &match &card.date {
+                        Some(date) => {
+                            let date = date.format("%-d %b '%y").to_string();
+                            format!("<date>{}</date>", date)
+                        }
+                        None => "".to_string(),
+                    },
+                ),
         );
     });
 
@@ -99,9 +141,13 @@ fn index(cards: Vec<Card>) -> String {
 }
 
 fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
-    let filename = path.iter().last().unwrap().to_string_lossy();
-
-    String::from(filename.strip_suffix(ext).unwrap())
+    path.iter()
+        .last()
+        .unwrap()
+        .to_string_lossy()
+        .strip_suffix(ext)
+        .unwrap()
+        .to_string()
 }
 
 fn yaml_to_blog(yaml: &Yaml) -> BlogMetadata {
@@ -119,6 +165,7 @@ fn yaml_to_blog(yaml: &Yaml) -> BlogMetadata {
         hidden: yaml["hidden"].as_bool().unwrap(),
         seo_description: yaml["seo_description"].as_str().unwrap().to_string(),
         date: yaml["date"].as_str().unwrap().parse().unwrap(),
+        urls: vec![],
     }
 }
 
@@ -144,17 +191,15 @@ fn yaml_to_experiment(yaml: String) -> ExperimentMetadata {
     }
 }
 
-fn parse_md_and_frontmatter(str: String) -> (Yaml, String) {
+fn parse_md(str: String) -> (Yaml, String) {
     let frontmatter_and_md: Vec<_> = str.trim_start_matches("---").split("---").collect();
 
     let frontmatter = frontmatter_and_md[0];
     let md = frontmatter_and_md[1];
 
-    let content = md_to_html(&md);
-
     let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
 
-    (frontmatter[0], md.to_string())
+    (frontmatter[0].clone(), md_to_html(&md))
 }
 
 fn main() -> std::io::Result<()> {
@@ -181,17 +226,17 @@ fn main() -> std::io::Result<()> {
             title: experiment.title.clone(),
             content: experiment.summary.clone(),
             links_to: None,
-            date: experiment.date,
+            date: Some(experiment.date),
             img_alt: experiment.img_alt.clone(),
+            links: vec![],
         })
         .chain(
             files_in_dir("./content/blog")
                 .iter()
                 .map(|filename| {
-                    let (frontmatter, md) =
-                        parse_md_and_frontmatter(read_to_string(filename).unwrap());
+                    let (frontmatter, md) = parse_md(read_to_string(filename).unwrap());
 
-                    let metadata = yaml_to_blog(&frontmatter[0]);
+                    let metadata = yaml_to_blog(&frontmatter);
 
                     let html = blogpost(&metadata, md);
 
@@ -203,15 +248,16 @@ fn main() -> std::io::Result<()> {
                     let dir = format!("./dist/{}", name);
                     let _ = std::fs::create_dir(dir.clone());
                     let _ = std::fs::write(format!("{}/index.html", dir), &html_output);
-                    (dir, metadata, html_output)
+                    (name, metadata, html_output)
                 })
                 .map(|(url, blogpost, _)| Card {
                     img_url: blogpost.img_url.clone(),
                     title: blogpost.title.clone(),
                     content: blogpost.summary.clone(),
                     links_to: Some(url.to_string()),
-                    date: blogpost.date,
+                    date: Some(blogpost.date),
                     img_alt: blogpost.img_alt.clone(),
+                    links: vec![],
                 }),
         )
         .collect();
@@ -221,12 +267,29 @@ fn main() -> std::io::Result<()> {
     cards.insert(
         0,
         Card {
-            img_url: String::from("/images/portrait.jpg"),
-            img_alt: String::from("Picture of me"),
-            title: String::from("Angus Findlay"),
-            content: String::from("Fullstack Engineer based in London!"),
+            img_url: "/images/portrait.jpg".to_string(),
+            img_alt: "Picture of me".to_string(),
+            title: "Angus Findlay".to_string(),
+            content: "Fullstack Engineer based in London!".to_string(),
             links_to: None,
-            date: NaiveDate::MAX,
+            date: None,
+            links: vec![
+                Link {
+                    url: "https://github.com/angusjf/".to_string(),
+                    icon: "fab fa-github".to_string(),
+                    label: "github/angusjf".to_string(),
+                },
+                Link {
+                    url: "https://www.linkedin.com/in/angus-findlay/".to_string(),
+                    icon: "fab fa-linkedin".to_string(),
+                    label: "linkedin/angus-findlay".to_string(),
+                },
+                Link {
+                    url: "https://webdev.london/".to_string(),
+                    icon: "fas fa-comment".to_string(),
+                    label: "webdev.london".to_string(),
+                },
+            ],
         },
     );
 
