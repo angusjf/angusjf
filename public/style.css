@@ -39,7 +39,8 @@ a:hover {
 }
 
 body {
-  margin: 0;
+  padding: 2rem 0rem;
+  margin: 0 auto;
 }
 
 a {
@@ -89,11 +90,6 @@ pre.elmsh * {
   column-gap: 1rem;
   row-gap: 1rem;
   justify-content: center;
-}
-
-.wrapper {
-  padding: 2rem 0rem;
-  margin: 0 auto;
 }
 
 .card {
