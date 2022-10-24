@@ -40,7 +40,6 @@ struct BlogMetadata {
     tags: Vec<String>,
     hidden: bool,
     seo_description: String,
-    urls: Vec<Link>,
 }
 
 struct Card {
@@ -88,9 +87,7 @@ fn index(cards: Vec<Card>) -> String {
                     "{{title}}",
                     &match &card.links_to {
                         Some(href) => {
-                            let href = &href.clone();
-                            let title = &card.title.clone();
-                            format!("<a href=\"{}\">{}</a>", &href, title)
+                            format!("<a href=\"{}\">{}</a>", &href, &card.title.clone())
                         }
                         None => card.title.clone(),
                     },
@@ -109,7 +106,6 @@ fn index(cards: Vec<Card>) -> String {
                             )
                         })
                         .collect::<String>();
-
                     &if links.len() > 0 {
                         format!("<ul>{}</ul>", &links).to_string()
                     } else {
@@ -165,7 +161,6 @@ fn yaml_to_blog(yaml: &Yaml) -> BlogMetadata {
         hidden: yaml["hidden"].as_bool().unwrap(),
         seo_description: yaml["seo_description"].as_str().unwrap().to_string(),
         date: yaml["date"].as_str().unwrap().parse().unwrap(),
-        urls: vec![],
     }
 }
 
@@ -222,13 +217,13 @@ fn main() -> std::io::Result<()> {
             yaml_to_experiment(json)
         })
         .map(|experiment| Card {
-            img_url: experiment.img_url.clone(),
-            title: experiment.title.clone(),
-            content: experiment.summary.clone(),
+            img_url: experiment.img_url,
+            title: experiment.title,
+            content: experiment.summary,
             links_to: None,
             date: Some(experiment.date),
-            img_alt: experiment.img_alt.clone(),
-            links: vec![],
+            img_alt: experiment.img_alt,
+            links: experiment.urls,
         })
         .chain(
             files_in_dir("./content/blog")
@@ -251,12 +246,12 @@ fn main() -> std::io::Result<()> {
                     (name, metadata, html_output)
                 })
                 .map(|(url, blogpost, _)| Card {
-                    img_url: blogpost.img_url.clone(),
-                    title: blogpost.title.clone(),
-                    content: blogpost.summary.clone(),
+                    img_url: blogpost.img_url,
+                    title: blogpost.title,
+                    content: blogpost.summary,
                     links_to: Some(url.to_string()),
                     date: Some(blogpost.date),
-                    img_alt: blogpost.img_alt.clone(),
+                    img_alt: blogpost.img_alt,
                     links: vec![],
                 }),
         )

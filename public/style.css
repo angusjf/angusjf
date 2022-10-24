@@ -1,5 +1,4 @@
 html {
-  background-color: white;
   font-size: 16px;
   font-family: system-ui, sans-serif;
   --white: white;
@@ -112,6 +111,12 @@ pre.elmsh * {
   display: inline;
 }
 
+.card ul {
+  margin-block: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
 .card * {
   transition: margin 0.1s, border 0.1s;
 }
@@ -137,7 +142,7 @@ pre.elmsh * {
   margin-bottom: 1em;
 }
 
-/* BLOG */
+/* blog */
 
 .blog {
   max-width: 48rem;
