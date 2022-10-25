@@ -1,0 +1,28 @@
+{
+  "dir": "auto",
+  "lang": "en-us",
+  "icons": [
+    {
+      "src": "https://angusjf.com/favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32",
+      "purpose": "any"
+    },
+    {
+      "src": "https://angusjf.com/favicon-16x16.png",
+      "type": "image/png",
+      "sizes": "16x16",
+      "purpose": "any"
+    }
+  ],
+  "orientation": "portrait",
+  "display": "standalone",
+  "categories": [],
+  "description": "Angus Findlay's Personal Blog",
+  "name": "Angus Findlay",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "start_url": "/",
+  "short_name": "angusjf",
+  "scope": "/"
+}

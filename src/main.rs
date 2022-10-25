@@ -13,7 +13,6 @@ const BLOG_TEMPLATE: &str = include_str!("../templates/blog.html");
 const INDEX_TEMPLATE: &str = include_str!("../templates/index.html");
 const CARD_TEMPLATE: &str = include_str!("../templates/card.html");
 
-#[derive(Debug)]
 struct ExperimentMetadata {
     summary: String,
     title: String,
@@ -23,14 +22,12 @@ struct ExperimentMetadata {
     urls: Vec<Link>,
 }
 
-#[derive(Debug)]
 struct Link {
     url: String,
     label: String,
     icon: String,
 }
 
-#[derive(Debug)]
 struct BlogMetadata {
     title: String,
     summary: String,
@@ -40,6 +37,7 @@ struct BlogMetadata {
     tags: Vec<String>,
     hidden: bool,
     seo_description: String,
+    canonical_url: String,
 }
 
 struct Card {
@@ -51,6 +49,9 @@ struct Card {
     date: Option<NaiveDate>,
     links: Vec<Link>,
 }
+
+const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
+const CANONICAL_URL: &str = "https://angusjf.com/";
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
     fs::read_dir(dir)
@@ -72,15 +73,15 @@ fn blogpost(metadata: &BlogMetadata, content: String) -> String {
     ROOT_TEMPLATE
         .replace("{{body}}", &body)
         .replace("{{title}}", &metadata.title)
+        .replace("{{extra_meta_tags}}", &blog_meta_tags(metadata))
+        .replace("{{description}}", &metadata.seo_description)
+        .replace("{{canonical_url}}", &metadata.canonical_url)
 }
 
 fn index(cards: Vec<Card>) -> String {
     let mut content = String::new();
 
     cards.iter().for_each(|card| {
-        let mut html_output = String::new();
-        let parser = pulldown_cmark::Parser::new(&card.content);
-        pulldown_cmark::html::push_html(&mut html_output, parser);
         content.push_str(
             &CARD_TEMPLATE
                 .replace(
@@ -94,7 +95,7 @@ fn index(cards: Vec<Card>) -> String {
                 )
                 .replace("{{img_alt}}", &card.img_alt)
                 .replace("{{img_src}}", &card.img_url)
-                .replace("{{summary}}", &html_output)
+                .replace("{{summary}}", &md_to_html(&card.content))
                 .replace("{{links}}", {
                     let links = &card
                         .links
@@ -134,6 +135,65 @@ fn index(cards: Vec<Card>) -> String {
     ROOT_TEMPLATE
         .replace("{{body}}", &body)
         .replace("{{title}}", "Angus Findlay")
+        .replace("{{extra_meta_tags}}", &index_meta_tags())
+        .replace("{{description}}", DESCRIPTION)
+        .replace("{{canonical_url}}", CANONICAL_URL)
+}
+
+fn meta_tag<'a>((property, content): &(&str, &str)) -> String {
+    format!("<meta name=\"{}\" property=\"{}\" />", property, content)
+}
+
+const IMG: &str = "images/plants.webp";
+
+fn index_meta_tags<'a>() -> String {
+    [
+        ("og:image", IMG),
+        ("og:image:secure_url", "https://angusjf.com/plants.webp"),
+        ("og:image:alt", "Angus Findlay"),
+        ("og:title", "Angus Findlay's Blog - angusjf"),
+        ("og:url", "https://angusjf.com/"),
+        ("og:description", DESCRIPTION),
+        ("og:site_name", "Angus Findlay"),
+        ("og:locale", "en_GB"),
+        ("og:type", "website"),
+        ("twitter:card", "summary"),
+        ("twitter:title", "Angus Findlay's Blog - angusjf"),
+        ("twitter:description", DESCRIPTION),
+        ("twitter:image", IMG),
+        ("twitter:image:alt", "Angus Findlay"),
+    ]
+    .iter()
+    .map(meta_tag)
+    .collect::<String>()
+}
+
+fn blog_meta_tags(metadata: &BlogMetadata) -> String {
+    [
+        ("og:image", "https://angusjf.com/images/elm.webp"),
+        ("og:image:secure_url", &metadata.img_url),
+        ("og:image:alt", &metadata.img_alt),
+        ("og:title", &metadata.title),
+        ("og:url", &metadata.canonical_url),
+        ("og:description", &metadata.seo_description),
+        ("og:site_name", "Angus Findlay"),
+        ("og:type", "article"),
+        ("twitter:card", "summary"),
+        ("twitter:title", &metadata.img_url),
+        ("twitter:description", &metadata.seo_description),
+        ("twitter:image", &metadata.img_url),
+        ("twitter:image:alt", &metadata.img_alt),
+        ("article:published_time", &metadata.date.to_string()),
+    ]
+    .iter()
+    .map(meta_tag)
+    .chain(
+        metadata
+            .tags
+            .iter()
+            .map(|tag| meta_tag(&("article:tag", tag.as_str()))),
+    )
+    .collect::<String>()
 }
 
 fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
@@ -146,7 +206,7 @@ fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
         .to_string()
 }
 
-fn yaml_to_blog(yaml: &Yaml) -> BlogMetadata {
+fn yaml_to_blog(url: String, yaml: &Yaml) -> BlogMetadata {
     BlogMetadata {
         title: yaml["title"].as_str().unwrap().to_string(),
         summary: yaml["summary"].as_str().unwrap().to_string(),
@@ -161,6 +221,7 @@ fn yaml_to_blog(yaml: &Yaml) -> BlogMetadata {
         hidden: yaml["hidden"].as_bool().unwrap(),
         seo_description: yaml["seo_description"].as_str().unwrap().to_string(),
         date: yaml["date"].as_str().unwrap().parse().unwrap(),
+        canonical_url: url,
     }
 }
 
@@ -231,25 +292,23 @@ fn main() -> std::io::Result<()> {
                 .map(|filename| {
                     let (frontmatter, md) = parse_md(read_to_string(filename).unwrap());
 
-                    let metadata = yaml_to_blog(&frontmatter);
+                    let name = filename_drop_ext(filename, ".md");
 
+                    let metadata = yaml_to_blog(name.clone(), &frontmatter);
                     let html = blogpost(&metadata, md);
 
-                    (filename, metadata, html)
+                    let _ = std::fs::create_dir(format!("./dist/{}", name.clone()));
+                    println!("./dist/{}/index.html", name);
+                    let _ = std::fs::write(format!("./dist/{}/index.html", name), &html);
+
+                    metadata
                 })
-                .filter(|(_, blog, _)| !blog.hidden)
-                .map(|(filename, metadata, html_output)| {
-                    let name = filename_drop_ext(filename, ".md");
-                    let dir = format!("./dist/{}", name);
-                    let _ = std::fs::create_dir(dir.clone());
-                    let _ = std::fs::write(format!("{}/index.html", dir), &html_output);
-                    (name, metadata, html_output)
-                })
-                .map(|(url, blogpost, _)| Card {
+                .filter(|blog| !blog.hidden)
+                .map(|blogpost| Card {
                     img_url: blogpost.img_url,
                     title: blogpost.title,
                     content: blogpost.summary,
-                    links_to: Some(url.to_string()),
+                    links_to: Some(blogpost.canonical_url),
                     date: Some(blogpost.date),
                     img_alt: blogpost.img_alt,
                     links: vec![],

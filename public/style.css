@@ -47,7 +47,6 @@ a {
 }
 
 img {
-  width: 100%;
   object-fit: cover;
 }
 
@@ -70,7 +69,6 @@ pre {
   font-family: "Fira Mono", monospace;
   background-color: var(--codebg);
 }
-
 
 pre.elmsh * {
   font-size: 14px;
@@ -112,7 +110,6 @@ pre.elmsh * {
 }
 
 .card ul {
-  margin-block: 0;
   padding-inline: 0;
   list-style: none;
 }
@@ -121,21 +118,8 @@ pre.elmsh * {
   transition: margin 0.1s, border 0.1s;
 }
 
-.card *:hover_ {
-  border: 2px solid var(--black);
-  border-radius: 3px;
-  /* margin: 1px; */
-  transform: scale(1.05);
-}
-
 .card h2 {
   display: block;
-}
-
-.card p:hover_,
-.card h2:hover_,
-.card div:hover_ {
-  background-color: white;
 }
 
 .card img {
@@ -153,6 +137,8 @@ pre.elmsh * {
 
 .blog img {
   max-width: 30rem;
+  display: block;
+  margin: 0 auto;
 }
 
 .blog .image-container {
