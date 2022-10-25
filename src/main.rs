@@ -13,6 +13,10 @@ const BLOG_TEMPLATE: &str = include_str!("../templates/blog.html");
 const INDEX_TEMPLATE: &str = include_str!("../templates/index.html");
 const CARD_TEMPLATE: &str = include_str!("../templates/card.html");
 
+const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
+const CANONICAL_URL: &str = "https://angusjf.com/";
+const IMG: &str = "images/plants.webp";
+
 struct ExperimentMetadata {
     summary: String,
     title: String,
@@ -49,9 +53,6 @@ struct Card {
     date: Option<NaiveDate>,
     links: Vec<Link>,
 }
-
-const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
-const CANONICAL_URL: &str = "https://angusjf.com/";
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
     fs::read_dir(dir)
@@ -143,8 +144,6 @@ fn index(cards: Vec<Card>) -> String {
 fn meta_tag<'a>((property, content): &(&str, &str)) -> String {
     format!("<meta name=\"{}\" property=\"{}\" />", property, content)
 }
-
-const IMG: &str = "images/plants.webp";
 
 fn index_meta_tags<'a>() -> String {
     [
@@ -258,18 +257,45 @@ fn parse_md(str: String) -> (Yaml, String) {
     (frontmatter[0].clone(), md_to_html(&md))
 }
 
-fn main() -> std::io::Result<()> {
-    {
-        let _ = std::fs::remove_dir_all("./dist");
-        std::fs::create_dir("./dist")?;
-    }
+fn refresh_dir(path: &str) -> io::Result<()> {
+    let _ = std::fs::remove_dir_all(path);
+    std::fs::create_dir(path)
+}
 
-    {
-        let mut options = fs_extra::dir::CopyOptions::new();
-        options.overwrite = true;
-        options.copy_inside = true;
-        copy_items(files_in_dir("./public").as_slice(), "./dist/", &options).unwrap();
+fn recursive_copy(contents_of: &str, into: &str) {
+    let mut options = fs_extra::dir::CopyOptions::new();
+    options.overwrite = true;
+    options.copy_inside = true;
+    copy_items(files_in_dir(contents_of).as_slice(), into, &options).unwrap();
+}
+
+fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
+    Card {
+        img_url: blogpost.img_url,
+        title: blogpost.title,
+        content: blogpost.summary,
+        links_to: Some(blogpost.canonical_url),
+        date: Some(blogpost.date),
+        img_alt: blogpost.img_alt,
+        links: vec![],
     }
+}
+fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
+    Card {
+        img_url: experiment.img_url,
+        title: experiment.title,
+        content: experiment.summary,
+        links_to: None,
+        date: Some(experiment.date),
+        img_alt: experiment.img_alt,
+        links: experiment.urls,
+    }
+}
+
+fn main() -> std::io::Result<()> {
+    refresh_dir("./dist")?;
+
+    recursive_copy("./public", "./dist");
 
     let mut cards: Vec<_> = files_in_dir("./content/experiments")
         .iter()
@@ -277,15 +303,7 @@ fn main() -> std::io::Result<()> {
             let json = read_to_string(path).unwrap();
             yaml_to_experiment(json)
         })
-        .map(|experiment| Card {
-            img_url: experiment.img_url,
-            title: experiment.title,
-            content: experiment.summary,
-            links_to: None,
-            date: Some(experiment.date),
-            img_alt: experiment.img_alt,
-            links: experiment.urls,
-        })
+        .map(experiment_to_card)
         .chain(
             files_in_dir("./content/blog")
                 .iter()
@@ -295,24 +313,16 @@ fn main() -> std::io::Result<()> {
                     let name = filename_drop_ext(filename, ".md");
 
                     let metadata = yaml_to_blog(name.clone(), &frontmatter);
+
                     let html = blogpost(&metadata, md);
 
-                    let _ = std::fs::create_dir(format!("./dist/{}", name.clone()));
-                    println!("./dist/{}/index.html", name);
-                    let _ = std::fs::write(format!("./dist/{}/index.html", name), &html);
+                    std::fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
+                    std::fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
 
                     metadata
                 })
                 .filter(|blog| !blog.hidden)
-                .map(|blogpost| Card {
-                    img_url: blogpost.img_url,
-                    title: blogpost.title,
-                    content: blogpost.summary,
-                    links_to: Some(blogpost.canonical_url),
-                    date: Some(blogpost.date),
-                    img_alt: blogpost.img_alt,
-                    links: vec![],
-                }),
+                .map(blogpost_to_card),
         )
         .collect();
 
