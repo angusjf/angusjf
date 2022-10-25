@@ -247,10 +247,7 @@ fn yaml_to_experiment(yaml: String) -> ExperimentMetadata {
 }
 
 fn parse_md(str: String) -> (Yaml, String) {
-    let frontmatter_and_md: Vec<_> = str.trim_start_matches("---").split("---").collect();
-
-    let frontmatter = frontmatter_and_md[0];
-    let md = frontmatter_and_md[1];
+    let (frontmatter, md) = str.trim_start_matches("---").split_once("---").unwrap();
 
     let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
 
