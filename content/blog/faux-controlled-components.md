@@ -22,6 +22,7 @@ It provides a useful case study for people (like myself) who **think they unders
 Let's take a tour of the [most popular programming languages](https://tjpalmer.github.io/languish/) and see how their **`==`** operator compares two lists, both containing the number one. (I'm aware critique of JavaScript's equality rules is cliché, but I promise it's relevant).
 
 **_Go:_** ✅
+
 ```go
 xs := [1]int{}
 ys := [1]int{}
@@ -30,6 +31,7 @@ xs == ys // true
 ```
 
 **_Java:_** ❌
+
 ```java
 int[] xs = { 1 };
 int[] ys = { 1 };
@@ -38,6 +40,7 @@ xs == ys; // false
 ```
 
 **_Python:_** ✅
+
 ```python
 > xs = [1]
 > ys = [1]
@@ -46,6 +49,7 @@ True
 ```
 
 **_JavaScript:_** ❌
+
 ```python
 > let xs = [1]
 > let ys = [1]
@@ -55,7 +59,7 @@ false
 
 A lot of disagreement about something quite simple!
 
-While perhaps not as intuitive, I wouldn't say Java and JS are **"wrong"** here. Is the list on the left __'the same as'__ the list on the right? They have the same content, but that doesn't really make them *__the same list__*. You could change the number in `xs`, and it wouldn't change in `ys`. In this way they are two distinct entities.
+While perhaps not as intuitive, I wouldn't say Java and JS are **"wrong"** here. Is the list on the left **'the same as'** the list on the right? They have the same content, but that doesn't really make them _**the same list**_. You could change the number in `xs`, and it wouldn't change in `ys`. In this way they are two distinct entities.
 
 In fact, if it wasn't for JavaScript's ability to quickly check if two things are exactly 'the same thing', React's fast rendering wouldn't be possible! I'll come back to the importance of this later.
 
@@ -119,6 +123,7 @@ So how could I fix the slide? We need to add another condition:
 **useMemo** - Don't use it everywhere!
 
 If the operation is:
+
 - **cheap**
 - **_AND returns the same address every time_**
 
@@ -130,13 +135,13 @@ There's **no point**.
 
 ---
 
-Most misuses of `useMemo` go unnoticed, and most of the time, misusing it doesn't matter much. Why? Re-renders in React are usually cheap, and won't cause a *real* re-render in the DOM unless something actually changed.
+Most misuses of `useMemo` go unnoticed, and most of the time, misusing it doesn't matter much. Why? Re-renders in React are usually cheap, and won't cause a _real_ re-render in the DOM unless something actually changed.
 
 It's almost not worth the developer's time to apply `useMemo` correctly - a pretty dangerous notion, as mistakes can be very hard to fix.
 
 ## Part 3: Je Déteste Faux-Controlled Components
 
-The [React documentation](https://reactjs.org/docs/uncontrolled-components.html) defines *'Uncontrolled Components'* as components controlled by *data in the DOM*, not a React Component. It's conventional wisdom that they should be avoided at all costs.
+The [React documentation](https://reactjs.org/docs/uncontrolled-components.html) defines _'Uncontrolled Components'_ as components controlled by _data in the DOM_, not a React Component. It's conventional wisdom that they should be avoided at all costs.
 
 However, the _'Controlled/Uncontrolled Binary'_ isn't quite as black and white as this definition implies. When you're using components you've downloaded from npm, you might stumble upon a _**'Faux-Controlled Component'**_. _**'Faux-Controlled Components'**_ are React Components which, while their state is not stored in the DOM, hides state from the developer & keep the issues of Uncontrolled Components as a result.
 
@@ -151,28 +156,29 @@ const App = () => {
       <DateRange onChange={onChange} ranges={ranges} />
     </div>
   );
-}
+};
 ```
 
 **The `DateRange` is controlled!** The user can pass down state and a callback, giving us complete control of the component. Before you can say '`yarn add`' I've made `react-date-range` (and its dependencies) a part of my website forever.
 
 But was I too hasty? What about these **month arrows**?
 
-![Those Month Arrows](images/month-arrows.png)
+![Those Month Arrows](/images/month-arrows.png)
 
-These buttons flip the DateRange from one month to the next... The DateRange clearly has some **more state than just '`date`'**. It's not nearly as *Controlled* as I first thought!
+These buttons flip the DateRange from one month to the next... The DateRange clearly has some **more state than just '`date`'**. It's not nearly as _Controlled_ as I first thought!
 
 What happens if I want those 'shown date' buttons to behave in any other way?
 
 I could want my `DateRange` to:
- - Only allow the user to view **dates in the future**
- - Move forward **2 months at a time**
- - Click a button **outside the DateRange** to advance it
- - Perform an **action**, such as a network request, **whenever the user changes month**
+
+- Only allow the user to view **dates in the future**
+- Move forward **2 months at a time**
+- Click a button **outside the DateRange** to advance it
+- Perform an **action**, such as a network request, **whenever the user changes month**
 
 The library attempts to provide a fix for the first shortcoming: `minDate` and `maxDate` props. In fact, the component has **over 40 props**, almost all of which are optional. Most of them provide a way to slightly change the behaviour of the component.
 
-Why not let me use my own state, and have `shownDate` and `onShownDateChange` props? Well, we almost do! Except the docs describe `shownDate` as the "initial focused date". Unfortunately, it only controls which value the **internal** state is __*initialised to*__. This is a **_Faux-Controlled Prop!_**
+Why not let me use my own state, and have `shownDate` and `onShownDateChange` props? Well, we almost do! Except the docs describe `shownDate` as the "initial focused date". Unfortunately, it only controls which value the **internal** state is **_initialised to_**. This is a **_Faux-Controlled Prop!_**
 
 It's hard to tell why `DateRange` was designed this way. I would consider this bad API design, but perhaps it's a good fit for the audience. Faux-Controlled Components can be a handy tool for **lazy developers** who **don't want to think about the complexity** they are introducing to their application. They'd rather the library handled all this state for them, to save them 'wiring up' 5 or 6 different state values & callbacks when they include complex components.
 
@@ -207,13 +213,15 @@ const App = () => {
 ```
 
 There are two important things to note about this code:
- - `onShownDateChange` causes a re-render, as it calls a React `setState` function.
- - `ranges` is set to a new array every time. As discussed in Part 1, creating an array literal outside of a `useMemo` will make a new object (with a distinct memory address) **every single time the code is run**.
- - `DateRange` is a _Faux-Controlled Component_
+
+- `onShownDateChange` causes a re-render, as it calls a React `setState` function.
+- `ranges` is set to a new array every time. As discussed in Part 1, creating an array literal outside of a `useMemo` will make a new object (with a distinct memory address) **every single time the code is run**.
+- `DateRange` is a _Faux-Controlled Component_
 
 These 3 properties come together to create a perfect storm, and the _Next_ button on the DateRange stops working.
 
 Why?
+
 - We press _Next_
 - So `onShownDateChange` is called
 - So `setState` is called
@@ -245,6 +253,7 @@ const App = () => {
 ```
 
 Now, we can break the chain of events:
+
 - We press _Next_
 - So `onShownDateChange` is called
 - So `setState` is called
