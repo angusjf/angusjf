@@ -25,9 +25,8 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: run
-      - id: pages
-        uses: actions/configure-pages@v1
-      - uses: actions/upload-pages-artifact@v1
+      - uses: actions/configure-pages@v2.1.2
+      - uses: actions/upload-pages-artifact@v1.0.4
         with:
           path: ./dist
 
@@ -41,6 +40,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: deploy to github pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+      - id: deployment
+        uses: actions/deploy-pages@v1.2.2
