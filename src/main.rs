@@ -141,11 +141,11 @@ fn index(cards: Vec<Card>) -> String {
         .replace("{{canonical_url}}", CANONICAL_URL)
 }
 
-fn meta_tag<'a>((property, content): &(&str, &str)) -> String {
+fn meta_tag((property, content): &(&str, &str)) -> String {
     format!("<meta name=\"{}\" property=\"{}\" />", property, content)
 }
 
-fn index_meta_tags<'a>() -> String {
+fn index_meta_tags() -> String {
     [
         ("og:image", IMG),
         ("og:image:secure_url", "https://angusjf.com/plants.webp"),
@@ -357,7 +357,7 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    let _ = std::fs::write("dist/index.html", &index(cards));
+    std::fs::write("dist/index.html", &index(cards)).unwrap();
 
     Ok(())
 }
