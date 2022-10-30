@@ -199,7 +199,7 @@ fn index(cards: Vec<Card>) -> String {
 }
 
 fn meta_tag((property, content): &(&str, &str)) -> String {
-    format!("<meta name=\"{}\" property=\"{}\" />", property, content)
+    format!("<meta name=\"{}\" content=\"{}\" />", property, content)
 }
 
 fn index_meta_tags() -> String {
