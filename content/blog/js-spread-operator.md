@@ -1,6 +1,6 @@
 ---
 title: "On the Embarrassingly Poor Performance of JavaScript's Spread Operator"
-img_url: images/none
+img_url: /images/sign.jpg
 img_alt: No alt
 date: "2022-08-05"
 seo_description: "On the Embarrassingly Poor Performance of JavaScript's Spread Operator"

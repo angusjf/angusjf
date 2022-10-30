@@ -1,6 +1,6 @@
 ---
 title: "Expiring Feature Flags"
-img_url: images/junk.png
+img_url: /images/junk.png
 img_alt: River of Junk
 date: "2022-10-15"
 seo_description: "Keeping feature flags under control one tiny eslint plugin."
