@@ -15,7 +15,7 @@ const CARD_TEMPLATE: &str = include_str!("../templates/card.html");
 
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
 const CANONICAL_URL: &str = "https://angusjf.com/";
-const IMG: &str = "images/plants.webp";
+const IMG: &str = "https://angusjf.com/images/plants.webp";
 
 struct ExperimentMetadata {
     summary: String,
@@ -58,6 +58,7 @@ fn files_in_dir(dir: &str) -> Vec<PathBuf> {
     fs::read_dir(dir)
         .unwrap()
         .map(|res| res.map(|e| e.path()))
+        .filter(|path| path.as_ref().map_or(false, |x| !x.starts_with(".")))
         .collect::<Result<Vec<_>, io::Error>>()
         .unwrap()
 }
@@ -67,6 +68,62 @@ fn md_to_html(md: &str) -> String {
     let mut html_output = String::new();
     pulldown_cmark::html::push_html(&mut html_output, parser);
     html_output
+}
+
+type Attr = (String, String);
+
+enum Html {
+    Fragment(Vec<Html>),
+    Node(&'static str, Vec<Attr>, Vec<Html>),
+    String(String),
+}
+
+fn fragment(content: Vec<Html>) -> Html {
+    Html::Fragment(content)
+}
+
+fn class(className: String) -> Attr {
+    ("class".to_string(), className)
+}
+
+fn href(url: String) -> Attr {
+    ("class".to_string(), url)
+}
+
+fn main_(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
+    Html::Node("main", attrs, children)
+}
+
+fn article(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
+    Html::Node("article", attrs, children)
+}
+
+fn header(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
+    Html::Node("main", attrs, children)
+}
+
+fn a(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
+    Html::Node("a", attrs, children)
+}
+
+fn s(string: String) -> Html {
+    Html::String(string)
+}
+
+fn blog(content: Vec<Html>) -> Html {
+    fragment(vec![
+        header(
+            vec![class("link-back".to_string())],
+            vec![a(
+                vec![href("/".to_string())],
+                vec![s("angusjf".to_string())],
+            )],
+        ),
+        main_(
+            vec![class("link-back".to_string())],
+            vec![article(vec![], content)],
+        ),
+    ])
 }
 
 fn blogpost(metadata: &BlogMetadata, content: String) -> String {
@@ -169,13 +226,13 @@ fn index_meta_tags() -> String {
 
 fn blog_meta_tags(metadata: &BlogMetadata) -> String {
     [
-        ("og:image", "https://angusjf.com/images/elm.webp"),
+        ("og:site_name", "Angus Findlay"),
+        ("og:image", &metadata.img_url),
         ("og:image:secure_url", &metadata.img_url),
         ("og:image:alt", &metadata.img_alt),
         ("og:title", &metadata.title),
         ("og:url", &metadata.canonical_url),
         ("og:description", &metadata.seo_description),
-        ("og:site_name", "Angus Findlay"),
         ("og:type", "article"),
         ("twitter:card", "summary"),
         ("twitter:title", &metadata.img_url),

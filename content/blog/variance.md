@@ -1,6 +1,6 @@
 ---
 title: "Fixing Dan and Aydın's Pyright Error"
-img_url: images/pyright.webp
+img_url: /images/pyright.webp
 img_alt: The Pyright Logo on Fire
 date: "2022-08-04"
 seo_description: "How learning about Variance helped me fix a Pyright error."
