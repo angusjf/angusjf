@@ -235,7 +235,7 @@ fn blog_meta_tags(metadata: &BlogMetadata) -> String {
         ("og:description", &metadata.seo_description),
         ("og:type", "article"),
         ("twitter:card", "summary"),
-        ("twitter:title", &metadata.img_url),
+        ("twitter:title", &metadata.title),
         ("twitter:description", &metadata.seo_description),
         ("twitter:image", &metadata.img_url),
         ("twitter:image:alt", &metadata.img_alt),
