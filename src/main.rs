@@ -58,7 +58,7 @@ fn files_in_dir(dir: &str) -> Vec<PathBuf> {
     fs::read_dir(dir)
         .unwrap()
         .map(|res| res.map(|e| e.path()))
-        .filter(|path| path.as_ref().map_or(false, |x| !x.starts_with(".")))
+        // .filter(|path| path.as_ref().map_or(true, |x| !x.starts_with(".")))
         .collect::<Result<Vec<_>, io::Error>>()
         .unwrap()
 }
