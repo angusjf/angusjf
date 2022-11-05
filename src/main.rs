@@ -70,62 +70,6 @@ fn md_to_html(md: &str) -> String {
     html_output
 }
 
-type Attr = (String, String);
-
-enum Html {
-    Fragment(Vec<Html>),
-    Node(&'static str, Vec<Attr>, Vec<Html>),
-    String(String),
-}
-
-fn fragment(content: Vec<Html>) -> Html {
-    Html::Fragment(content)
-}
-
-fn class(className: String) -> Attr {
-    ("class".to_string(), className)
-}
-
-fn href(url: String) -> Attr {
-    ("class".to_string(), url)
-}
-
-fn main_(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
-    Html::Node("main", attrs, children)
-}
-
-fn article(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
-    Html::Node("article", attrs, children)
-}
-
-fn header(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
-    Html::Node("main", attrs, children)
-}
-
-fn a(attrs: Vec<Attr>, children: Vec<Html>) -> Html {
-    Html::Node("a", attrs, children)
-}
-
-fn s(string: String) -> Html {
-    Html::String(string)
-}
-
-fn blog(content: Vec<Html>) -> Html {
-    fragment(vec![
-        header(
-            vec![class("link-back".to_string())],
-            vec![a(
-                vec![href("/".to_string())],
-                vec![s("angusjf".to_string())],
-            )],
-        ),
-        main_(
-            vec![class("link-back".to_string())],
-            vec![article(vec![], content)],
-        ),
-    ])
-}
-
 fn blogpost(metadata: &BlogMetadata, content: String) -> String {
     let body = BLOG_TEMPLATE.replace("{{content}}", content.as_str());
     ROOT_TEMPLATE
