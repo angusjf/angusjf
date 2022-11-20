@@ -24,12 +24,9 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
+      - run: rustup update stable && rustup default stable
+      - run: cargo build --verbose
+      - run: cargo run
       - uses: actions/configure-pages@v2.1.2
       - uses: actions/upload-pages-artifact@v1.0.4
         with:
