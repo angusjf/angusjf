@@ -6,6 +6,11 @@
             "href": "/apps/tones",
             "label": "/tones",
             "icon": "fas fa-trophy"
+        },
+        {
+            "href": "https://github.com/angusjf/tones",
+            "label": "angusjf/tones",
+            "icon": "fab fa-github"
         }
     ],
     "img_url": "images/tones.webp",
