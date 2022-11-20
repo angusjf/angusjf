@@ -30,35 +30,35 @@
     <style>
         :root {
             font-size: 16px;
-            --black: #325a92;
-            --blue: #73a8f2;
-            --green: #43f268;
-            --red: #f24843;
-            --grey: #736268;
             font-family: system-ui, sans-serif;
+            --blue: 215, 50%;
+            --green: 133, 50%;
+            --red: 0, 80%;
+            --grey: 140, 3%;
+            --pink: 339, 68%;
         }
 
         body {
-            display: grid;
             max-width: 17rem;
             margin: 0 auto;
-            align-content: center;
-        }
-
-        body>div {
-            display: grid;
+            display: flex;
             gap: 0.4rem;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
 
         button {
+            --depth: 0.4rem;
             font-weight: bold;
             font-size: 2rem;
             border-radius: 1rem;
             border: 0;
-            box-shadow: 0rem 0.4rem var(--black);
-            margin-bottom: 0.4rem;
+            box-shadow: 0rem var(--depth) hsl(var(--color, 0, 0%), 63%);
+            margin-bottom: var(--depth);
             color: white;
-            background-color: var(--color, hotpink);
+            background-color: hsl(var(--color, 0, 0%), 74%);
+            --color: var(--pink);
         }
 
         button:hover {
@@ -66,10 +66,9 @@
         }
 
         button:active {
-            transform: translate(0, 0.4rem);
-            box-shadow: 0rem 0rem var(--black);
+            transform: translateY(var(--depth));
+            box-shadow: 0rem 0 hsl(var(--color, 0, 0%), 63%);
         }
-
 
         .options {
             display: grid;
@@ -82,6 +81,7 @@
             transition: height 0.2s;
             font-style: italic;
             height: 50px;
+            --color: var(--green);
         }
 
         button.next:disabled {
@@ -94,23 +94,23 @@
         }
 
         button[data-state="unset"] {
-            background-color: var(--blue);
+            --color: var(--blue);
         }
 
         button[data-state="incorrect-this"] {
-            background-color: var(--red);
+            --color: var(--red);
         }
 
         button[data-state="incorrect-other"] {
-            background-color: var(--grey);
+            --color: var(--grey);
         }
 
         button[data-state="correct-this"] {
-            background-color: var(--green);
+            --color: var(--green);
         }
 
         button[data-state="correct-other"] {
-            background-color: var(--grey);
+            --color: var(--grey);
         }
     </style>
 </head>

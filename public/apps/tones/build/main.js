@@ -5195,7 +5195,7 @@ var $elm$core$Task$perform = F2(
 			$elm$core$Task$Perform(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
-var $elm$browser$Browser$element = _Browser_element;
+var $elm$browser$Browser$document = _Browser_document;
 var $author$project$Main$Menu = {$: 'Menu'};
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
@@ -5531,7 +5531,6 @@ var $author$project$Main$update = F2(
 	});
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Main$Next = {$: 'Next'};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -5612,6 +5611,7 @@ var $author$project$Types$combinations = A2(
 			$author$project$Types$allTones);
 	},
 	$author$project$Types$allVowels);
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $author$project$Main$Guess = function (a) {
 	return {$: 'Guess', a: a};
 };
@@ -5684,42 +5684,50 @@ var $author$project$Main$viewSound = function (answer) {
 			]));
 };
 var $author$project$Main$viewGame = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
+	return _List_fromArray(
+		[
+			$author$project$Main$viewSound(model.answer),
+			$author$project$Main$viewOptions(model),
+			$author$project$Main$viewNext(
+			!_Utils_eq(
+				$elm$core$Maybe$Just(model.answer),
+				model.guess))
+		]);
+};
+var $author$project$Main$viewMenu = _List_fromArray(
+	[
+		A2(
+		$elm$html$Html$button,
 		_List_fromArray(
 			[
-				$author$project$Main$viewSound(model.answer),
-				$author$project$Main$viewOptions(model),
-				$author$project$Main$viewNext(
-				!_Utils_eq(
-					$elm$core$Maybe$Just(model.answer),
-					model.guess))
-			]));
-};
-var $author$project$Main$viewMenu = A2(
-	$elm$html$Html$button,
-	_List_fromArray(
-		[
-			$elm$html$Html$Events$onClick($author$project$Main$Next)
-		]),
-	_List_fromArray(
-		[
-			$elm$html$Html$text('start!')
-		]));
+				$elm$html$Html$Events$onClick($author$project$Main$Next)
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('start!')
+			]))
+	]);
 var $author$project$Main$view = function (superModel) {
-	var _v0 = superModel.state;
-	switch (_v0.$) {
-		case 'Menu':
-			return $author$project$Main$viewMenu;
-		case 'InProgress':
-			var model = _v0.a;
-			return $author$project$Main$viewGame(model);
-		default:
-			return $elm$html$Html$text('TODO!');
-	}
+	return {
+		body: function () {
+			var _v0 = superModel.state;
+			switch (_v0.$) {
+				case 'Menu':
+					return $author$project$Main$viewMenu;
+				case 'InProgress':
+					var model = _v0.a;
+					return $author$project$Main$viewGame(model);
+				default:
+					return _List_fromArray(
+						[
+							$elm$html$Html$text('TODO!')
+						]);
+			}
+		}(),
+		title: 'mandarin tones quiz!'
+	};
 };
-var $author$project$Main$main = $elm$browser$Browser$element(
+var $author$project$Main$main = $elm$browser$Browser$document(
 	{
 		init: $author$project$Main$init,
 		subscriptions: function (_v0) {
