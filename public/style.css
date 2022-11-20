@@ -55,27 +55,10 @@ img {
   padding-right: 1rem;
 }
 
-/* code & elmsh */
-
-pre.elmsh {
-  padding: 10px;
-  margin: 0;
-  text-align: left;
-  overflow: auto;
-}
-
 code,
 pre {
   font-family: "Fira Mono", monospace;
   background-color: var(--codebg);
-}
-
-pre.elmsh * {
-  font-size: 14px;
-}
-
-.elmsh {
-  background-color: #f7faf7 !important;
 }
 
 /* homepage */
@@ -133,6 +116,7 @@ pre.elmsh * {
   padding: 1rem;
   margin: 0rem auto 4rem auto;
   overflow: hidden;
+  line-height: 1.4;
 }
 
 .blog img {
