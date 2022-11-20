@@ -1,5 +1,0 @@
-#!/bin/bash
-
-python -m http.server -d dist &
-
-watchman-make -p './content/**/*' './public/**/*' './src/**/*' './templates/**/*' --run 'cargo run'

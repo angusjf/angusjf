@@ -1,0 +1,14 @@
+{
+    "title": "Learn Mandarin Chinese's Tones",
+    "summary": "A tiny audio quiz, written in Elm.",
+    "urls": [
+        {
+            "href": "/apps/tones",
+            "label": "/tones",
+            "icon": "fas fa-trophy"
+        }
+    ],
+    "img_url": "images/tones.webp",
+    "img_alt": "Screenshot of the pinyin buttons on the website",
+    "date": "2022-11-20"
+}

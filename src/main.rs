@@ -1,17 +1,10 @@
+use chrono::NaiveDate;
 use std::{
     fs::{self, read_to_string},
     io,
     path::PathBuf,
 };
-
-use chrono::NaiveDate;
-use fs_extra::copy_items;
 use yaml_rust::{Yaml, YamlLoader};
-
-const ROOT_TEMPLATE: &str = include_str!("../templates/root.html");
-const BLOG_TEMPLATE: &str = include_str!("../templates/blog.html");
-const INDEX_TEMPLATE: &str = include_str!("../templates/index.html");
-const CARD_TEMPLATE: &str = include_str!("../templates/card.html");
 
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
 const CANONICAL_URL: &str = "https://angusjf.com/";
@@ -70,9 +63,14 @@ fn md_to_html(md: &str) -> String {
     html_output
 }
 
-fn blogpost(metadata: &BlogMetadata, content: String) -> String {
-    let body = BLOG_TEMPLATE.replace("{{content}}", content.as_str());
-    ROOT_TEMPLATE
+fn blogpost(
+    blog_template: &str,
+    root_template: &str,
+    metadata: &BlogMetadata,
+    content: String,
+) -> String {
+    let body = blog_template.replace("{{content}}", content.as_str());
+    root_template
         .replace("{{body}}", &body)
         .replace("{{title}}", &metadata.title)
         .replace("{{extra_meta_tags}}", &blog_meta_tags(metadata))
@@ -80,12 +78,17 @@ fn blogpost(metadata: &BlogMetadata, content: String) -> String {
         .replace("{{canonical_url}}", &metadata.canonical_url)
 }
 
-fn index(cards: Vec<Card>) -> String {
+fn index(
+    card_template: &str,
+    index_template: &str,
+    root_template: &str,
+    cards: Vec<Card>,
+) -> String {
     let mut content = String::new();
 
     cards.iter().for_each(|card| {
         content.push_str(
-            &CARD_TEMPLATE
+            &card_template
                 .replace(
                     "{{title}}",
                     &match &card.links_to {
@@ -132,9 +135,9 @@ fn index(cards: Vec<Card>) -> String {
         );
     });
 
-    let body = INDEX_TEMPLATE.replace("{{content}}", &content);
+    let body = index_template.replace("{{content}}", &content);
 
-    ROOT_TEMPLATE
+    root_template
         .replace("{{body}}", &body)
         .replace("{{title}}", "Angus Findlay")
         .replace("{{extra_meta_tags}}", &index_meta_tags())
@@ -255,18 +258,6 @@ fn parse_md(str: String) -> (Yaml, String) {
     (frontmatter[0].clone(), md_to_html(&md))
 }
 
-fn refresh_dir(path: &str) -> io::Result<()> {
-    let _ = std::fs::remove_dir_all(path);
-    std::fs::create_dir(path)
-}
-
-fn recursive_copy(contents_of: &str, into: &str) {
-    let mut options = fs_extra::dir::CopyOptions::new();
-    options.overwrite = true;
-    options.copy_inside = true;
-    copy_items(files_in_dir(contents_of).as_slice(), into, &options).unwrap();
-}
-
 fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
     Card {
         img_url: blogpost.img_url,
@@ -291,9 +282,10 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
 }
 
 fn main() -> std::io::Result<()> {
-    refresh_dir("./dist")?;
-
-    recursive_copy("./public", "./dist");
+    let root_template = fs::read_to_string("templates/root.html")?;
+    let blog_template = fs::read_to_string("templates/blog.html")?;
+    let index_template = fs::read_to_string("templates/index.html")?;
+    let card_template = fs::read_to_string("templates/card.html")?;
 
     let mut cards: Vec<_> = files_in_dir("./content/experiments")
         .iter()
@@ -312,7 +304,7 @@ fn main() -> std::io::Result<()> {
 
                     let metadata = yaml_to_blog(name.clone(), &frontmatter);
 
-                    let html = blogpost(&metadata, md);
+                    let html = blogpost(&blog_template, &root_template, &metadata, md);
 
                     std::fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
                     std::fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
@@ -355,7 +347,11 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    std::fs::write("dist/index.html", &index(cards)).unwrap();
+    std::fs::write(
+        "dist/index.html",
+        &index(&card_template, &index_template, &root_template, cards),
+    )
+    .unwrap();
 
     Ok(())
 }
