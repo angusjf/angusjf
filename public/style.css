@@ -17,7 +17,7 @@ html {
 @media (prefers-color-scheme: dark) {
   :root {
     --white: hsl(232deg 19% 11%);
-    --black: hsl(47deg 9% 95%);
+    --black: hsl(47deg 9% 98%);
     --codebg: #302040;
   }
 }
@@ -133,6 +133,7 @@ pre {
 }
 
 .blog img {
+  width: 100%;
   max-width: 30rem;
   display: block;
   margin: 0 auto;
