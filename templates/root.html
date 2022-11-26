@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <link rel="stylesheet" href="/style.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{{title}}</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="hsl(232deg 19% 11%)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="canonical" href="{{canonical_url}}" />
     <meta name="description" content="{{description}}" />
     {{extra_meta_tags}}
@@ -23,13 +22,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="theme-color" content="#ffffff" />
-    <script
-      async
-      defer
-      src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"
-    ></script>
-  </head>
-  <body>
+    <script async defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+</head>
+
+<body>
     {{body}}
-  </body>
+</body>
+
 </html>
