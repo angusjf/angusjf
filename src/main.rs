@@ -95,7 +95,9 @@ fn index(
                         Some(href) => {
                             format!("<a href=\"{}\">{}</a>", &href, &card.title.clone())
                         }
-                        None => card.title.clone(),
+                        None => {
+                            format!("<a href=\"{}\">{}</a>", &card.links[0].url, &card.title.clone())
+                        }
                     },
                 )
                 .replace("{{img_alt}}", &card.img_alt)

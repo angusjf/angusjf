@@ -5679,7 +5679,7 @@ var $author$project$Main$update = F2(
 									results: {correct: 0, incorrect: 0, rounds: 5}
 								})
 						}),
-					$elm$core$Platform$Cmd$none);
+					$author$project$Main$play(answer));
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(

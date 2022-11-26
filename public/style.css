@@ -109,6 +109,10 @@ pre {
   margin-bottom: 1em;
 }
 
+.card li {
+  line-height: 2;
+}
+
 /* blog */
 
 .blog {
