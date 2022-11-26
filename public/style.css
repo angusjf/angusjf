@@ -17,7 +17,7 @@ html {
 @media (prefers-color-scheme: dark) {
   :root {
     --white: hsl(232deg 19% 11%);
-    --black: hsl(47deg 9% 90%);
+    --black: hsl(47deg 9% 95%);
     --codebg: #302040;
   }
 }
