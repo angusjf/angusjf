@@ -16,8 +16,8 @@ html {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --white: black;
-    --black: white;
+    --white: hsl(232deg 19% 11%);
+    --black: hsl(47deg 9% 90%);
     --codebg: #302040;
   }
 }
@@ -91,6 +91,11 @@ pre {
     flex-direction: row-reverse;
     justify-content: space-between;
   }
+}
+
+.card i {
+    width: 2rem;
+    display: inline-block;
 }
 
 .card img {
