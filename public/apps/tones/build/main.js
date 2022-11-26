@@ -5232,6 +5232,10 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$InProgress = function (a) {
 	return {$: 'InProgress', a: a};
 };
+var $author$project$Main$Over = function (a) {
+	return {$: 'Over', a: a};
+};
+var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Types$A = {$: 'A'};
 var $author$project$Types$High = {$: 'High'};
 var $author$project$Types$Falling = {$: 'Falling'};
@@ -5249,33 +5253,18 @@ var $author$project$Types$allVowels = _List_fromArray(
 var $elm$random$Random$Generator = function (a) {
 	return {$: 'Generator', a: a};
 };
-var $elm$random$Random$map2 = F3(
-	function (func, _v0, _v1) {
+var $elm$random$Random$andThen = F2(
+	function (callback, _v0) {
 		var genA = _v0.a;
-		var genB = _v1.a;
 		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v2 = genA(seed0);
-				var a = _v2.a;
-				var seed1 = _v2.b;
-				var _v3 = genB(seed1);
-				var b = _v3.a;
-				var seed2 = _v3.b;
-				return _Utils_Tuple2(
-					A2(func, a, b),
-					seed2);
+			function (seed) {
+				var _v1 = genA(seed);
+				var result = _v1.a;
+				var newSeed = _v1.b;
+				var _v2 = callback(result);
+				var genB = _v2.a;
+				return genB(newSeed);
 			});
-	});
-var $elm$random$Random$pair = F2(
-	function (genA, genB) {
-		return A3(
-			$elm$random$Random$map2,
-			F2(
-				function (a, b) {
-					return _Utils_Tuple2(a, b);
-				}),
-			genA,
-			genB);
 	});
 var $elm$random$Random$constant = function (value) {
 	return $elm$random$Random$Generator(
@@ -5283,6 +5272,31 @@ var $elm$random$Random$constant = function (value) {
 			return _Utils_Tuple2(value, seed);
 		});
 };
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$random$Random$addOne = function (value) {
 	return _Utils_Tuple2(1, value);
 };
@@ -5343,19 +5357,6 @@ var $elm$random$Random$getByWeight = F3(
 			}
 		}
 	});
-var $elm$random$Random$map = F2(
-	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
 var $elm$core$List$sum = function (numbers) {
 	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
 };
@@ -5389,10 +5390,84 @@ var $author$project$Types$uniformWithDefault = F2(
 			return $elm$random$Random$constant(x);
 		}
 	});
-var $author$project$Types$generator = A2(
-	$elm$random$Random$pair,
-	A2($author$project$Types$uniformWithDefault, $author$project$Types$A, $author$project$Types$allVowels),
-	A2($author$project$Types$uniformWithDefault, $author$project$Types$High, $author$project$Types$allTones));
+var $author$project$Types$nV = F2(
+	function (n, set) {
+		if (!n) {
+			return $elm$random$Random$constant(_List_Nil);
+		} else {
+			return A2(
+				$elm$random$Random$andThen,
+				function (x) {
+					return A2(
+						$elm$random$Random$map,
+						function (xs) {
+							return A2($elm$core$List$cons, x, xs);
+						},
+						A2(
+							$author$project$Types$nV,
+							n - 1,
+							A2(
+								$elm$core$List$filter,
+								function (v) {
+									return !_Utils_eq(v, x);
+								},
+								set)));
+				},
+				A2($author$project$Types$uniformWithDefault, $author$project$Types$A, set));
+		}
+	});
+var $elm$random$Random$map2 = F3(
+	function (func, _v0, _v1) {
+		var genA = _v0.a;
+		var genB = _v1.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v2 = genA(seed0);
+				var a = _v2.a;
+				var seed1 = _v2.b;
+				var _v3 = genB(seed1);
+				var b = _v3.a;
+				var seed2 = _v3.b;
+				return _Utils_Tuple2(
+					A2(func, a, b),
+					seed2);
+			});
+	});
+var $elm$random$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			$elm$random$Random$map2,
+			F2(
+				function (a, b) {
+					return _Utils_Tuple2(a, b);
+				}),
+			genA,
+			genB);
+	});
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $author$project$Types$generator = F2(
+	function (n, seed0) {
+		var _v0 = A2(
+			$elm$random$Random$step,
+			A2($author$project$Types$nV, n, $author$project$Types$allVowels),
+			seed0);
+		var vowels = _v0.a;
+		var seed1 = _v0.b;
+		var _v1 = A2(
+			$elm$random$Random$step,
+			A2(
+				$elm$random$Random$pair,
+				A2($author$project$Types$uniformWithDefault, $author$project$Types$A, vowels),
+				A2($author$project$Types$uniformWithDefault, $author$project$Types$High, $author$project$Types$allTones)),
+			seed1);
+		var answer = _v1.a;
+		var seed2 = _v1.b;
+		return _Utils_Tuple3(vowels, answer, seed2);
+	});
 var $author$project$Main$mapGame = F2(
 	function (f, state) {
 		if (state.$ === 'InProgress') {
@@ -5483,11 +5558,16 @@ var $elm$core$Basics$composeR = F3(
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Main$playSoundFromString = _Platform_outgoingPort('playSoundFromString', $elm$json$Json$Encode$string);
 var $author$project$Main$play = A2($elm$core$Basics$composeR, $author$project$Types$char, $author$project$Main$playSoundFromString);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
+var $author$project$Main$rightAnswer = function (results) {
+	return _Utils_update(
+		results,
+		{correct: results.correct + 1});
+};
+var $author$project$Main$wrongAnswer = function (results) {
+	return _Utils_update(
+		results,
+		{incorrect: results.incorrect + 1});
+};
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5503,7 +5583,15 @@ var $author$project$Main$update = F2(
 									return _Utils_update(
 										game,
 										{
-											guess: $elm$core$Maybe$Just(guess)
+											guess: $elm$core$Maybe$Just(guess),
+											results: function () {
+												var _v1 = game.guess;
+												if (_v1.$ === 'Nothing') {
+													return _Utils_eq(guess, game.answer) ? $author$project$Main$rightAnswer(game.results) : $author$project$Main$wrongAnswer(game.results);
+												} else {
+													return game.results;
+												}
+											}()
 										});
 								},
 								model.state)
@@ -5514,24 +5602,92 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$play(sound));
-			default:
-				var _v1 = A2($elm$random$Random$step, $author$project$Types$generator, model.seed);
-				var answer = _v1.a;
-				var seed = _v1.b;
+			case 'Next':
+				var gameOver = function () {
+					var _v5 = model.state;
+					if (_v5.$ === 'InProgress') {
+						var results = _v5.a.results;
+						return _Utils_cmp(results.correct + results.incorrect, results.rounds) > -1;
+					} else {
+						return false;
+					}
+				}();
+				if (gameOver) {
+					var _v2 = model.state;
+					if (_v2.$ === 'InProgress') {
+						var results = _v2.a.results;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									state: $author$project$Main$Over(results)
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{state: $author$project$Main$Menu}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					var _v3 = model.state;
+					if (_v3.$ === 'InProgress') {
+						var game = _v3.a;
+						var _v4 = A2(
+							$author$project$Types$generator,
+							$elm$core$List$length(game.options),
+							model.seed);
+						var vowels = _v4.a;
+						var answer = _v4.b;
+						var seed = _v4.c;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									seed: seed,
+									state: $author$project$Main$InProgress(
+										_Utils_update(
+											game,
+											{answer: answer, guess: $elm$core$Maybe$Nothing, options: vowels}))
+								}),
+							$author$project$Main$play(answer));
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{state: $author$project$Main$Menu}),
+							$elm$core$Platform$Cmd$none);
+					}
+				}
+			case 'NewGame':
+				var nVowels = msg.a;
+				var _v6 = A2($author$project$Types$generator, nVowels, model.seed);
+				var vowels = _v6.a;
+				var answer = _v6.b;
+				var seed = _v6.c;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							seed: seed,
 							state: $author$project$Main$InProgress(
-								{answer: answer, guess: $elm$core$Maybe$Nothing})
+								{
+									answer: answer,
+									guess: $elm$core$Maybe$Nothing,
+									options: vowels,
+									results: {correct: 0, incorrect: 0, rounds: 5}
+								})
 						}),
-					$author$project$Main$play(answer));
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{state: $author$project$Main$Menu}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Main$Next = {$: 'Next'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5568,6 +5724,8 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$viewNext = function (disabled) {
 	return A2(
 		$elm$html$Html$button,
@@ -5582,35 +5740,6 @@ var $author$project$Main$viewNext = function (disabled) {
 				$elm$html$Html$text('next ⮕')
 			]));
 };
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
-var $elm$core$Tuple$pair = F2(
-	function (a, b) {
-		return _Utils_Tuple2(a, b);
-	});
-var $author$project$Types$combinations = A2(
-	$elm$core$List$concatMap,
-	function (v) {
-		return A2(
-			$elm$core$List$map,
-			$elm$core$Tuple$pair(v),
-			$author$project$Types$allTones);
-	},
-	$author$project$Types$allVowels);
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $author$project$Main$Guess = function (a) {
 	return {$: 'Guess', a: a};
@@ -5655,6 +5784,33 @@ var $author$project$Main$viewOption = F2(
 					$author$project$Types$char(option))
 				]));
 	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var $author$project$Types$withTones = $elm$core$List$concatMap(
+	function (v) {
+		return A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$pair(v),
+			$author$project$Types$allTones);
+	});
 var $author$project$Main$viewOptions = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5665,7 +5821,21 @@ var $author$project$Main$viewOptions = function (model) {
 		A2(
 			$elm$core$List$map,
 			$author$project$Main$viewOption(model),
-			$author$project$Types$combinations));
+			$author$project$Types$withTones(model.options)));
+};
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $author$project$Main$viewQuestion = function (_v0) {
+	var correct = _v0.correct;
+	var incorrect = _v0.incorrect;
+	var rounds = _v0.rounds;
+	var t = $elm$core$String$fromInt(correct + incorrect) + ('/' + $elm$core$String$fromInt(rounds));
+	return A2(
+		$elm$html$Html$h1,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(t)
+			]));
 };
 var $author$project$Main$PlaySound = function (a) {
 	return {$: 'PlaySound', a: a};
@@ -5686,6 +5856,7 @@ var $author$project$Main$viewSound = function (answer) {
 var $author$project$Main$viewGame = function (model) {
 	return _List_fromArray(
 		[
+			$author$project$Main$viewQuestion(model.results),
 			$author$project$Main$viewSound(model.answer),
 			$author$project$Main$viewOptions(model),
 			$author$project$Main$viewNext(
@@ -5694,19 +5865,158 @@ var $author$project$Main$viewGame = function (model) {
 				model.guess))
 		]);
 };
+var $author$project$Main$NewGame = function (a) {
+	return {$: 'NewGame', a: a};
+};
 var $author$project$Main$viewMenu = _List_fromArray(
 	[
+		A2(
+		$elm$html$Html$h1,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text('tones quiz')
+			])),
 		A2(
 		$elm$html$Html$button,
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onClick($author$project$Main$Next)
+				$elm$html$Html$Events$onClick(
+				$author$project$Main$NewGame(1))
 			]),
 		_List_fromArray(
 			[
-				$elm$html$Html$text('start!')
+				$elm$html$Html$text('easy')
+			])),
+		A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Main$NewGame(3))
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('medium')
+			])),
+		A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Main$NewGame(
+					$elm$core$List$length($author$project$Types$allVowels)))
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('hard')
 			]))
 	]);
+var $author$project$Main$Back = {$: 'Back'};
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Basics$round = _Basics_round;
+var $elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(xs);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Main$distribute = F3(
+	function (x, xs, n) {
+		var len = $elm$core$List$length(xs);
+		var get = F2(
+			function (i, l) {
+				get:
+				while (true) {
+					if (!i) {
+						return A2(
+							$elm$core$Maybe$withDefault,
+							x,
+							$elm$core$List$head(l));
+					} else {
+						if (i < 0) {
+							return x;
+						} else {
+							var $temp$i = i - 1,
+								$temp$l = A2(
+								$elm$core$Maybe$withDefault,
+								_List_Nil,
+								$elm$core$List$tail(l));
+							i = $temp$i;
+							l = $temp$l;
+							continue get;
+						}
+					}
+				}
+			});
+		return A2(
+			get,
+			$elm$core$Basics$round(n * len),
+			A2($elm$core$List$cons, x, xs));
+	});
+var $author$project$Main$viewResults = function (results) {
+	var score = $elm$core$String$fromInt(results.correct) + ('/' + $elm$core$String$fromInt(results.rounds));
+	var quip = A3(
+		$author$project$Main$distribute,
+		'bad luck!',
+		_List_fromArray(
+			['nice try!', 'well done!', 'outstanding!']),
+		results.correct / results.rounds);
+	return _List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('game over')
+				])),
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('score: ' + score)
+				])),
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(quip)
+				])),
+			A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Events$onClick($author$project$Main$Back)
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('play again')
+				]))
+		]);
+};
 var $author$project$Main$view = function (superModel) {
 	return {
 		body: function () {
@@ -5718,10 +6028,8 @@ var $author$project$Main$view = function (superModel) {
 					var model = _v0.a;
 					return $author$project$Main$viewGame(model);
 				default:
-					return _List_fromArray(
-						[
-							$elm$html$Html$text('TODO!')
-						]);
+					var results = _v0.a;
+					return $author$project$Main$viewResults(results);
 			}
 		}(),
 		title: 'mandarin tones quiz!'
