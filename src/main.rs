@@ -2,14 +2,14 @@
 extern crate serde_derive;
 extern crate tinytemplate;
 
-use serde::Serializer;
+use serde::{Serializer, Deserializer, de};
 use chrono::NaiveDate;
 use std::{
     fs::{self, read_to_string},
     io,
-    path::PathBuf,
+    path::PathBuf, fmt,
 };
-use yaml_rust::{Yaml, YamlLoader};
+use serde_yaml;
 use tinytemplate::TinyTemplate;
 
 const TITLE: &str = "Angus Findlay";
@@ -17,25 +17,29 @@ const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
 const CANONICAL_URL: &str = "https://angusjf.com/";
 const IMG: &str = "https://angusjf.com/images/plants.webp";
 
+#[derive(Deserialize)]
 struct ExperimentMetadata {
     summary: String,
     title: String,
+    #[serde(deserialize_with = "deserialize_date")]
     date: NaiveDate,
     img_url: String,
     img_alt: String,
     urls: Vec<Link>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
 struct BlogMetadata {
     title: String,
     summary: String,
+    #[serde(deserialize_with = "deserialize_date")]
     date: NaiveDate,
     img_url: String,
     img_alt: String,
     tags: Vec<String>,
     hidden: bool,
     seo_description: String,
+    #[serde(default)]
     canonical_url: String,
 }
 
@@ -74,13 +78,12 @@ struct Card {
     links: Vec<Link>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 struct Link {
-    url: String,
+    href: String,
     label: String,
     icon: String,
 }
-
 
 pub fn serialize_optional_date<S>( date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
     match date {
@@ -91,6 +94,25 @@ pub fn serialize_optional_date<S>( date: &Option<NaiveDate>, s: S) -> Result<S::
 
 pub fn serialize_date<S>( date: &NaiveDate, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
     s.serialize_str(&date.format("%-d %b '%y").to_string())
+}
+
+fn deserialize_date<'de, D>(deserializer: D) -> Result<NaiveDate, D::Error> where D: Deserializer<'de> {
+    struct Visitor;
+
+    impl<'de> de::Visitor<'de> for Visitor {
+        type Value = NaiveDate;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            write!(formatter, "datetime string")
+        }
+
+        fn visit_str<E>(self, v: &str) -> Result<NaiveDate, E> where E: de::Error,
+        {
+            Ok(v.parse().unwrap())
+        }
+    }
+
+    deserializer.deserialize_string(Visitor)
 }
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
@@ -112,56 +134,8 @@ fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
         .to_string()
 }
 
-/*
- *
- * PARSERS
- *
- */
-fn yaml_to_blog(url: String, yaml: &Yaml) -> BlogMetadata {
-    BlogMetadata {
-        title: yaml["title"].as_str().unwrap().to_string(),
-        summary: yaml["summary"].as_str().unwrap().to_string(),
-        img_url: yaml["img_url"].as_str().unwrap().to_string(),
-        img_alt: yaml["img_alt"].as_str().unwrap().to_string(),
-        tags: yaml["tags"]
-            .as_vec()
-            .unwrap()
-            .iter()
-            .map(|x| x.as_str().unwrap().to_string())
-            .collect(),
-        hidden: yaml["hidden"].as_bool().unwrap(),
-        seo_description: yaml["seo_description"].as_str().unwrap().to_string(),
-        date: yaml["date"].as_str().unwrap().parse().unwrap(),
-        canonical_url: url,
-    }
-}
-
-fn yaml_to_experiment(yaml: String) -> ExperimentMetadata {
-    let yaml = &YamlLoader::load_from_str(&yaml).unwrap()[0];
-
-    ExperimentMetadata {
-        summary: yaml["summary"].as_str().expect("title").to_string(),
-        title: yaml["title"].as_str().expect("title").to_string(),
-        img_url: yaml["img_url"].as_str().expect("title").to_string(),
-        img_alt: yaml["img_alt"].as_str().expect("title").to_string(),
-        date: yaml["date"].as_str().expect("date").parse().unwrap(),
-        urls: yaml["urls"]
-            .as_vec()
-            .unwrap()
-            .iter()
-            .map(|url| Link {
-                icon: url["icon"].as_str().unwrap().to_string(),
-                label: url["label"].as_str().unwrap().to_string(),
-                url: url["href"].as_str().unwrap().to_string(),
-            })
-            .collect(),
-    }
-}
-
 /* 
- *
  * CARD CONVERTERS
- *
  */
 fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
     Card {
@@ -180,7 +154,7 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
         img_url: experiment.img_url,
         title: experiment.title,
         content: experiment.summary,
-        links_to: experiment.urls[0].url.clone(),
+        links_to: experiment.urls[0].href.clone(),
         date: Some(experiment.date),
         img_alt: experiment.img_alt,
         links: experiment.urls,
@@ -188,9 +162,7 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
 }
 
 /*
- *
  * RENDERERS
- *
  */
 fn blogpost(
     metadata: BlogMetadata,
@@ -199,7 +171,7 @@ fn blogpost(
     Root {
         img_url: metadata.img_url,
         img_alt: metadata.img_alt,
-        canonical_url: metadata.canonical_url, // TODO Wrong?
+        canonical_url: metadata.canonical_url,
         description: metadata.seo_description,
         title: metadata.title,
         index: None,
@@ -221,14 +193,6 @@ fn index(
     }
 }
 
-fn parse_md(str: String) -> (Yaml, String) {
-    let (frontmatter, md) = str.trim_start_matches("---").split_once("---").unwrap();
-
-    let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
-
-    (frontmatter[0].clone(), md.to_string())
-}
-
 fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
     let mut tt = TinyTemplate::new();
@@ -244,24 +208,28 @@ fn main() -> std::io::Result<()> {
         .iter()
         .map(|path| {
             let json = read_to_string(path).unwrap();
-            yaml_to_experiment(json)
+            serde_yaml::from_str(&json).unwrap()
         })
         .map(experiment_to_card)
         .chain(
             files_in_dir("./content/blog")
                 .iter()
                 .map(|filename| {
-                    let (frontmatter, md) = parse_md(read_to_string(filename).unwrap());
+                    let content = read_to_string(filename).unwrap();
+                    let (frontmatter, md) = content.trim_start_matches("---").split_once("---").unwrap();
 
                     let name = filename_drop_ext(filename, ".md");
 
-                    let metadata = yaml_to_blog(name.clone(), &frontmatter);
+                    let metadata = BlogMetadata {
+                        canonical_url: CANONICAL_URL.to_string() + &name,
+                        ..serde_yaml::from_str(&frontmatter).unwrap()
+                    };
 
-                    let html = blogpost(metadata.clone(), md);
+                    let html = blogpost(metadata.clone(), md.to_string());
                     let html = &tt.render("root", &html).unwrap();
 
-                    std::fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
-                    std::fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
+                    fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
+                    fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
 
                     metadata
                 })
@@ -278,22 +246,22 @@ fn main() -> std::io::Result<()> {
             img_url: "/images/portrait.jpg".to_string(),
             img_alt: "Picture of me".to_string(),
             title: "Angus Findlay".to_string(),
-            content: "Fullstack Engineer based in London!".to_string(),
+            content: "Fullstack Engineer based in London.".to_string(),
             links_to: "https://github.com/angusjf/".to_string(),
             date: None,
             links: vec![
                 Link {
-                    url: "https://github.com/angusjf/".to_string(),
+                    href: "https://github.com/angusjf/".to_string(),
                     icon: "fab fa-github".to_string(),
                     label: "github/angusjf".to_string(),
                 },
                 Link {
-                    url: "https://www.linkedin.com/in/angus-findlay/".to_string(),
+                    href: "https://www.linkedin.com/in/angus-findlay/".to_string(),
                     icon: "fab fa-linkedin".to_string(),
                     label: "linkedin/angus-findlay".to_string(),
                 },
                 Link {
-                    url: "https://webdev.london/".to_string(),
+                    href: "https://webdev.london/".to_string(),
                     icon: "fas fa-comment".to_string(),
                     label: "webdev.london".to_string(),
                 },
@@ -301,7 +269,7 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    std::fs::write("dist/index.html", &tt.render("root", &index(cards)).unwrap()).unwrap();
+    fs::write("dist/index.html", &tt.render("root", &index(cards)).unwrap()).unwrap();
 
     Ok(())
 }
