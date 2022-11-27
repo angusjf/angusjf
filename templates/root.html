@@ -57,9 +57,9 @@
             <img alt="{c.img_alt}" src="{c.img_url}" {{if not @first}} loading="lazy" {{endif}} />
             <div>
                 <{{ if @first }}h1{{ else }}h2{{ endif }}>
-                    {{-if c.links_to}}<a href="{c.links_to}">{{endif-}}
+                    <a href="{c.links_to}">
                         {c.title}
-                        {{-if c.links_to}}</a>{{endif-}}
+                    </a>
                 </{{ if @first }}h1{{ else }}h2{{ endif }}>
                 {c.content | markdown}
                 {{- for l in c.links -}}

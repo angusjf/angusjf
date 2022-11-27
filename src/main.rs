@@ -68,7 +68,7 @@ struct Card {
     img_alt: String,
     title: String,
     content: String,
-    links_to: Option<String>,
+    links_to: String,
     #[serde(serialize_with = "serialize_optional_date")]
     date: Option<NaiveDate>,
     links: Vec<Link>,
@@ -168,7 +168,7 @@ fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
         img_url: blogpost.img_url,
         title: blogpost.title,
         content: blogpost.summary,
-        links_to: Some(blogpost.canonical_url),
+        links_to: blogpost.canonical_url,
         date: Some(blogpost.date),
         img_alt: blogpost.img_alt,
         links: vec![],
@@ -180,7 +180,7 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
         img_url: experiment.img_url,
         title: experiment.title,
         content: experiment.summary,
-        links_to: None,
+        links_to: experiment.urls[0].url.clone(),
         date: Some(experiment.date),
         img_alt: experiment.img_alt,
         links: experiment.urls,
@@ -279,7 +279,7 @@ fn main() -> std::io::Result<()> {
             img_alt: "Picture of me".to_string(),
             title: "Angus Findlay".to_string(),
             content: "Fullstack Engineer based in London!".to_string(),
-            links_to: None,
+            links_to: "https://github.com/angusjf/".to_string(),
             date: None,
             links: vec![
                 Link {
