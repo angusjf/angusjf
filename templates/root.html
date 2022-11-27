@@ -54,7 +54,7 @@
     <main class="homepage">
         {{ for c in index.cards }}
         <article class="card">
-            <img alt="{c.img_alt}" src="{c.img_url}" {{if @first}} loading="lazy" {{endif}} />
+            <img alt="{c.img_alt}" src="{c.img_url}" {{if not @first}} loading="lazy" {{endif}} />
             <div>
                 <{{ if @first }}h1{{ else }}h2{{ endif }}>
                     {{-if c.links_to}}<a href="{c.links_to}">{{endif-}}
