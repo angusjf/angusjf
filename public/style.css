@@ -38,7 +38,7 @@ a:hover {
 }
 
 body {
-  padding: 2rem 0rem;
+  padding: 3rem 0rem;
   margin: 0 auto;
 }
 
@@ -75,7 +75,7 @@ pre {
   flex-direction: column;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 770px) {
   .homepage {
     width: 48rem;
   }
