@@ -5,28 +5,73 @@
     <link rel="stylesheet" href="/style.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{{title}}</title>
+    <title>{title}</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="hsl(232deg 19% 11%)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="canonical" href="{{canonical_url}}" />
-    <meta name="description" content="{{description}}" />
-    {{extra_meta_tags}}
+    <link rel="canonical" href="{canonical_url}" />
+    <meta name="description" content="{description}" />
+    {{for t in extra_meta_tags}}
+    <meta name="{t.name}" content="{t.content}" />
+    {{endfor}}
     <!-- <link rel="sitemap" type="application/xml" href="/sitemap.xml" /> -->
     <link rel="icon" type="image/png" href="https://angusjf.com/favicon.png" />
     <link rel="icon" sizes="16x16" type="image/png" href="/favicon-16x16.png" />
     <link rel="icon" sizes="32x32" type="image/png" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="theme-color" content="#ffffff" />
+    {{if index}}
     <script async defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+    {{endif}}
+    {{if blog}}
+    <link media="screen and (prefers-color-scheme: dark)" rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/tokyo-night-dark.min.css">
+    <link media="(prefers-color-scheme: light)" rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script defer>hljs.highlightAll();</script>
+    {{endif}}
 </head>
 
 <body>
-    {{body}}
+    {{if index}}
+    <!--   MAKE ART   -->
+    <!-- NOT SOFTWARE -->
+    <main class="homepage">
+        {{ for c in index.cards }}
+        <article class="card">
+            <img alt="{c.img_alt}" src="{c.img_url}" {{if @first}} loading="lazy" {{endif}} />
+            <div>
+                <{{ if @first }}h1{{ else }}h2{{ endif }}>
+                    {{if c.links_to}}<a href="{c.links_to}">{{endif}}
+                        {c.title}
+                        {{if c.links_to}}</a>{{endif}}
+                </{{ if @first }}h1{{ else }}h2{{ endif }}>
+                {c.content | markdown}
+                <ul>
+                    {{ for l in c.links }}
+                    <li><i class="{l.icon}"></i><a href="{l.url}">{l.label}</a></li>
+                    {{ endfor }}
+                </ul>
+                {{if c.date}}
+                <date>{c.date}</date>
+                {{endif}}
+            </div>
+        </article>
+        {{ endfor }}
+    </main>
+    {{endif}}
+    {{if blog}}
+    <header class="link-back">
+        <a href="/">angusjf</a>
+    </header>
+    <main class="blog">
+        <article>{blog.content | markdown}</article>
+    </main>
+    {{endif}}
 </body>
 
 </html>

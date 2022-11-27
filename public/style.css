@@ -1,12 +1,11 @@
 html {
-  font-size: 20px;
+  font-size: 16px;
   font-family: system-ui, sans-serif;
   --white: white;
   --black: black;
   --codebg: #f7faf7;
   background-color: var(--white);
   color: var(--black);
-  font-weight: 600;
 }
 
 ::selection {
@@ -67,24 +66,26 @@ pre {
 .homepage {
   margin: 0 auto;
   width: 20rem;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .card {
   background: var(--white);
-  padding: 0 2rem 2rem 2rem;
-  gap: 2rem;
+  padding: 0 4rem 4rem 4rem;
+  gap: 4rem;
   display: flex;
   flex-direction: column;
 }
 
 @media (min-width: 700px) {
   .homepage {
-    width: 36rem;
+    width: 72rem;
   }
 
   .card {
     flex-direction: row;
-    padding: 2rem;
+    padding: 4rem;
   }
 
   .card:nth-child(even) {
@@ -94,13 +95,13 @@ pre {
 }
 
 .card i {
-    width: 2rem;
+    width: 4rem;
     display: inline-block;
 }
 
 .card img {
-  height: 12rem;
-  width: 12rem;
+  height: 24rem;
+  width: 24rem;
 }
 
 .card ul {
@@ -112,8 +113,8 @@ pre {
   transition: margin 0.1s, border 0.1s;
 }
 
-.card h2 {
-  font-size: 1rem;
+.card h1, .card h2 {
+  font-size: 2rem;
   font-weight: 600;
   display: inline;
 }

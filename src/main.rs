@@ -1,3 +1,8 @@
+#[macro_use]
+extern crate serde_derive;
+extern crate tinytemplate;
+
+use serde::Serializer;
 use chrono::NaiveDate;
 use std::{
     fs::{self, read_to_string},
@@ -5,7 +10,9 @@ use std::{
     path::PathBuf,
 };
 use yaml_rust::{Yaml, YamlLoader};
+use tinytemplate::TinyTemplate;
 
+const TITLE: &str = "Angus Findlay";
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
 const CANONICAL_URL: &str = "https://angusjf.com/";
 const IMG: &str = "https://angusjf.com/images/plants.webp";
@@ -19,12 +26,7 @@ struct ExperimentMetadata {
     urls: Vec<Link>,
 }
 
-struct Link {
-    url: String,
-    label: String,
-    icon: String,
-}
-
+#[derive(Clone)]
 struct BlogMetadata {
     title: String,
     summary: String,
@@ -37,14 +39,61 @@ struct BlogMetadata {
     canonical_url: String,
 }
 
+#[derive(Serialize)]
 struct Card {
     img_url: String,
     img_alt: String,
     title: String,
     content: String,
     links_to: Option<String>,
+    #[serde(serialize_with = "serialize_date")]
     date: Option<NaiveDate>,
     links: Vec<Link>,
+}
+
+#[derive(Serialize)]
+struct Link {
+    url: String,
+    label: String,
+    icon: String,
+}
+
+#[derive(Serialize)]
+struct Index {
+    cards: Vec<Card>,
+}
+
+#[derive(Serialize)]
+struct Blog {
+    content: String,
+}
+
+#[derive(Serialize)]
+struct Meta {
+    name: String,
+    content: String,
+}
+
+#[derive(Serialize)]
+struct Root {
+    title: String,
+    canonical_url: String,
+    description: String,
+    extra_meta_tags: Vec<Meta>,
+    index: Option<Index>,
+    blog: Option<Blog>,
+}
+
+pub fn serialize_date<S>(
+    date: &Option<NaiveDate>, 
+    s: S
+) -> Result<S::Ok, S::Error> 
+where
+    S: Serializer {
+    match date {
+        Some(date) => s.serialize_str(&date.format("%-d %b '%y").to_string()),
+        _ => s.serialize_none(),
+    }
 }
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
@@ -64,94 +113,67 @@ fn md_to_html(md: &str) -> String {
 }
 
 fn blogpost(
-    blog_template: &str,
-    root_template: &str,
-    metadata: &BlogMetadata,
+    metadata: BlogMetadata,
     content: String,
-) -> String {
-    let body = blog_template.replace("{{content}}", content.as_str());
-    root_template
-        .replace("{{body}}", &body)
-        .replace("{{title}}", &metadata.title)
-        .replace("{{extra_meta_tags}}", &blog_meta_tags(metadata))
-        .replace("{{description}}", &metadata.seo_description)
-        .replace("{{canonical_url}}", &metadata.canonical_url)
+) -> Root {
+    let metadata2 = metadata.clone();
+    Root {
+        canonical_url: metadata.canonical_url, // TODO Wrong?
+        description: metadata.seo_description,
+        title: metadata.title,
+        extra_meta_tags: blog_meta_tags(metadata2),
+        index: None,
+        blog: Some( Blog {
+            content: content
+        })
+    }
 }
 
 fn index(
-    card_template: &str,
-    index_template: &str,
-    root_template: &str,
     cards: Vec<Card>,
-) -> String {
-    let mut content = String::new();
+) -> Root {
+    Root {
+        canonical_url: CANONICAL_URL.to_string(),
+        description: DESCRIPTION.to_string(),
+        title: TITLE.to_string(),
+        extra_meta_tags: index_meta_tags(),
+        blog : None,
+        index : Some( Index {
+            cards: cards
+        })
+    }
+    // cards.iter().for_each(|card| {
+            // &card_template
+            //     .replace(
+            //         "{{title}}",
+            //         &match &card.links_to {
+            //             Some(href) => {
+            //                 format!("<a href=\"{}\">{}</a>", &href, &card.title.clone())
+            //             }
+            //             None => {
+            //                 format!("<a href=\"{}\">{}</a>", &card.links[0].url, &card.title.clone())
+            //             }
+            //         },
+            //     )
+            //     .replace("{{links}}", {
+            //         &if links.len() > 0 {
+            //             format!("<ul>{}</ul>", &links).to_string()
+            //         } else {
+            //             "".to_string()
+            //         }
+            //     })
+        // );
+    // });
 
-    cards.iter().for_each(|card| {
-        content.push_str(
-            &card_template
-                .replace(
-                    "{{title}}",
-                    &match &card.links_to {
-                        Some(href) => {
-                            format!("<a href=\"{}\">{}</a>", &href, &card.title.clone())
-                        }
-                        None => {
-                            format!("<a href=\"{}\">{}</a>", &card.links[0].url, &card.title.clone())
-                        }
-                    },
-                )
-                .replace("{{img_alt}}", &card.img_alt)
-                .replace("{{img_src}}", &card.img_url)
-                .replace("{{summary}}", &md_to_html(&card.content))
-                .replace("{{links}}", {
-                    let links = &card
-                        .links
-                        .iter()
-                        .map(|link| {
-                            format!(
-                                "<li><i class=\"{}\"></i><a href=\"{}\">{}</a></li>",
-                                link.icon, link.url, link.label
-                            )
-                        })
-                        .collect::<String>();
-                    &if links.len() > 0 {
-                        format!("<ul>{}</ul>", &links).to_string()
-                    } else {
-                        "".to_string()
-                    }
-                })
-                .replace(
-                    "{{href}}",
-                    &card.links_to.as_ref().unwrap_or(&"".to_string()),
-                )
-                .replace(
-                    "{{date}}",
-                    &match &card.date {
-                        Some(date) => {
-                            let date = date.format("%-d %b '%y").to_string();
-                            format!("<date>{}</date>", date)
-                        }
-                        None => "".to_string(),
-                    },
-                ),
-        );
-    });
+    // let body = index_template.replace("{{content}}", &content);
 
-    let body = index_template.replace("{{content}}", &content);
-
-    root_template
-        .replace("{{body}}", &body)
-        .replace("{{title}}", "Angus Findlay")
-        .replace("{{extra_meta_tags}}", &index_meta_tags())
-        .replace("{{description}}", DESCRIPTION)
-        .replace("{{canonical_url}}", CANONICAL_URL)
 }
 
 fn meta_tag((property, content): &(&str, &str)) -> String {
     format!("<meta name=\"{}\" content=\"{}\" />", property, content)
 }
 
-fn index_meta_tags() -> String {
+fn index_meta_tags() -> Vec<Meta> {
     [
         ("og:image", IMG),
         ("og:image:secure_url", "https://angusjf.com/plants.webp"),
@@ -169,11 +191,15 @@ fn index_meta_tags() -> String {
         ("twitter:image:alt", "Angus Findlay"),
     ]
     .iter()
-    .map(meta_tag)
-    .collect::<String>()
+    .map(|(name, content)|
+         Meta {
+             name: name.to_string(),
+             content: content.to_string(),
+        })
+    .collect()
 }
 
-fn blog_meta_tags(metadata: &BlogMetadata) -> String {
+fn blog_meta_tags(metadata: BlogMetadata) -> Vec<Meta> {
     [
         ("og:site_name", "Angus Findlay"),
         ("og:image", &metadata.img_url),
@@ -191,14 +217,22 @@ fn blog_meta_tags(metadata: &BlogMetadata) -> String {
         ("article:published_time", &metadata.date.to_string()),
     ]
     .iter()
-    .map(meta_tag)
+    .map(|(name, content)|
+         Meta {
+             name: name.to_string(),
+             content: content.to_string(),
+        })
     .chain(
         metadata
             .tags
             .iter()
-            .map(|tag| meta_tag(&("article:tag", tag.as_str()))),
+            .map(|tag|
+                 Meta {
+                     name: "article:tag".to_string(),
+                     content: tag.clone()
+                })
     )
-    .collect::<String>()
+    .collect()
 }
 
 fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
@@ -257,7 +291,7 @@ fn parse_md(str: String) -> (Yaml, String) {
 
     let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
 
-    (frontmatter[0].clone(), md_to_html(&md))
+    (frontmatter[0].clone(), md.to_string())
 }
 
 fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
@@ -285,9 +319,16 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
 
 fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
-    let blog_template = fs::read_to_string("templates/blog.html")?;
-    let index_template = fs::read_to_string("templates/index.html")?;
-    let card_template = fs::read_to_string("templates/card.html")?;
+
+    let mut tt = TinyTemplate::new();
+
+    tt.add_template("root", &root_template).unwrap();
+
+    tt.add_formatter("markdown", |md, str| {
+        let md = md.as_str().unwrap();
+        str.push_str(&md_to_html(md));
+        Ok(())
+    });
 
     let mut cards: Vec<_> = files_in_dir("./content/experiments")
         .iter()
@@ -306,7 +347,8 @@ fn main() -> std::io::Result<()> {
 
                     let metadata = yaml_to_blog(name.clone(), &frontmatter);
 
-                    let html = blogpost(&blog_template, &root_template, &metadata, md);
+                    let html = blogpost(metadata.clone(), md);
+                    let html = &tt.render("root", &html).unwrap();
 
                     std::fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
                     std::fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
@@ -349,11 +391,7 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    std::fs::write(
-        "dist/index.html",
-        &index(&card_template, &index_template, &root_template, cards),
-    )
-    .unwrap();
+    std::fs::write("dist/index.html", &tt.render("root", &index(cards)).unwrap()).unwrap();
 
     Ok(())
 }

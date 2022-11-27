@@ -37,7 +37,7 @@ if (showFcaNumber) {
 }
 ```
 
-Problem solved!
+Now we have our changes ready to go as soon as they're needed.
 
 However, in a few months this flag will be enabled forever and that 'else branch' will become dead code. How will we remember to remove it?
 
