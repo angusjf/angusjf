@@ -40,13 +40,36 @@ struct BlogMetadata {
 }
 
 #[derive(Serialize)]
+struct Root {
+    title: String,
+    img_url: String,
+    img_alt: String,
+    canonical_url: String,
+    description: String,
+    index: Option<Index>,
+    blog: Option<Blog>,
+}
+
+#[derive(Serialize)]
+struct Index {
+    cards: Vec<Card>,
+}
+
+#[derive(Serialize)]
+struct Blog {
+    content: String,
+    #[serde(serialize_with = "serialize_date")]
+    date: NaiveDate,
+}
+
+#[derive(Serialize)]
 struct Card {
     img_url: String,
     img_alt: String,
     title: String,
     content: String,
     links_to: Option<String>,
-    #[serde(serialize_with = "serialize_date")]
+    #[serde(serialize_with = "serialize_optional_date")]
     date: Option<NaiveDate>,
     links: Vec<Link>,
 }
@@ -58,42 +81,16 @@ struct Link {
     icon: String,
 }
 
-#[derive(Serialize)]
-struct Index {
-    cards: Vec<Card>,
-}
 
-#[derive(Serialize)]
-struct Blog {
-    content: String,
-}
-
-#[derive(Serialize)]
-struct Meta {
-    name: String,
-    content: String,
-}
-
-#[derive(Serialize)]
-struct Root {
-    title: String,
-    canonical_url: String,
-    description: String,
-    extra_meta_tags: Vec<Meta>,
-    index: Option<Index>,
-    blog: Option<Blog>,
-}
-
-pub fn serialize_date<S>(
-    date: &Option<NaiveDate>, 
-    s: S
-) -> Result<S::Ok, S::Error> 
-where
-    S: Serializer {
+pub fn serialize_optional_date<S>( date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
     match date {
-        Some(date) => s.serialize_str(&date.format("%-d %b '%y").to_string()),
+        Some(date) => serialize_date(date, s),
         _ => s.serialize_none(),
     }
+}
+
+pub fn serialize_date<S>( date: &NaiveDate, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    s.serialize_str(&date.format("%-d %b '%y").to_string())
 }
 
 fn files_in_dir(dir: &str) -> Vec<PathBuf> {
@@ -103,136 +100,6 @@ fn files_in_dir(dir: &str) -> Vec<PathBuf> {
         // .filter(|path| path.as_ref().map_or(true, |x| !x.starts_with(".")))
         .collect::<Result<Vec<_>, io::Error>>()
         .unwrap()
-}
-
-fn md_to_html(md: &str) -> String {
-    let parser = pulldown_cmark::Parser::new(&md);
-    let mut html_output = String::new();
-    pulldown_cmark::html::push_html(&mut html_output, parser);
-    html_output
-}
-
-fn blogpost(
-    metadata: BlogMetadata,
-    content: String,
-) -> Root {
-    let metadata2 = metadata.clone();
-    Root {
-        canonical_url: metadata.canonical_url, // TODO Wrong?
-        description: metadata.seo_description,
-        title: metadata.title,
-        extra_meta_tags: blog_meta_tags(metadata2),
-        index: None,
-        blog: Some( Blog {
-            content: content
-        })
-    }
-}
-
-fn index(
-    cards: Vec<Card>,
-) -> Root {
-    Root {
-        canonical_url: CANONICAL_URL.to_string(),
-        description: DESCRIPTION.to_string(),
-        title: TITLE.to_string(),
-        extra_meta_tags: index_meta_tags(),
-        blog : None,
-        index : Some( Index {
-            cards: cards
-        })
-    }
-    // cards.iter().for_each(|card| {
-            // &card_template
-            //     .replace(
-            //         "{{title}}",
-            //         &match &card.links_to {
-            //             Some(href) => {
-            //                 format!("<a href=\"{}\">{}</a>", &href, &card.title.clone())
-            //             }
-            //             None => {
-            //                 format!("<a href=\"{}\">{}</a>", &card.links[0].url, &card.title.clone())
-            //             }
-            //         },
-            //     )
-            //     .replace("{{links}}", {
-            //         &if links.len() > 0 {
-            //             format!("<ul>{}</ul>", &links).to_string()
-            //         } else {
-            //             "".to_string()
-            //         }
-            //     })
-        // );
-    // });
-
-    // let body = index_template.replace("{{content}}", &content);
-
-}
-
-fn meta_tag((property, content): &(&str, &str)) -> String {
-    format!("<meta name=\"{}\" content=\"{}\" />", property, content)
-}
-
-fn index_meta_tags() -> Vec<Meta> {
-    [
-        ("og:image", IMG),
-        ("og:image:secure_url", "https://angusjf.com/plants.webp"),
-        ("og:image:alt", "Angus Findlay"),
-        ("og:title", "Angus Findlay's Blog - angusjf"),
-        ("og:url", "https://angusjf.com/"),
-        ("og:description", DESCRIPTION),
-        ("og:site_name", "Angus Findlay"),
-        ("og:locale", "en_GB"),
-        ("og:type", "website"),
-        ("twitter:card", "summary"),
-        ("twitter:title", "Angus Findlay's Blog - angusjf"),
-        ("twitter:description", DESCRIPTION),
-        ("twitter:image", IMG),
-        ("twitter:image:alt", "Angus Findlay"),
-    ]
-    .iter()
-    .map(|(name, content)|
-         Meta {
-             name: name.to_string(),
-             content: content.to_string(),
-        })
-    .collect()
-}
-
-fn blog_meta_tags(metadata: BlogMetadata) -> Vec<Meta> {
-    [
-        ("og:site_name", "Angus Findlay"),
-        ("og:image", &metadata.img_url),
-        ("og:image:secure_url", &metadata.img_url),
-        ("og:image:alt", &metadata.img_alt),
-        ("og:title", &metadata.title),
-        ("og:url", &metadata.canonical_url),
-        ("og:description", &metadata.seo_description),
-        ("og:type", "article"),
-        ("twitter:card", "summary"),
-        ("twitter:title", &metadata.title),
-        ("twitter:description", &metadata.seo_description),
-        ("twitter:image", &metadata.img_url),
-        ("twitter:image:alt", &metadata.img_alt),
-        ("article:published_time", &metadata.date.to_string()),
-    ]
-    .iter()
-    .map(|(name, content)|
-         Meta {
-             name: name.to_string(),
-             content: content.to_string(),
-        })
-    .chain(
-        metadata
-            .tags
-            .iter()
-            .map(|tag|
-                 Meta {
-                     name: "article:tag".to_string(),
-                     content: tag.clone()
-                })
-    )
-    .collect()
 }
 
 fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
@@ -245,6 +112,11 @@ fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
         .to_string()
 }
 
+/*
+ *
+ * PARSERS
+ *
+ */
 fn yaml_to_blog(url: String, yaml: &Yaml) -> BlogMetadata {
     BlogMetadata {
         title: yaml["title"].as_str().unwrap().to_string(),
@@ -286,14 +158,11 @@ fn yaml_to_experiment(yaml: String) -> ExperimentMetadata {
     }
 }
 
-fn parse_md(str: String) -> (Yaml, String) {
-    let (frontmatter, md) = str.trim_start_matches("---").split_once("---").unwrap();
-
-    let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
-
-    (frontmatter[0].clone(), md.to_string())
-}
-
+/* 
+ *
+ * CARD CONVERTERS
+ *
+ */
 fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
     Card {
         img_url: blogpost.img_url,
@@ -305,6 +174,7 @@ fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
         links: vec![],
     }
 }
+
 fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
     Card {
         img_url: experiment.img_url,
@@ -317,16 +187,56 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
     }
 }
 
+/*
+ *
+ * RENDERERS
+ *
+ */
+fn blogpost(
+    metadata: BlogMetadata,
+    content: String,
+) -> Root {
+    Root {
+        img_url: metadata.img_url,
+        img_alt: metadata.img_alt,
+        canonical_url: metadata.canonical_url, // TODO Wrong?
+        description: metadata.seo_description,
+        title: metadata.title,
+        index: None,
+        blog: Some(Blog { content, date: metadata.date }),
+    }
+}
+
+fn index(
+    cards: Vec<Card>,
+) -> Root {
+    Root {
+        img_url: IMG.to_string(),
+        img_alt: TITLE.to_string(),
+        canonical_url: CANONICAL_URL.to_string(),
+        description: DESCRIPTION.to_string(),
+        title: TITLE.to_string(),
+        index : Some(Index { cards }),
+        blog : None,
+    }
+}
+
+fn parse_md(str: String) -> (Yaml, String) {
+    let (frontmatter, md) = str.trim_start_matches("---").split_once("---").unwrap();
+
+    let frontmatter = YamlLoader::load_from_str(frontmatter).unwrap();
+
+    (frontmatter[0].clone(), md.to_string())
+}
+
 fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
-
     let mut tt = TinyTemplate::new();
-
     tt.add_template("root", &root_template).unwrap();
-
     tt.add_formatter("markdown", |md, str| {
         let md = md.as_str().unwrap();
-        str.push_str(&md_to_html(md));
+        let parser = pulldown_cmark::Parser::new(&md);
+        pulldown_cmark::html::push_html(str, parser);
         Ok(())
     });
 

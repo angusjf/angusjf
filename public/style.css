@@ -65,27 +65,24 @@ pre {
 
 .homepage {
   margin: 0 auto;
-  width: 20rem;
-  font-weight: 600;
-  font-size: 2rem;
+  width: 24rem;
 }
 
 .card {
-  background: var(--white);
-  padding: 0 4rem 4rem 4rem;
-  gap: 4rem;
+  padding: 0 3rem 3rem 3rem;
+  gap: 3rem;
   display: flex;
   flex-direction: column;
 }
 
 @media (min-width: 700px) {
   .homepage {
-    width: 72rem;
+    width: 48rem;
   }
 
   .card {
     flex-direction: row;
-    padding: 4rem;
+    padding: 3rem;
   }
 
   .card:nth-child(even) {
@@ -100,8 +97,8 @@ pre {
 }
 
 .card img {
-  height: 24rem;
-  width: 24rem;
+  height: 14rem;
+  width: 14rem;
 }
 
 .card ul {
@@ -109,18 +106,12 @@ pre {
   list-style: none;
 }
 
-.card * {
-  transition: margin 0.1s, border 0.1s;
+.card li {
+  line-height: 2;
 }
 
 .card h1, .card h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  display: inline;
-}
-
-.card li {
-  line-height: 2;
+    margin-top: 0;
 }
 
 /* blog */
