@@ -17,7 +17,7 @@ html {
   :root {
     --white: hsl(232deg 19% 11%);
     --black: hsl(47deg 9% 98%);
-    --codebg: #302040;
+    --codebg: rgb(53, 69, 89);
   }
 }
 
