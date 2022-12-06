@@ -3,7 +3,7 @@ html {
   font-family: system-ui, sans-serif;
   --white: white;
   --black: black;
-  --codebg: #f7faf7;
+  --codebg: #e3e7e3;
   background-color: var(--white);
   color: var(--black);
 }
@@ -59,6 +59,10 @@ code,
 pre {
   font-family: "Fira Mono", monospace;
   background-color: var(--codebg);
+}
+
+code {
+  padding: 0px 0.2rem;
 }
 
 /* homepage */

@@ -7,7 +7,6 @@ seo_description: "An introduction to the Elm functional programming language for
 summary: How Elm takes a novel approach to creating frontend applications, and what React developers can learn from it. Originally written for the [Theodo Blog](https://blog.theodo.com/2021/10/intro-to-elm-for-react-devs/), published in the [React Newsletter](https://reactnewsletter.com/issues/289).
 tags: ["elm", "react", "functional", "javascript", "typescript"]
 hidden: false
-
 ---
 
 # An Introduction to Elm for React Developers
