@@ -103,6 +103,7 @@ code {
 .card img {
   height: 14rem;
   width: 14rem;
+  align-self: center;
 }
 
 .card ul {
