@@ -258,8 +258,7 @@ Now, we can break the chain of events:
 - So `onShownDateChange` is called
 - So `setState` is called
 - So `App` is re-rendered
-- ~~So `[range]` gets a **new memory address**, even though its value is the same~~
-  - The useMemo makes sure `ranges` keeps the same memory address, as `range` is the same
+- The useMemo makes sure `ranges` **keeps the same memory address**, as `range` is the same
 
 Not exactly elegant, but at least it works!
 
