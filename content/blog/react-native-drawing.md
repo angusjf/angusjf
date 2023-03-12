@@ -135,8 +135,8 @@ M 0 0 L 10 20 L 99 99
 const pointsToSvg = (points: Point[]) => {
   if (points.length > 0) {
     return (
-      `M ${round(points[0].x)},${round(points[0].y)}` +
-      points.slice(1).map((point) => ` L ${round(point.x)},${round(point.y)}`)
+      `M ${points[0].x},${points[0].y}` +
+      points.slice(1).map((point) => ` L ${point.x},${point.y}`)
     );
   } else {
     return "";
@@ -144,5 +144,16 @@ const pointsToSvg = (points: Point[]) => {
 };
 ```
 
+## Storing Drawings Efficiently
+
+For 575 we use a no-SQL database, and store the signatures as SVGs. This is not the simplest setup, but it is the most convenient and simple. However, they do create ridiculously long SVGs:
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" version="1.1"> 
+  <g>
+      <path d="M 76.66665649414062,108.66665649414062 L 75.33332824707031,110.99998474121094, L 75.33332824707031,112.33332824707031, L 76,110.99998474121094, L 78.33332824707031,106.99998474121094, L 84,98.33332824707031, L 91,87.66665649414062, L 97.66665649414062,77.66665649414062, L 103.33332824707031,70.66665649414062, L 114,63.666656494140625, ...
+```
+
+The solution here is pretty simple - just round the numbers! We can use `number.toFixed(0)` to chop the decimal point off the end, reducing overall storage size by a factor of 10 with little to no degradation in quality at this scale.
 
 [You can find my finished code here](https://github.com/angusjf/575/blob/b8f9f771bf96438599e892f0e7b888036e6f12da/src/components/Whiteboard.tsx#L34). Happy drawing!
