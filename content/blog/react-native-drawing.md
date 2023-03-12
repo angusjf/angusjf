@@ -13,13 +13,13 @@ hidden: false
 
 ![some drawings from five-seven-five](https://angusjf.com/images/drawings.webp)
 
-I've been working on 575, *the app for the next generation of Haiku poets* for the last few months, it's my pride and joy. As a team, we love to experiment with light-hearted and non-traditional features that bring a lot of fun to the app. 
+I've been working on [575](https://www.github.com/angusjf/575) *(the app for the next generation of Haiku poets)* for the last few months – it's my pride and joy. As a team, we love to experiment with light-hearted and non-traditional features that bring a lot of fun to the app. 
 
-One feature is the ability to add your signature to the haikus you post. Think of it as an alternative to a username or profile picture - a bit a of throwback to the Picochats of the Nintendo DS days.
+One such feature is the ability to add your signature to the haikus you post. Think of it as an alternative to a username or profile picture - a bit a of throwback to the Pictochats of the Nintendo DS days.
 
-But how would you implement this in React Native, our app framework of choice? The answer is to use `PanResponder`.
+But how would you implement this in *React Native*, our app framework of choice? The answer is to use `PanResponder`.
 
-## API Design
+## Code Walkthrough
 
 We will represent a "drawing" as a list of lines, and in turn represent a line as a list of points. A point is just an x and y coordinate:
 ```tsx
@@ -29,7 +29,7 @@ export type Point = {
 };
 ```
 
-We of course want or input to be [fully controlled](https://angusjf.com/faux-controlled-components/)... Although we will keep track of the current stroke ourselves.
+We of course want or input to be [fully controlled](https://angusjf.com/faux-controlled-components/) - although we will keep track of the current stroke inside the component (`currentPoints`).
 
 ```tsx
 type WhiteboardProps = {
@@ -145,4 +145,4 @@ const pointsToSvg = (points: Point[]) => {
 ```
 
 
-Happy drawing!
+[You can find my finished code here](https://github.com/angusjf/575/blob/b8f9f771bf96438599e892f0e7b888036e6f12da/src/components/Whiteboard.tsx#L34). Happy drawing!
