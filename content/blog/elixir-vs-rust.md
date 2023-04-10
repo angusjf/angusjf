@@ -1,3 +1,14 @@
+---
+title: Rust Compiler Speed Case Study
+img_url: https://angusjf.com/images/rust-vs-elixir.jpg
+img_alt: Bar chart showing speeds of the rust and elixir compilers
+date: "2023-04-10"
+seo_description: "A comparison of the Elixir and Rust compilers."
+summary: "A comparison of the Elixir and Rust compilers"
+tags: ["rust", "elixir"]
+hidden: false
+---
+
 # Rust Compiler Speed: A Real World Case Study
 
 # Motivations
