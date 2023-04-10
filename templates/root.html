@@ -57,7 +57,8 @@
     <main class="homepage">
         {{ for c in index.cards }}
         <article class="card">
-            <img alt="{c.img_alt}" src="{c.img_url}" {{if not @first}} loading="lazy" {{endif}} />
+            <img alt="{c.img_alt}" src="{c.img_url}" {{if not @first}} loading="lazy" {{endif}}
+                data-thumbhash="{c.img_url | thumbhash}" />
             <div>
                 <{{ if @first }}h1{{ else }}h2{{ endif }}>
                     <a href="{c.links_to}">
@@ -78,6 +79,7 @@
             </div>
         </article>
         {{ endfor }}
+        <script type="module" src="/thumbhash.mjs"></script>
     </main>
     {{endif}}
     {{if blog}}

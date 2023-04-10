@@ -1,6 +1,6 @@
 ---
 title: "Intro to Elm for React Developers"
-img_url: https://angusjf.com/images/elm.webp
+img_url: /images/elm.webp
 img_alt: The Elm logo
 date: "2021-10-25"
 seo_description: "An introduction to the Elm functional programming language for frontend web developers familiar with React, JavaScript and TypeScript"

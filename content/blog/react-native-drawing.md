@@ -1,6 +1,6 @@
 ---
 title: "Drawing with React Native"
-img_url: "https://angusjf.com/images/drawings.webp"
+img_url: /images/drawings.webp
 img_alt: "some drawings from five-seven-five"
 date: "2023-03-12"
 seo_description: "Creating a touch/drawing input in React Native with Expo"

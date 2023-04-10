@@ -2,14 +2,18 @@
 extern crate serde_derive;
 extern crate tinytemplate;
 
-use serde::{Serializer, Deserializer, de};
+use base64::{engine::general_purpose, Engine as _};
 use chrono::NaiveDate;
+use image::imageops::FilterType;
+use serde::{de, Deserializer, Serializer};
+use serde_yaml;
 use std::{
+    fmt,
     fs::{self, read_to_string},
     io,
-    path::PathBuf, fmt,
+    path::PathBuf,
 };
-use serde_yaml;
+use thumbhash::rgba_to_thumb_hash;
 use tinytemplate::TinyTemplate;
 
 const TITLE: &str = "Angus Findlay";
@@ -85,18 +89,27 @@ struct Link {
     icon: String,
 }
 
-pub fn serialize_optional_date<S>( date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
+pub fn serialize_optional_date<S>(date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
     match date {
         Some(date) => serialize_date(date, s),
         _ => s.serialize_none(),
     }
 }
 
-pub fn serialize_date<S>( date: &NaiveDate, s: S) -> Result<S::Ok, S::Error> where S: Serializer {
+pub fn serialize_date<S>(date: &NaiveDate, s: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
     s.serialize_str(&date.format("%-d %b '%y").to_string())
 }
 
-fn deserialize_date<'de, D>(deserializer: D) -> Result<NaiveDate, D::Error> where D: Deserializer<'de> {
+fn deserialize_date<'de, D>(deserializer: D) -> Result<NaiveDate, D::Error>
+where
+    D: Deserializer<'de>,
+{
     struct Visitor;
 
     impl<'de> de::Visitor<'de> for Visitor {
@@ -106,7 +119,9 @@ fn deserialize_date<'de, D>(deserializer: D) -> Result<NaiveDate, D::Error> wher
             write!(formatter, "datetime string")
         }
 
-        fn visit_str<E>(self, v: &str) -> Result<NaiveDate, E> where E: de::Error,
+        fn visit_str<E>(self, v: &str) -> Result<NaiveDate, E>
+        where
+            E: de::Error,
         {
             Ok(v.parse().unwrap())
         }
@@ -134,7 +149,7 @@ fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
         .to_string()
 }
 
-/* 
+/*
  * CARD CONVERTERS
  */
 fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
@@ -164,10 +179,7 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
 /*
  * RENDERERS
  */
-fn blogpost(
-    metadata: BlogMetadata,
-    content: String,
-) -> Root {
+fn blogpost(metadata: BlogMetadata, content: String) -> Root {
     Root {
         img_url: metadata.img_url,
         img_alt: metadata.img_alt,
@@ -175,21 +187,22 @@ fn blogpost(
         description: metadata.seo_description,
         title: metadata.title,
         index: None,
-        blog: Some(Blog { content, date: metadata.date }),
+        blog: Some(Blog {
+            content,
+            date: metadata.date,
+        }),
     }
 }
 
-fn index(
-    cards: Vec<Card>,
-) -> Root {
+fn index(cards: Vec<Card>) -> Root {
     Root {
         img_url: IMG.to_string(),
         img_alt: TITLE.to_string(),
         canonical_url: CANONICAL_URL.to_string(),
         description: DESCRIPTION.to_string(),
         title: TITLE.to_string(),
-        index : Some(Index { cards }),
-        blog : None,
+        index: Some(Index { cards }),
+        blog: None,
     }
 }
 
@@ -201,6 +214,21 @@ fn main() -> std::io::Result<()> {
         let md = md.as_str().unwrap();
         let parser = pulldown_cmark::Parser::new(&md);
         pulldown_cmark::html::push_html(str, parser);
+        Ok(())
+    });
+    tt.add_formatter("thumbhash", |img_url, str| {
+        let img_url = img_url.as_str().unwrap();
+        println!("{:?}", img_url);
+        let image = image::open("public/".to_string() + img_url).unwrap();
+        let image = image.resize(100, 100, FilterType::Nearest);
+        let rgba = image.to_rgba8();
+        let thumb_hash = rgba_to_thumb_hash(
+            rgba.width() as usize,
+            rgba.height() as usize,
+            &rgba.into_raw(),
+        );
+        let encoded_thumb_hash = general_purpose::STANDARD.encode(thumb_hash);
+        str.push_str(&encoded_thumb_hash);
         Ok(())
     });
 
@@ -216,7 +244,8 @@ fn main() -> std::io::Result<()> {
                 .iter()
                 .map(|filename| {
                     let content = read_to_string(filename).unwrap();
-                    let (frontmatter, md) = content.trim_start_matches("---").split_once("---").unwrap();
+                    let (frontmatter, md) =
+                        content.trim_start_matches("---").split_once("---").unwrap();
 
                     let name = filename_drop_ext(filename, ".md");
 
@@ -269,7 +298,11 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    fs::write("dist/index.html", &tt.render("root", &index(cards)).unwrap()).unwrap();
+    fs::write(
+        "dist/index.html",
+        &tt.render("root", &index(cards)).unwrap(),
+    )
+    .unwrap();
 
     Ok(())
 }
