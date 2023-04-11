@@ -46,7 +46,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-    <script defer>hljs.highlightAll();</script>
+    <script>hljs.highlightAll();</script>
     {{endif}}
 </head>
 
@@ -79,7 +79,7 @@
             </div>
         </article>
         {{ endfor }}
-        <script type="module" src="/thumbhash.mjs"></script>
+        <script async type="module" src="/thumbhash.mjs"></script>
     </main>
     {{endif}}
     {{if blog}}
