@@ -206,6 +206,17 @@ fn index(cards: Vec<Card>) -> Root {
     }
 }
 
+fn get_encoded_thumbhash(img_url: &str) -> String {
+    let image = image::open(img_url).unwrap();
+    let image = image.resize(100, 100, FilterType::Nearest);
+    let thumb_hash = rgba_to_thumb_hash(
+        image.width() as usize,
+        image.height() as usize,
+        &image.to_rgba8().into_raw(),
+    );
+    general_purpose::STANDARD.encode(thumb_hash)
+}
+
 fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
     let mut tt = TinyTemplate::new();
@@ -217,18 +228,8 @@ fn main() -> std::io::Result<()> {
         Ok(())
     });
     tt.add_formatter("thumbhash", |img_url, str| {
-        let img_url = img_url.as_str().unwrap();
-        println!("{:?}", img_url);
-        let image = image::open("public/".to_string() + img_url).unwrap();
-        let image = image.resize(100, 100, FilterType::Nearest);
-        let rgba = image.to_rgba8();
-        let thumb_hash = rgba_to_thumb_hash(
-            rgba.width() as usize,
-            rgba.height() as usize,
-            &rgba.into_raw(),
-        );
-        let encoded_thumb_hash = general_purpose::STANDARD.encode(thumb_hash);
-        str.push_str(&encoded_thumb_hash);
+        let img_url = "public/".to_string() + img_url.as_str().unwrap();
+        str.push_str(&get_encoded_thumbhash(&img_url));
         Ok(())
     });
 
