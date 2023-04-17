@@ -191,7 +191,7 @@ In Scala there are lots of different types of list, two examples are the immutab
 
 Again we define the `ValidStatus` __*is-a*__ `Status` relation:
 
-```scala
+```rust
 class Status {}
 
 class ValidStatus extends Status {}
@@ -199,7 +199,7 @@ class ValidStatus extends Status {}
 
 So `List` lets us do this:
 
-```scala
+```rust
 def add(orders: List[Status]) {
     // we can't change list here, just look at it
 }
