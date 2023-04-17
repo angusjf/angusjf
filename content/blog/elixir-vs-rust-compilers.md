@@ -71,7 +71,7 @@ Elixir wins this one by a huge margin.
 
 For this test (which, it must be said, is the least scientific of them all), I modified a single file and recompiled both the projects. For each service, I chose a selection of files that looked highly-depended-on configuration files and chose the one with the worst results.
 
-```elixir
+```bash
 # elixir service (single file)
 vim apps/core/config/config.exs
 mix compile
@@ -95,7 +95,7 @@ As you can see, the times are much faster, but Elixir performs even better here.
 
 Just for fun, I’ve run the formatter on both projects. Pretty unsurprising but narrow lead for Rust here. 
 
-```elixir
+```bash
 # elixir service
 mix format
 
