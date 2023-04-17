@@ -18,7 +18,7 @@ use tinytemplate::TinyTemplate;
 
 const TITLE: &str = "Angus Findlay";
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
-const CANONICAL_URL: &str = "https://angusjf.com";
+const CANONICAL_ORIGIN: &str = "https://angusjf.com";
 const IMG: &str = "/images/plants.webp";
 
 #[derive(Deserialize)]
@@ -44,7 +44,7 @@ struct BlogMetadata {
     hidden: bool,
     seo_description: String,
     #[serde(default)]
-    canonical_url: String,
+    path: String,
 }
 
 #[derive(Serialize)]
@@ -52,7 +52,8 @@ struct Root {
     title: String,
     img_url: String,
     img_alt: String,
-    canonical_url: String,
+    canonical_origin: String,
+    path: String,
     description: String,
     index: Option<Index>,
     blog: Option<Blog>,
@@ -157,7 +158,7 @@ fn blogpost_to_card(blogpost: BlogMetadata) -> Card {
         img_url: blogpost.img_url,
         title: blogpost.title,
         content: blogpost.summary,
-        links_to: blogpost.canonical_url,
+        links_to: blogpost.path,
         date: Some(blogpost.date),
         img_alt: blogpost.img_alt,
         links: vec![],
@@ -183,7 +184,8 @@ fn blogpost(metadata: BlogMetadata, content: String) -> Root {
     Root {
         img_url: metadata.img_url,
         img_alt: metadata.img_alt,
-        canonical_url: metadata.canonical_url,
+        canonical_origin: CANONICAL_ORIGIN.to_string(),
+        path: metadata.path,
         description: metadata.seo_description,
         title: metadata.title,
         index: None,
@@ -198,7 +200,8 @@ fn index(cards: Vec<Card>) -> Root {
     Root {
         img_url: IMG.to_string(),
         img_alt: TITLE.to_string(),
-        canonical_url: CANONICAL_URL.to_string(),
+        canonical_origin: CANONICAL_ORIGIN.to_string(),
+        path: "".to_string(),
         description: DESCRIPTION.to_string(),
         title: TITLE.to_string(),
         index: Some(Index { cards }),
@@ -251,7 +254,7 @@ fn main() -> std::io::Result<()> {
                     let name = filename_drop_ext(filename, ".md");
 
                     let metadata = BlogMetadata {
-                        canonical_url: "/".to_owned() + &name,
+                        path: "/".to_owned() + &name,
                         ..serde_yaml::from_str(&frontmatter).unwrap()
                     };
 
