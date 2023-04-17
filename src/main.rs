@@ -18,8 +18,8 @@ use tinytemplate::TinyTemplate;
 
 const TITLE: &str = "Angus Findlay";
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
-const CANONICAL_URL: &str = "https://angusjf.com/";
-const IMG: &str = "https://angusjf.com/images/plants.webp";
+const CANONICAL_URL: &str = "https://angusjf.com";
+const IMG: &str = "/images/plants.webp";
 
 #[derive(Deserialize)]
 struct ExperimentMetadata {
@@ -251,7 +251,7 @@ fn main() -> std::io::Result<()> {
                     let name = filename_drop_ext(filename, ".md");
 
                     let metadata = BlogMetadata {
-                        canonical_url: CANONICAL_URL.to_string() + &name,
+                        canonical_url: "/".to_owned() + &name,
                         ..serde_yaml::from_str(&frontmatter).unwrap()
                     };
 
