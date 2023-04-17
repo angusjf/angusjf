@@ -19,7 +19,7 @@ One of the most common sentiments I’ll hear from Rust skeptics is that the com
 
 At Prima, we have created two web services, both of a similar size, both GraphQL backends: one written for the Spanish market (in Rust) and the other for the British market (in Elixir). How comparable they are is hard to tell, but a naïve metric (and the one I will use) is number of lines of code, excluding test files as they are not compiled in this experiment.
 
-![Screenshot 2023-03-01 at 15.05.22.png](Screenshot_2023-03-01_at_15.05.22.png)
+![Screenshot 2023-03-01 at 15.05.22.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_15.05.22.png)
 
 The service written in Rust has about 15% more code in it than the Elixir service. Note that this is not a good measurement of ‘how much code it takes to build a service’ in either language, as both services have different requirements and dependencies.
 
@@ -45,7 +45,7 @@ cargo clean
 cargo build
 ```
 
-![Screenshot 2023-03-01 at 14.27.49.png](Screenshot_2023-03-01_at_14.27.49.png)
+![Screenshot 2023-03-01 at 14.27.49.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_14.27.49.png)
 
 We see here that on a 4 core machine Elixir and Rust are fairly comparable.
 
@@ -63,7 +63,7 @@ ls src | xargs -I % cargo clean -p %
 cargo build
 ```
 
-![Screenshot 2023-03-01 at 14.27.59.png](Screenshot_2023-03-01_at_14.27.59.png)
+![Screenshot 2023-03-01 at 14.27.59.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_14.27.59.png)
 
 Elixir wins this one by a huge margin.
 
@@ -81,13 +81,13 @@ vim src/config/src/lib.rs
 cargo build
 ```
 
-![Screenshot 2023-03-01 at 16.01.04.png](Screenshot_2023-03-01_at_16.01.04.png)
+![Screenshot 2023-03-01 at 16.01.04.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_16.01.04.png)
 
 When compared to the previous set of results, these numbers are really compelling. The Elixir compiler takes about the same amount of time to recompile after one file change (when the file has a lot of dependants) as it does to recompile the whole project source. In contrast, the Rust compiler (when run without optimisations) seems to be able to make intelligent time savings in situations like this.
 
 Below, I’ve repeated the experiment for a file that was not as tightly coupled to the rest of the project:
 
-![Screenshot 2023-03-01 at 16.02.20.png](Screenshot_2023-03-01_at_16.02.20.png)
+![Screenshot 2023-03-01 at 16.02.20.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_16.02.20.png)
 
 As you can see, the times are much faster, but Elixir performs even better here.
 
@@ -103,7 +103,7 @@ mix format
 cargo fmt
 ```
 
-![Screenshot 2023-03-01 at 15.15.39.png](Screenshot_2023-03-01_at_15.15.39.png)
+![Screenshot 2023-03-01 at 15.15.39.png](/images/elixir-vs-rust/Screenshot_2023-03-01_at_15.15.39.png)
 
 # Conclusions
 
