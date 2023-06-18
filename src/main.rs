@@ -40,6 +40,7 @@ struct BlogMetadata {
     date: NaiveDate,
     img_url: Box<str>,
     img_alt: Box<str>,
+    #[allow(dead_code)]
     tags: Vec<Box<str>>,
     hidden: bool,
     seo_description: Box<str>,
@@ -140,14 +141,14 @@ fn files_in_dir(dir: &str) -> Vec<PathBuf> {
         .unwrap()
 }
 
-fn filename_drop_ext(path: &PathBuf, ext: &str) -> Box<str> {
+fn filename_drop_ext<'a>(path: &'a PathBuf, ext: &'a str) -> &'a str {
     path.iter()
         .last()
         .unwrap()
-        .to_string_lossy()
+        .to_str()
+        .unwrap()
         .strip_suffix(ext)
         .unwrap()
-        .into()
 }
 
 /*
