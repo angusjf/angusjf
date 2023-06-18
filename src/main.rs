@@ -23,38 +23,38 @@ const IMG: &str = "/images/plants.webp";
 
 #[derive(Deserialize)]
 struct ExperimentMetadata {
-    summary: String,
-    title: String,
+    summary: Box<str>,
+    title: Box<str>,
     #[serde(deserialize_with = "deserialize_date")]
     date: NaiveDate,
-    img_url: String,
-    img_alt: String,
+    img_url: Box<str>,
+    img_alt: Box<str>,
     urls: Vec<Link>,
 }
 
 #[derive(Clone, Deserialize)]
 struct BlogMetadata {
-    title: String,
-    summary: String,
+    title: Box<str>,
+    summary: Box<str>,
     #[serde(deserialize_with = "deserialize_date")]
     date: NaiveDate,
-    img_url: String,
-    img_alt: String,
-    tags: Vec<String>,
+    img_url: Box<str>,
+    img_alt: Box<str>,
+    tags: Vec<Box<str>>,
     hidden: bool,
-    seo_description: String,
+    seo_description: Box<str>,
     #[serde(default)]
-    path: String,
+    path: Box<str>,
 }
 
 #[derive(Serialize)]
 struct Root {
-    title: String,
-    img_url: String,
-    img_alt: String,
-    canonical_origin: String,
-    path: String,
-    description: String,
+    title: Box<str>,
+    img_url: Box<str>,
+    img_alt: Box<str>,
+    canonical_origin: Box<str>,
+    path: Box<str>,
+    description: Box<str>,
     index: Option<Index>,
     blog: Option<Blog>,
 }
@@ -66,18 +66,18 @@ struct Index {
 
 #[derive(Serialize)]
 struct Blog {
-    content: String,
+    content: Box<str>,
     #[serde(serialize_with = "serialize_date")]
     date: NaiveDate,
 }
 
 #[derive(Serialize)]
 struct Card {
-    img_url: String,
-    img_alt: String,
-    title: String,
-    content: String,
-    links_to: String,
+    img_url: Box<str>,
+    img_alt: Box<str>,
+    title: Box<str>,
+    content: Box<str>,
+    links_to: Box<str>,
     #[serde(serialize_with = "serialize_optional_date")]
     date: Option<NaiveDate>,
     links: Vec<Link>,
@@ -85,9 +85,9 @@ struct Card {
 
 #[derive(Serialize, Deserialize)]
 struct Link {
-    href: String,
-    label: String,
-    icon: String,
+    href: Box<str>,
+    label: Box<str>,
+    icon: Box<str>,
 }
 
 pub fn serialize_optional_date<S>(date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error>
@@ -140,14 +140,14 @@ fn files_in_dir(dir: &str) -> Vec<PathBuf> {
         .unwrap()
 }
 
-fn filename_drop_ext(path: &PathBuf, ext: &str) -> String {
+fn filename_drop_ext(path: &PathBuf, ext: &str) -> Box<str> {
     path.iter()
         .last()
         .unwrap()
         .to_string_lossy()
         .strip_suffix(ext)
         .unwrap()
-        .to_string()
+        .into()
 }
 
 /*
@@ -180,11 +180,11 @@ fn experiment_to_card(experiment: ExperimentMetadata) -> Card {
 /*
  * RENDERERS
  */
-fn blogpost(metadata: BlogMetadata, content: String) -> Root {
+fn blogpost(metadata: BlogMetadata, content: Box<str>) -> Root {
     Root {
         img_url: metadata.img_url,
         img_alt: metadata.img_alt,
-        canonical_origin: CANONICAL_ORIGIN.to_string(),
+        canonical_origin: CANONICAL_ORIGIN.into(),
         path: metadata.path,
         description: metadata.seo_description,
         title: metadata.title,
@@ -198,18 +198,18 @@ fn blogpost(metadata: BlogMetadata, content: String) -> Root {
 
 fn index(cards: Vec<Card>) -> Root {
     Root {
-        img_url: IMG.to_string(),
-        img_alt: TITLE.to_string(),
-        canonical_origin: CANONICAL_ORIGIN.to_string(),
-        path: "".to_string(),
-        description: DESCRIPTION.to_string(),
-        title: TITLE.to_string(),
+        img_url: IMG.into(),
+        img_alt: TITLE.into(),
+        canonical_origin: CANONICAL_ORIGIN.into(),
+        path: "".into(),
+        description: DESCRIPTION.into(),
+        title: TITLE.into(),
         index: Some(Index { cards }),
         blog: None,
     }
 }
 
-fn get_encoded_thumbhash(img_url: &str) -> String {
+fn get_encoded_thumbhash(img_url: &str) -> Box<str> {
     let image = image::open(img_url).unwrap();
     let image = image.resize(100, 100, FilterType::Nearest);
     let thumb_hash = rgba_to_thumb_hash(
@@ -217,7 +217,7 @@ fn get_encoded_thumbhash(img_url: &str) -> String {
         image.height() as usize,
         &image.to_rgba8().into_raw(),
     );
-    general_purpose::STANDARD.encode(thumb_hash)
+    general_purpose::STANDARD.encode(thumb_hash).into()
 }
 
 fn main() -> std::io::Result<()> {
@@ -254,11 +254,11 @@ fn main() -> std::io::Result<()> {
                     let name = filename_drop_ext(filename, ".md");
 
                     let metadata = BlogMetadata {
-                        path: "/".to_owned() + &name,
+                        path: format!("/{}", name).into(),
                         ..serde_yaml::from_str(&frontmatter).unwrap()
                     };
 
-                    let html = blogpost(metadata.clone(), md.to_string());
+                    let html = blogpost(metadata.clone(), md.into());
                     let html = &tt.render("root", &html).unwrap();
 
                     fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
@@ -276,27 +276,27 @@ fn main() -> std::io::Result<()> {
     cards.insert(
         0,
         Card {
-            img_url: "/images/portrait.jpg".to_string(),
-            img_alt: "Picture of me".to_string(),
-            title: "Angus Findlay".to_string(),
-            content: "Fullstack Engineer based in London.".to_string(),
-            links_to: "https://github.com/angusjf/".to_string(),
+            img_url: "/images/portrait.jpg".into(),
+            img_alt: "Picture of me".into(),
+            title: "Angus Findlay".into(),
+            content: "Fullstack Engineer based in London.".into(),
+            links_to: "https://github.com/angusjf/".into(),
             date: None,
             links: vec![
                 Link {
-                    href: "https://github.com/angusjf/".to_string(),
-                    icon: "fab fa-github".to_string(),
-                    label: "github/angusjf".to_string(),
+                    href: "https://github.com/angusjf/".into(),
+                    icon: "fab fa-github".into(),
+                    label: "github/angusjf".into(),
                 },
                 Link {
-                    href: "https://www.linkedin.com/in/angus-findlay/".to_string(),
-                    icon: "fab fa-linkedin".to_string(),
-                    label: "linkedin/angus-findlay".to_string(),
+                    href: "https://www.linkedin.com/in/angus-findlay/".into(),
+                    icon: "fab fa-linkedin".into(),
+                    label: "linkedin/angus-findlay".into(),
                 },
                 Link {
-                    href: "https://webdev.london/".to_string(),
-                    icon: "fas fa-comment".to_string(),
-                    label: "webdev.london".to_string(),
+                    href: "https://webdev.london/".into(),
+                    icon: "fas fa-comment".into(),
+                    label: "webdev.london".into(),
                 },
             ],
         },
