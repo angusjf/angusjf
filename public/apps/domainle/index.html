@@ -289,7 +289,7 @@
             <input list="countries" id="guess" name="guess" placeholder="Country name..." />
             <input type="submit" value="Guess">
         </form>
-        <div id="result" style="visibility: hidden;">
+        <div id="result" style="visibility: hidden">
             <p>The answer was: <span id="answer"></span></p>
             <img id="flag" alt="flag">
             <p id="explaination"></p>
@@ -298,64 +298,77 @@
     </main>
     <footer>made by <a href="http://angusjf.com">angusjf</a></footer>
     <script>
+        let guesses = 0
+
         function dayOfYear() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 0);
-            const diff = now - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            return Math.floor(diff / oneDay);
+            const now = new Date()
+            const start = new Date(now.getFullYear(), 0, 0)
+            const diff = now - start
+            const oneDay = 1000 * 60 * 60 * 24
+            return Math.floor(diff / oneDay)
         }
 
-        let data = JSON.parse(document.getElementById("data").innerHTML);
-        let answer = data[dayOfYear() % data.length];
+        const data = JSON.parse(document.getElementById("data").innerHTML)
+        const answer = data[dayOfYear() % data.length]
 
-        let datalist = document.getElementById("countries");
-        let options = data.map(country => {
-            let option = document.createElement("option");
-            option.value = country.name;
-            return option;
+        const datalist = document.getElementById("countries")
+        const options = data.map(country => {
+            const option = document.createElement("option")
+            option.value = country.name
+            return option
         })
-        datalist.replaceChildren(...options);
+        datalist.replaceChildren(...options)
 
-        let tld = document.getElementById("tld");
-        tld.innerText = answer.tld;
+        const tld = document.getElementById("tld")
+        tld.innerText = answer.tld
 
-        let quiz = document.getElementById("quiz");
+        const quiz = document.getElementById("quiz")
 
-        let explaination = document.getElementById("explaination");
+        const explaination = document.getElementById("explaination")
 
         quiz.onsubmit = (e) => {
-            e.preventDefault();
-            let value = e.target.guess.value;
+            e.preventDefault()
+            const value = e.target.guess.value
             if (value != "") {
-                e.target.guess.value = "";
-                e.target.blur();
-                submit(value);
+                e.target.guess.value = ""
+                e.target.blur()
+                submit(value)
             }
         }
 
         function roughlyEqual(a, b) {
-            const simple = (x) => x.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-            return simple(a) === simple(b);
+            const simple = (x) => x.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+            return simple(a) === simple(b)
         }
 
         const submit = (input) => {
-            result.style.visibility = "initial";
-            let flag = document.getElementById("flag");
-
-            document.querySelectorAll("input").forEach(node => { node.disabled = true; });
-
-            flag.src = answer.image.src;
-            flag.style = `width: ${answer.image.width}px; height: ${answer.image.height}px;`
-
             if (roughlyEqual(input, answer.name)) {
-                alert("🎉")
+                alert("🎉 Well done!")
+                gameOver()
             } else {
-                alert("❌")
+                const c = data.find(d => d.name === input)
+                if (c) {
+                    alert(`❌ ${c.name} is ${c.tld}`)
+                    if (guesses++ > 4) {
+                        gameOver()
+                    }
+                } else {
+                    alert(`❓ Invalid guess: '${input}'`)
+                }
             }
 
-            document.getElementById("answer").innerText = answer.name;
-            explaination.innerHTML = answer.explaination;
+            document.getElementById("answer").innerText = answer.name
+            explaination.innerHTML = answer.explaination
+        }
+
+        const gameOver = () => {
+            result.style.visibility = "initial"
+            const flag = document.getElementById("flag")
+
+            document.querySelectorAll("input").forEach(node => { node.disabled = true })
+
+            flag.src = answer.image.src
+            flag.style = `width: ${answer.image.width}px; height: ${answer.image.height}px;`
         }
     </script>
 </body>
