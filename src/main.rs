@@ -5,6 +5,7 @@ extern crate tinytemplate;
 use base64::{engine::general_purpose, Engine as _};
 use chrono::NaiveDate;
 use image::imageops::FilterType;
+use lol_html::{element, HtmlRewriter, Settings};
 use serde::{de, Deserializer, Serializer};
 use serde_yaml;
 use std::{
@@ -221,6 +222,35 @@ fn get_encoded_thumbhash(img_url: &str) -> Box<str> {
     general_purpose::STANDARD.encode(thumb_hash).into()
 }
 
+fn inline_css(html: &str) -> Box<str> {
+    let mut output = vec![];
+
+    let mut rewriter = HtmlRewriter::new(
+        Settings {
+            element_content_handlers: vec![element!("link[rel=stylesheet][href^=\"/\"]", |el| {
+                let href = el.get_attribute("href").unwrap();
+
+                let path = format!("public/{href}");
+
+                let css = fs::read_to_string(path).unwrap();
+
+                let content = format!("<styles>{css}</styles>");
+
+                el.replace(&content, lol_html::html_content::ContentType::Html);
+
+                Ok(())
+            })],
+            ..Settings::default()
+        },
+        |c: &[u8]| output.extend_from_slice(c),
+    );
+
+    rewriter.write(html.as_bytes()).unwrap();
+    rewriter.end().unwrap();
+
+    String::from_utf8(output).unwrap().into_boxed_str()
+}
+
 fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
     let mut tt = TinyTemplate::new();
@@ -303,11 +333,11 @@ fn main() -> std::io::Result<()> {
         },
     );
 
-    fs::write(
-        "dist/index.html",
-        &tt.render("root", &index(cards)).unwrap(),
-    )
-    .unwrap();
+    let index = &tt.render("root", &index(cards)).unwrap();
+
+    let index = inline_css(index);
+
+    fs::write("dist/index.html", &*index).unwrap();
 
     Ok(())
 }
