@@ -234,7 +234,7 @@ fn inline_css(html: &str) -> Box<str> {
 
                 let css = fs::read_to_string(path).unwrap();
 
-                let content = format!("<styles>{css}</styles>");
+                let content = format!("<style>{css}</style>");
 
                 el.replace(&content, lol_html::html_content::ContentType::Html);
 
