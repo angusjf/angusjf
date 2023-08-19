@@ -262,7 +262,7 @@ fn main() -> std::io::Result<()> {
         Ok(())
     });
     tt.add_formatter("thumbhash", |img_url, str| {
-        let img_url = "public/".to_string() + img_url.as_str().unwrap();
+        let img_url = "public".to_string() + img_url.as_str().unwrap();
         str.push_str(&get_encoded_thumbhash(&img_url));
         Ok(())
     });

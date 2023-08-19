@@ -1,14 +1,14 @@
 {
-    "title": "yet-another-calendar",
-    "summary": "An opinionated, simple but highly customizable calendar library for React.",
-    "urls": [
-        {
-            "href": "https://www.npmjs.com/package/yet-another-calendar",
-            "label": "npm/yet-another-calendar",
-            "icon": "fas fa-download"
-        }
-    ],
-    "img_url": "images/date-range.webp",
-    "img_alt": "Range Picker Calendar",
-    "date": "2022-06-02"
+  "title": "yet-another-calendar",
+  "summary": "An opinionated, simple but highly customizable calendar library for React.",
+  "urls": [
+    {
+      "href": "https://www.npmjs.com/package/yet-another-calendar",
+      "label": "npm/yet-another-calendar",
+      "icon": "fas fa-download"
+    }
+  ],
+  "img_url": "/images/date-range.webp",
+  "img_alt": "Range Picker Calendar",
+  "date": "2022-06-02"
 }

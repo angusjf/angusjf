@@ -1,14 +1,14 @@
 {
-    "title": "575",
-    "summary": "A haiku app for the 21st century",
-    "urls": [
-        {
-            "href": "https://bento.me/575",
-            "label": "bento.me/575",
-            "icon": "fab fa-app-store-ios"
-        }
-    ],
-    "img_url": "images/575.webp",
-    "img_alt": "575 Logo",
-    "date": "2023-04-17"
+  "title": "575",
+  "summary": "A haiku app for the 21st century",
+  "urls": [
+    {
+      "href": "https://bento.me/575",
+      "label": "bento.me/575",
+      "icon": "fab fa-app-store-ios"
+    }
+  ],
+  "img_url": "/images/575.webp",
+  "img_alt": "575 Logo",
+  "date": "2023-04-17"
 }

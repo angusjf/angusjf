@@ -1,14 +1,14 @@
 {
-    "title": "Domainle",
-    "summary": "Guess the country from the TLD.",
-    "urls": [
-        {
-            "href": "/apps/domainle",
-            "label": "/domainle",
-            "icon": "fas fa-globe"
-        }
-    ],
-    "img_url": "images/domainle.webp",
-    "img_alt": "Domainle",
-    "date": "2023-08-06"
+  "title": "Domainle",
+  "summary": "Guess the country from the TLD.",
+  "urls": [
+    {
+      "href": "/apps/domainle",
+      "label": "/domainle",
+      "icon": "fas fa-globe"
+    }
+  ],
+  "img_url": "/images/domainle.webp",
+  "img_alt": "Domainle",
+  "date": "2023-08-06"
 }

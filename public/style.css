@@ -96,8 +96,8 @@ code {
 }
 
 .card i {
-    width: 2rem;
-    display: inline-block;
+  width: 2rem;
+  display: inline-block;
 }
 
 .card img {
@@ -115,8 +115,9 @@ code {
   line-height: 2;
 }
 
-.card h1, .card h2 {
-    margin-top: 0;
+.card h1,
+.card h2 {
+  margin-top: 0;
 }
 
 /* blog */
