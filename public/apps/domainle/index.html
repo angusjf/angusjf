@@ -289,6 +289,7 @@
             <input list="countries" id="guess" name="guess" placeholder="Country name..." />
             <input type="submit" value="Guess">
         </form>
+        <p id="scorecard"></p>
         <div id="result" style="visibility: hidden">
             <p>The answer was: <span id="answer"></span></p>
             <img id="flag" alt="flag">
@@ -298,6 +299,8 @@
     </main>
     <footer>made by <a href="http://angusjf.com">angusjf</a></footer>
     <script>
+        const endOfDay = new Date()
+
         let guesses = 0
 
         function dayOfYear() {
@@ -312,7 +315,7 @@
         const answer = data[dayOfYear() % data.length]
 
         const datalist = document.getElementById("countries")
-        const options = data.map(country => {
+        const options = data.sort((a, b) => a.name > b.name).map(country => {
             const option = document.createElement("option")
             option.value = country.name
             return option
@@ -344,14 +347,17 @@
         const submit = (input) => {
             if (roughlyEqual(input, answer.name)) {
                 alert("🎉 Well done!")
+                document.getElementById("scorecard").innerText += "🎉"
                 gameOver()
             } else {
                 const c = data.find(d => d.name === input)
                 if (c) {
                     alert(`❌ ${c.name} is ${c.tld}`)
-                    if (guesses++ > 4) {
+                    guesses++;
+                    if (guesses >= 4) {
                         gameOver()
                     }
+                    document.getElementById("scorecard").innerText += '❌'
                 } else {
                     alert(`❓ Invalid guess: '${input}'`)
                 }
