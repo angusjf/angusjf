@@ -1,6 +1,20 @@
-import { thumbHashToDataURL } from "https://cdn.skypack.dev/thumbhash"
+import { thumbHashToDataURL } from "https://cdn.skypack.dev/thumbhash";
 
-document.querySelectorAll("img[data-thumbhash]").forEach(img => {
-    const thumbhash = Uint8Array.from(atob(img.dataset.thumbhash), c => c.charCodeAt(0))
-    img.style.background = `center / cover url(${thumbHashToDataURL(thumbhash)})`
-})
+const observer = new IntersectionObserver(
+  (entries) =>
+    entries.forEach(({ isIntersecting, target: img }) => {
+      if (isIntersecting) {
+        const thumbhash = Uint8Array.from(atob(img.dataset.thumbhash), (c) =>
+          c.charCodeAt(0)
+        );
+        img.style.background = `center / cover url(${thumbHashToDataURL(
+          thumbhash
+        )})`;
+      }
+    }),
+  { threshold: 0.1 }
+);
+
+document
+  .querySelectorAll("img[data-thumbhash]")
+  .forEach((img) => observer.observe(img));
