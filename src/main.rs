@@ -222,24 +222,39 @@ fn get_encoded_thumbhash(img_url: &str) -> Box<str> {
     general_purpose::STANDARD.encode(thumb_hash).into()
 }
 
-fn inline_css(html: &str) -> Box<str> {
+fn inline_assets(html: &str) -> Box<str> {
     let mut output = vec![];
 
     let mut rewriter = HtmlRewriter::new(
         Settings {
-            element_content_handlers: vec![element!("link[rel=stylesheet][href^=\"/\"]", |el| {
-                let href = el.get_attribute("href").unwrap();
+            element_content_handlers: vec![
+                element!("link[rel=stylesheet][href^=\"/\"]", |el| {
+                    let href = el.get_attribute("href").unwrap();
 
-                let path = format!("public/{href}");
+                    let path = format!("public/{href}");
 
-                let css = fs::read_to_string(path).unwrap();
+                    let css = fs::read_to_string(path).unwrap();
 
-                let content = format!("<style>{css}</style>");
+                    let content = format!("<style>{css}</style>");
 
-                el.replace(&content, lol_html::html_content::ContentType::Html);
+                    el.replace(&content, lol_html::html_content::ContentType::Html);
 
-                Ok(())
-            })],
+                    Ok(())
+                }),
+                element!("script[src^=\"/\"]", |el| {
+                    let href = el.get_attribute("src").unwrap();
+
+                    let path = format!("public/{href}");
+
+                    let code = fs::read_to_string(path).unwrap();
+
+                    let content = format!("<script type='module'>{code}</script>");
+
+                    el.replace(&content, lol_html::html_content::ContentType::Html);
+
+                    Ok(())
+                }),
+            ],
             ..Settings::default()
         },
         |c: &[u8]| output.extend_from_slice(c),
@@ -335,7 +350,7 @@ fn main() -> std::io::Result<()> {
 
     let index = &tt.render("root", &index(cards)).unwrap();
 
-    let index = inline_css(index);
+    let index = inline_assets(index);
 
     fs::write("dist/index.html", &*index).unwrap();
 
