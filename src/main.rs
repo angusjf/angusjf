@@ -2,17 +2,20 @@
 extern crate serde_derive;
 extern crate tinytemplate;
 
+#[path = "js.rs"]
+mod js;
 use base64::{engine::general_purpose, Engine as _};
 use chrono::NaiveDate;
 use image::imageops::FilterType;
 use lol_html::{element, HtmlRewriter, Settings};
+use minify_js::{minify, Session, TopLevelMode};
 use serde::{de, Deserializer, Serializer};
 use serde_yaml;
 use std::{
     fmt,
     fs::{self, read_to_string},
     io,
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 use thumbhash::rgba_to_thumb_hash;
 use tinytemplate::TinyTemplate;
@@ -244,11 +247,18 @@ fn inline_assets(html: &str) -> Box<str> {
                 element!("script[src^=\"/\"]", |el| {
                     let href = el.get_attribute("src").unwrap();
 
-                    let path = format!("public/{href}");
+                    let path = format!("public{href}");
+                    let path = Path::new(&path);
 
-                    let code = fs::read_to_string(path).unwrap();
+                    let code = crate::js::bundle(path);
 
-                    let content = format!("<script type='module'>{code}</script>");
+                    let session = Session::new();
+                    let mut out = Vec::new();
+                    minify(&session, TopLevelMode::Global, &code.into_bytes(), &mut out).unwrap();
+
+                    let compressed: String = String::from_utf8(out).unwrap();
+
+                    let content = format!("<script type='module'>{compressed}</script>");
 
                     el.replace(&content, lol_html::html_content::ContentType::Html);
 
@@ -266,7 +276,8 @@ fn inline_assets(html: &str) -> Box<str> {
     String::from_utf8(output).unwrap().into_boxed_str()
 }
 
-fn main() -> std::io::Result<()> {
+#[tokio::main]
+async fn main() -> std::io::Result<()> {
     let root_template = fs::read_to_string("templates/root.html")?;
     let mut tt = TinyTemplate::new();
     tt.add_template("root", &root_template).unwrap();
