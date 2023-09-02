@@ -3,7 +3,7 @@ import { thumbHashToDataURL } from "https://cdn.skypack.dev/thumbhash";
 const observer = new IntersectionObserver(
   (entries) =>
     entries.forEach(({ isIntersecting, target: img }) => {
-      if (isIntersecting) {
+      if (isIntersecting && !img.complete) {
         const thumbhash = Uint8Array.from(atob(img.dataset.thumbhash), (c) =>
           c.charCodeAt(0)
         );
@@ -12,7 +12,7 @@ const observer = new IntersectionObserver(
         )})`;
       }
     }),
-  { threshold: 0.1 }
+  { threshold: 0.1, rootMargin: "100%" }
 );
 
 document

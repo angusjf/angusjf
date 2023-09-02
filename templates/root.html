@@ -36,7 +36,6 @@
     <meta name="view-transition" content="same-origin" />
     {{if index}}
     <script async defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
-    <script async type="module" src="/thumbhash.mjs"></script>
     {{endif}}
     {{if blog}}
     <meta name="article:published_time" content="{blog.date}" />
@@ -81,6 +80,7 @@
             </div>
         </article>
         {{ endfor }}
+        <script async type="module" src="/thumbhash.mjs"></script>
     </main>
     {{endif}}
     {{if blog}}
