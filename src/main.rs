@@ -12,9 +12,10 @@ use serde::{de, Deserializer, Serializer};
 use serde_yaml;
 use std::{
     fmt,
-    fs::{self, read_to_string},
-    io,
+    fs::{self, read_to_string, File},
+    io::{self, Write},
     path::{Path, PathBuf},
+    time::Instant,
 };
 use thumbhash::rgba_to_thumb_hash;
 use tinytemplate::TinyTemplate;
@@ -215,22 +216,26 @@ fn index(cards: Vec<Card>) -> Root {
 
 fn get_encoded_thumbhash(img_url: &str) -> Box<str> {
     let image = image::open(img_url).unwrap();
+    print!("{img_url}");
+    io::stdout().flush().unwrap();
+
     let small = image.thumbnail(100, 100);
     let thumb_hash = rgba_to_thumb_hash(
         small.width() as usize,
         small.height() as usize,
         &small.to_rgba8().into_raw(),
     );
+    println!(" (hashed)");
     general_purpose::STANDARD.encode(thumb_hash).into()
 }
 
-fn inline_assets(html: &str) -> Box<str> {
+fn optimize_assets(html: &str) -> Box<str> {
     let mut output = vec![];
 
     let mut rewriter = HtmlRewriter::new(
         Settings {
             element_content_handlers: vec![
-                element!("link[rel=stylesheet][href^=\"/\"]", |el| {
+                element!("link[rel=stylesheet][href^='/']", |el| {
                     let href = el.get_attribute("href").unwrap();
 
                     let path = format!("public/{href}");
@@ -243,10 +248,10 @@ fn inline_assets(html: &str) -> Box<str> {
 
                     Ok(())
                 }),
-                element!("script[src^=\"/\"]", |el| {
-                    let href = el.get_attribute("src").unwrap();
+                element!("script[src^='/']", |el| {
+                    let src = el.get_attribute("src").unwrap();
 
-                    let path = format!("public{href}");
+                    let path = format!("public{src}");
                     let path = Path::new(&path);
 
                     let code = crate::js::bundle(path);
@@ -260,6 +265,72 @@ fn inline_assets(html: &str) -> Box<str> {
                     let content = format!("<script type='module'>{compressed}</script>");
 
                     el.replace(&content, lol_html::html_content::ContentType::Html);
+
+                    Ok(())
+                }),
+                element!("img[src^='/']", |el| {
+                    let rendered_size = 244;
+
+                    let src = el.get_attribute("src").unwrap();
+                    let src = src.as_str();
+                    print!("{}", src);
+                    io::stdout().flush().unwrap();
+
+                    let path = "public".to_owned() + src;
+                    let image = image::open(&path).unwrap();
+
+                    let make = |pixel_ratio: u32| {
+                        let resized = image.resize(
+                            rendered_size * pixel_ratio,
+                            rendered_size * pixel_ratio,
+                            image::imageops::FilterType::Lanczos3,
+                        );
+                        let in_path = Path::new(&path);
+                        let ext = in_path.extension().unwrap().to_str().unwrap();
+                        let out_path = in_path.with_file_name(format!(
+                            "{}_{pixel_ratio}x.{}",
+                            in_path
+                                .file_name()
+                                .unwrap()
+                                .to_str()
+                                .unwrap()
+                                .trim_end_matches(ext)
+                                .trim_end_matches("."),
+                            ext
+                        ));
+
+                        resized.save(&out_path).unwrap();
+
+                        let src_scaled;
+
+                        fn filesize(path: &Path) -> u64 {
+                            File::open(path).unwrap().metadata().unwrap().len()
+                        }
+
+                        let original_size = filesize(in_path);
+                        let new_size = filesize(&out_path);
+
+                        print!(
+                            " [@{pixel_ratio}x compression = {}%]",
+                            ((original_size as f32 - new_size as f32) / (original_size as f32))
+                                * 100.0
+                        );
+
+                        if new_size > original_size {
+                            // don't use the downsized image, if downsizing didn't make it smaller
+                            src_scaled = src;
+                        } else {
+                            src_scaled = out_path.to_str().unwrap().strip_prefix("public").unwrap();
+                        }
+
+                        return format!("{src_scaled} {pixel_ratio}x");
+                    };
+
+                    let true_scale: f32 = image.width() as f32 / rendered_size as f32;
+                    let srcset = [make(1), make(2), format!("{src} {true_scale}x")].join(", ");
+
+                    el.set_attribute("srcset", &srcset).unwrap();
+                    println!(".");
 
                     Ok(())
                 }),
@@ -277,6 +348,8 @@ fn inline_assets(html: &str) -> Box<str> {
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
+    let start = Instant::now();
+
     let root_template = fs::read_to_string("templates/root.html")?;
     let mut tt = TinyTemplate::new();
     tt.add_template("root", &root_template).unwrap();
@@ -360,9 +433,13 @@ async fn main() -> std::io::Result<()> {
 
     let index = &tt.render("root", &index(cards)).unwrap();
 
-    let index = inline_assets(index);
+    let index = optimize_assets(index);
 
     fs::write("dist/index.html", &*index).unwrap();
 
+    println!(
+        "{CANONICAL_ORIGIN} built in {}s",
+        start.elapsed().as_secs_f32()
+    );
     Ok(())
 }
