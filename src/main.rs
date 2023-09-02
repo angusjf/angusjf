@@ -6,7 +6,6 @@ extern crate tinytemplate;
 mod js;
 use base64::{engine::general_purpose, Engine as _};
 use chrono::NaiveDate;
-use image::imageops::FilterType;
 use lol_html::{element, HtmlRewriter, Settings};
 use minify_js::{minify, Session, TopLevelMode};
 use serde::{de, Deserializer, Serializer};
@@ -216,11 +215,11 @@ fn index(cards: Vec<Card>) -> Root {
 
 fn get_encoded_thumbhash(img_url: &str) -> Box<str> {
     let image = image::open(img_url).unwrap();
-    let image = image.resize(100, 100, FilterType::Nearest);
+    let small = image.thumbnail(100, 100);
     let thumb_hash = rgba_to_thumb_hash(
-        image.width() as usize,
-        image.height() as usize,
-        &image.to_rgba8().into_raw(),
+        small.width() as usize,
+        small.height() as usize,
+        &small.to_rgba8().into_raw(),
     );
     general_purpose::STANDARD.encode(thumb_hash).into()
 }

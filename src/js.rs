@@ -8,7 +8,7 @@ pub(crate) fn bundle(path: &Path) -> String {
     let mut loader = Loader {};
     block_on(async {
         deno_emit::bundle(
-            Url::from_file_path(dbg!(path.canonicalize().unwrap())).unwrap(),
+            Url::from_file_path(path.canonicalize().unwrap()).unwrap(),
             &mut loader,
             None,
             BundleOptions {
