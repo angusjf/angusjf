@@ -256,13 +256,13 @@ fn optimize_assets(html: &str) -> Box<str> {
 
                     let code = crate::js::bundle(path);
 
-                    let session = Session::new();
-                    let mut out = Vec::new();
-                    minify(&session, TopLevelMode::Global, &code.into_bytes(), &mut out).unwrap();
+                    // let session = Session::new();
+                    // let mut out = Vec::new();
+                    // minify(&session, TopLevelMode::Global, &code.into_bytes(), &mut out).unwrap();
 
-                    let compressed: String = String::from_utf8(out).unwrap();
+                    // let compressed: String = String::from_utf8(out).unwrap();
 
-                    let content = format!("<script type='module'>{compressed}</script>");
+                    let content = format!("<script type='module'>{code}</script>");
 
                     el.replace(&content, lol_html::html_content::ContentType::Html);
 
