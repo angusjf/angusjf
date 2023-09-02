@@ -11,7 +11,7 @@ use minify_js::{minify, Session, TopLevelMode};
 use serde::{de, Deserializer, Serializer};
 use serde_yaml;
 use std::{
-    fmt,
+    env, fmt,
     fs::{self, read_to_string, File},
     io::{self, Write},
     path::{Path, PathBuf},
@@ -431,9 +431,13 @@ async fn main() -> std::io::Result<()> {
         },
     );
 
-    let index = &tt.render("root", &index(cards)).unwrap();
+    let index = tt.render("root", &index(cards)).unwrap();
 
-    let index = optimize_assets(index);
+    let index = if env::args().nth(1).is_some_and(|flag| flag == "--dev") {
+        index.into()
+    } else {
+        optimize_assets(&index)
+    };
 
     fs::write("dist/index.html", &*index).unwrap();
 
