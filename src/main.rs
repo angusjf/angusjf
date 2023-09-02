@@ -372,15 +372,17 @@ fn process_images(cards: &[Card]) -> HashMap<Box<str>, (String, u32)> {
                     .unwrap()
                     .insert(src, (thumbhash, image.width()));
             });
-            hash_handle.join().unwrap();
-            for handle in resize_handles {
-                handle.join().unwrap();
-            }
+
+            (hash_handle, resize_handles)
         }))
     }
 
     for handle in handles {
-        handle.join().unwrap();
+        let (h, hs) = handle.join().unwrap();
+        h.join().unwrap();
+        for h in hs {
+            h.join().unwrap();
+        }
     }
 
     let thumbhashes = Arc::try_unwrap(thumbhashes).unwrap();
