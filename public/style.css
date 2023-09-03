@@ -53,6 +53,7 @@ img {
   height: 1rem !important;
   vertical-align: -0.125em;
   padding-right: 1rem;
+  fill: var(--black);
 }
 
 code,
