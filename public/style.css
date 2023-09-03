@@ -48,8 +48,10 @@ img {
   object-fit: cover;
 }
 
-.svg-inline--fa {
+.homepage li svg {
   width: 1rem !important;
+  height: 1rem !important;
+  vertical-align: -0.125em;
   padding-right: 1rem;
 }
 

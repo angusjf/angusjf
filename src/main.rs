@@ -99,10 +99,6 @@ struct Link {
     icon: Box<str>,
 }
 
-fn dev() -> bool {
-    env::args().nth(1).is_some_and(|flag| flag == "--dev")
-}
-
 pub fn serialize_optional_date<S>(date: &Option<NaiveDate>, s: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
@@ -223,7 +219,7 @@ fn index(cards: Vec<Card>) -> Root {
 }
 
 fn optimize_assets(html: &str, thumbhashes: HashMap<Box<str>, (String, u32)>) -> Box<str> {
-    if dev() {
+    if env::args().any(|flag| flag == "--no-opt") {
         return html.into();
     }
 
@@ -254,6 +250,28 @@ fn optimize_assets(html: &str, thumbhashes: HashMap<Box<str>, (String, u32)>) ->
                     let code = crate::js::bundle(path);
 
                     let content = format!("<script type='module'>{code}</script>");
+
+                    el.replace(&content, lol_html::html_content::ContentType::Html);
+
+                    Ok(())
+                }),
+                element!("i[class]", |el| {
+                    let class = el.get_attribute("class").unwrap();
+                    let split: Vec<_> = class.split(" ").collect();
+
+                    let category = match split[0] {
+                        "fas" => "solid",
+                        "fab" => "brands",
+                        _ => unreachable!(),
+                    };
+
+                    let name = split[1].trim_start_matches("fa-");
+
+                    let path = format!("svgs/{category}/{name}.svg");
+
+                    let svg = fs::read_to_string(path).unwrap();
+
+                    let content = svg; //format!("");
 
                     el.replace(&content, lol_html::html_content::ContentType::Html);
 
@@ -322,7 +340,7 @@ fn optimize_assets(html: &str, thumbhashes: HashMap<Box<str>, (String, u32)>) ->
 }
 
 fn process_images(cards: &[Card]) -> HashMap<Box<str>, (String, u32)> {
-    let filter = if env::args().nth(1).is_some_and(|flag| flag == "--dev") {
+    let filter = if env::args().any(|flag| flag == "--no-img") {
         image::imageops::FilterType::Nearest
     } else {
         image::imageops::FilterType::Lanczos3
@@ -333,7 +351,7 @@ fn process_images(cards: &[Card]) -> HashMap<Box<str>, (String, u32)> {
     let mut handles = vec![];
 
     for card in cards {
-        if dev() {
+        if env::args().any(|flag| flag == "--no-img") {
             thumbhashes.clone().lock().unwrap().insert(
                 card.img_url.clone(),
                 ("LwGlM2%3j?of%%kCfPj[ERV@kBaz".into(), 100),

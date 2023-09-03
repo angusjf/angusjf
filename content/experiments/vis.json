@@ -5,7 +5,7 @@
     {
       "href": "https://marketplace.visualstudio.com/items?itemName=angusjf.visualise",
       "label": "Visual Studio Marketplace",
-      "icon": "fas fa-project-diagram"
+      "icon": "fas fa-diagram-project"
     }
   ],
   "img_url": "/images/visualiser.png",
