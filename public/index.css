@@ -1,0 +1,60 @@
+.homepage {
+  margin: 0 auto;
+  width: 24rem;
+}
+
+.card {
+  padding: 0 3rem 3rem 3rem;
+  gap: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 770px) {
+  .homepage {
+    width: 48rem;
+  }
+
+  .card {
+    flex-direction: row;
+    padding: 3rem;
+  }
+
+  .card:nth-child(even) {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+}
+
+.card i {
+  width: 2rem;
+  display: inline-block;
+}
+
+.card img {
+  height: 14rem;
+  width: 14rem;
+  align-self: center;
+}
+
+.card ul {
+  padding-inline: 0;
+  list-style: none;
+}
+
+.card li {
+  line-height: 2;
+}
+
+.card h1,
+.card h2 {
+  margin-top: 0;
+}
+
+.homepage li svg {
+  width: 1rem !important;
+  height: 1rem !important;
+  vertical-align: -0.125em;
+  padding-right: 1rem;
+  fill: var(--black);
+}
