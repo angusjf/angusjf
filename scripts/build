@@ -1,2 +1,2 @@
 #!/bin/bash
-(rm -r dist || true) && mkdir dist && ./target/debug/angusjf-blog $1 && cp -r public/* dist/
+(rm -r dist || true) && mkdir dist && ./target/debug/angusjf-blog $@ && cp -r public/* dist/

@@ -11,6 +11,7 @@ html {
 ::selection {
   background-color: var(--black);
   color: var(--white);
+  text-decoration-color: var(--black);
 }
 
 @media (prefers-color-scheme: dark) {
