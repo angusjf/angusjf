@@ -350,7 +350,7 @@
                 document.getElementById("scorecard").innerText += "🎉"
                 gameOver()
             } else {
-                const c = data.find(d => d.name === input)
+                const c = data.find(d => roughlyEqual(d.name, input))
                 if (c) {
                     alert(`❌ ${c.name} is ${c.tld}`)
                     guesses++;
