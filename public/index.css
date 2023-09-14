@@ -49,6 +49,7 @@
 .card h1,
 .card h2 {
   margin-top: 0;
+  display: inline-block;
 }
 
 .homepage li svg {

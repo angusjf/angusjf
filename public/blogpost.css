@@ -4,6 +4,7 @@
   margin: 0rem auto 4rem auto;
   overflow: hidden;
   line-height: 1.4;
+  view-transition-name: article;
 }
 
 .blog img {
@@ -21,4 +22,15 @@ hr {
 
 .link-back {
   text-align: center;
+}
+
+@media not (prefers-reduced-motion: reduce) {
+  h1 {
+    view-transition-name: title;
+    display: inline-block;
+  }
+
+  .blog p:nth-child(1 of :has(img)) > img {
+    view-transition-name: hero;
+  }
 }
