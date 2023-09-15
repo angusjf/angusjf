@@ -36,7 +36,7 @@ const prev = window
   .reverse()
   .map(({ url }) => new URL(url))
   .find((url) => hosts.some((host) => host == url.host) && url.pathname != "/")
-  .pathname?.replace(/\/$/, "");
+  ?.pathname.replace(/\/$/, "");
 
 if (prev) {
   clearViewTransitions();
