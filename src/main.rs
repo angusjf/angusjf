@@ -495,12 +495,7 @@ async fn main() -> std::io::Result<()> {
                     href: "https://www.linkedin.com/in/angus-findlay/".into(),
                     icon: "fab fa-linkedin".into(),
                     label: "linkedin/angus-findlay".into(),
-                },
-                Link {
-                    href: "https://webdev.london/".into(),
-                    icon: "fas fa-comment".into(),
-                    label: "webdev.london".into(),
-                },
+                }
             ],
         },
     );
