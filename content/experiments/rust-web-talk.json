@@ -1,0 +1,14 @@
+{
+  "title": "Rust-friendly websites and web apps",
+  "summary": "Recording of a talk I gave at Rust & C++ Cardiff",
+  "urls": [
+    {
+      "href": "https://www.youtube.com/watch?v=QzMJngJqOYU",
+      "label": "youtube",
+      "icon": "fab fa-youtube"
+    }
+  ],
+  "img_url": "/images/rust-web-apps.jpg",
+  "img_alt": "Youtube video thumbnail",
+  "date": "2023-04-26"
+}
