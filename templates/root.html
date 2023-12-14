@@ -87,12 +87,15 @@
     <script src="/transitions.mjs"></script>
     {{endif}}
     {{if blog}}
-    <header class="link-back">
+    <header>
         <a href="/">angusjf</a>
     </header>
     <main class="blog">
         <article>{blog.content | markdown}</article>
     </main>
+    <footer>
+	<date>{blog.date}</date>
+    </footer>
     {{endif}}
 </body>
 

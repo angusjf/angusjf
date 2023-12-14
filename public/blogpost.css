@@ -20,7 +20,7 @@ hr {
   border-width: 0 0 1px 0;
 }
 
-.link-back {
+header, footer {
   text-align: center;
 }
 
