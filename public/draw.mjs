@@ -10,16 +10,14 @@ customElements.define('draw-canvas', class extends HTMLElement {
 		const canvas = document.createElement("canvas");
 		this.#root.appendChild(canvas)
 
-		// this.style.border = "1px solid red"
+		canvas.style.width = "100vw"
+		canvas.style.height = "100vh"
 		this.style.display = "block"
-		// this.style.position = "sticky"
-		// this.style.top = 0
-		// this.style.bottom = 0
-		// this.style.left = 0
-		// this.style.right = 0
-		// canvas.style.border = "1px dashed blue"
-		canvas.style.width = "100%"
-		canvas.style.height = "100%"
+		setTimeout(() => {
+			this.style.position = "fixed"
+			this.style.top = 0
+			this.style.pointerEvents = "none"
+		})
 
 		const ctx = canvas.getContext('2d');
 		const dpr = window.devicePixelRatio;
@@ -37,8 +35,8 @@ customElements.define('draw-canvas', class extends HTMLElement {
 
 		let old = null;
 
-		canvas.addEventListener("mouseup", () => { down = false; old = null; })
-		canvas.addEventListener("mousedown", () => { down = true; old = null; })
+		document.addEventListener("mouseup", () => { down = false; old = null; })
+		document.addEventListener("mousedown", () => { down = true; old = null; })
 
 		const width = 30;
 
@@ -54,9 +52,9 @@ customElements.define('draw-canvas', class extends HTMLElement {
 		let gt = 0;
 		let bt = 0;
 
-		canvas.addEventListener('mousemove', (event) => {
-			let x = event.offsetX;
-			let y = event.offsetY;
+		document.addEventListener('mousemove', (event) => {
+			let x = event.x;
+			let y = event.y;
 
 			if (down) {
 				ctx.beginPath();

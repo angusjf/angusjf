@@ -57,6 +57,8 @@
     <!--   MAKE ART   -->
     <!-- NOT SOFTWARE -->
     {{if index}}
+    <script src="/draw.mjs"></script>
+    <draw-canvas></draw-canvas>
     <main class="homepage">
         {{ for c in index.cards }}
         <article class="card">
@@ -85,8 +87,6 @@
         <script async type="module" src="/thumbhash.mjs"></script>
     </main>
     <script src="/transitions.mjs"></script>
-    <script src="/draw.mjs"></script>
-    <draw-canvas></draw-canvas>
     {{endif}}
     {{if blog}}
     <header>
