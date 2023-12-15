@@ -10,19 +10,16 @@ customElements.define('draw-canvas', class extends HTMLElement {
 		const canvas = document.createElement("canvas");
 		this.#root.appendChild(canvas)
 
-		// canvas {
-		//   width: 100%;
-		//   height: 100%;
-		//   pointer-events: none;
-		//   position: absolute;
-		//   top: 0;
-		//   left: 0;
-		// }
-		// canvas.style.position = "absolute"
-		// canvas.style.left = "0"
-		// canvas.style.right = "0"
-		// canvas.style.top = "0"
-		// canvas.style.bottom = "0"
+		// this.style.border = "1px solid red"
+		this.style.display = "block"
+		// this.style.position = "sticky"
+		// this.style.top = 0
+		// this.style.bottom = 0
+		// this.style.left = 0
+		// this.style.right = 0
+		// canvas.style.border = "1px dashed blue"
+		canvas.style.width = "100%"
+		canvas.style.height = "100%"
 
 		const ctx = canvas.getContext('2d');
 		const dpr = window.devicePixelRatio;
@@ -77,7 +74,7 @@ customElements.define('draw-canvas', class extends HTMLElement {
 				old.x = x;
 				old.y = y;
 			} else {
-				old = {x, y}
+				old = { x, y }
 			}
 
 
