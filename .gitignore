@@ -1,3 +1,5 @@
 .DS_Store
 /dist
 /target
+public/images/*_1x.*
+public/images/*_2x.*
