@@ -462,7 +462,7 @@ async fn main() -> std::io::Result<()> {
                     let html = blogpost(metadata.clone(), md.into());
                     let html = &tt.render("root", &html).unwrap();
 
-                    fs::create_dir(format!("./dist/{}", name.clone())).unwrap();
+                    fs::create_dir(format!("./dist/{}", name)).unwrap();
                     fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
 
                     metadata
