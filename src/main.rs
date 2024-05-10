@@ -479,7 +479,7 @@ async fn main() -> std::io::Result<()> {
     cards.insert(
         0,
         Card {
-            img_url: "/images/me.jpg".into(),
+            img_url: "/images/me.jpeg".into(),
             img_alt: "Picture of me".into(),
             title: "Angus Findlay".into(),
             content: "Fullstack Engineer based in London.".into(),
