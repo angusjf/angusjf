@@ -1,7 +1,7 @@
 ---
 title: Templating & Power
-img_url: /images/cookie-cutter.jpeg
-img_alt: Cookies being cut with a cookie cutter
+img_url: /images/django.jpg
+img_alt: Zoomed in Django template code
 date: "2024-01-07"
 seo_description: "Evaluating different approaches to templating for the web"
 summary: "Reflecting on different ways of rendering HTML pages"
