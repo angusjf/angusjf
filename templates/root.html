@@ -66,9 +66,7 @@
                 data-thumbhash="{c.img_url | thumbhash}" />
             <div>
                 <{{ if @first }}h1{{ else }}h2{{ endif }}>
-                    <a href="{c.links_to}">
-                        {c.title}
-                    </a>
+                    <a href="{c.links_to}">{c.title}</a>
                 </{{ if @first }}h1{{ else }}h2{{ endif }}>
                 {c.content | markdown}
                 {{- for l in c.links -}}
