@@ -1,102 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{title}</title>
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="canonical" href="{canonical_origin}{path}" />
-    <link rel="icon" type="image/png" href="https://angusjf.com/favicon.png" />
-    <link rel="icon" sizes="16x16" type="image/png" href="/favicon-16x16.png" />
-    <link rel="icon" sizes="32x32" type="image/png" href="/favicon-32x32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="hsl(232deg 19% 11%)" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="{description}" />
-    <meta name="og:description" content="{description}" />
-    <meta name="og:image" content="{canonical_origin}{img_url}" />
-    <meta name="og:image:alt" content="{img_alt}" />
-    <meta name="og:image:secure_url" content="{canonical_origin}{img_url}" />
-    <meta name="og:locale" content="en_GB" />
-    <meta name="og:site_name" content="Angus Findlay" />
-    <meta name="og:title" content="{title}" />
-    <meta name="og:type" content="{{if blog}}article{{else}}website{{endif}}" />
-    <meta name="og:url" content="{canonical_origin}{path}" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:description" content="{description}" />
-    <meta name="twitter:image" content="{canonical_origin}{img_url}" />
-    <meta name="twitter:image:alt" content="{img_alt}" />
-    <meta name="twitter:title" content="{title}" />
-    <meta name="view-transition" content="same-origin" />
-    {{if index}}
-    <link rel="stylesheet" href="/index.css" />
-    {{endif}}
-    {{if blog}}
-    <link rel="stylesheet" href="/blogpost.css" />
-    <meta name="article:published_time" content="{blog.date}" />
-    <link media="screen and (prefers-color-scheme: dark)" rel="stylesheet"
-        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/tokyo-night-dark.min.css">
-    <link media="(prefers-color-scheme: light)" rel="stylesheet"
-        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/haskell.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    {{endif}}
-</head>
-
-<body>
-    <!--   MAKE ART   -->
-    <!-- NOT SOFTWARE -->
-    {{if index}}
-    <script src="/draw.mjs"></script>
-    <draw-canvas></draw-canvas>
-    <main class="homepage">
-        {{ for c in index.cards }}
-        <article class="card">
-            <img alt="{c.img_alt}" src="{c.img_url}" {{if not @first}} loading="lazy" {{endif}}
-                data-thumbhash="{c.img_url | thumbhash}" />
-            <div>
-                <{{ if @first }}h1{{ else }}h2{{ endif }}>
-                    <a href="{c.links_to}">{c.title}</a>
-                </{{ if @first }}h1{{ else }}h2{{ endif }}>
-                {c.content | markdown}
-                {{- for l in c.links -}}
-                {{- if @first}}
-                <ul>
-                    {{endif -}}
-                    <li><i class="{l.icon}"></i><a href="{l.href}">{l.label}</a></li>
-                    {{if @last}}
-                </ul>
-                {{- endif -}}
-                {{- endfor}}
-                {{if c.date}}<date>{c.date}</date>{{endif}}
-            </div>
-        </article>
-        {{ endfor }}
-        <script async type="module" src="/thumbhash.mjs"></script>
-    </main>
-    <script src="/transitions.mjs"></script>
-    {{endif}}
-    {{if blog}}
-    <header>
-        <a href="/">angusjf</a>
-    </header>
-    <main class="blog">
-        <article>{blog.content | markdown}</article>
-    </main>
-    <footer>
-	<date>{blog.date}</date>
-    </footer>
-    {{endif}}
-</body>
-
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="/style.css" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="canonical" ^href="canonical_origin + path" />
+        <link rel="icon" type="image/png" href="https://angusjf.com/favicon.png" />
+        <link rel="icon" sizes="16x16" type="image/png" href="/favicon-16x16.png" />
+        <link rel="icon" sizes="32x32" type="image/png" href="/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="hsl(232deg 19% 11%)" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="description" ^content="description" />
+        <meta name="og:description" ^content="description" />
+        <meta name="og:image" ^content="canonical_origin + img_url" />
+        <meta name="og:image:alt" ^content="img_alt" />
+        <meta name="og:image:secure_url" ^content="canonical_origin + img_url" />
+        <meta name="og:locale" content="en_GB" />
+        <meta name="og:site_name" content="Angus Findlay" />
+        <meta name="og:title" ^content="title" />
+        <meta name="og:type" ^content='blog ? "article" : "website"' />
+        <meta name="og:url" ^content="canonical_origin + path" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" ^content="description" />
+        <meta name="twitter:image" ^content="canonical_origin + img_url" />
+        <meta name="twitter:image:alt" ^content="img_alt" />
+        <meta name="twitter:title" ^content="title" />
+        <meta name="view-transition" content="same-origin" />
+        <link pl-if="index" rel="stylesheet" href="/index.css" />
+        <template pl-if="blog">
+            <link rel="stylesheet" href="/blogpost.css" />
+            <meta name="article:published_time" ^content="blog.date" />
+            <link media="screen and (prefers-color-scheme: dark)" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/tokyo-night-dark.min.css" />
+            <link media="(prefers-color-scheme: light)" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github.min.css" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet" />
+            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/haskell.min.js"></script>
+            <script>
+                hljs.highlightAll();
+            </script>
+        </template>
+    </head>
+    <body>
+        <!--   MAKE ART   -->
+        <!-- NOT SOFTWARE -->
+        <template pl-if="index">
+            <script src="/draw.mjs"></script>
+            <draw-canvas></draw-canvas>
+            <main class="homepage">
+                <article pl-for="(c, i) in index.cards" class="card">
+                    <img ^alt="c.img_alt" ^src="c.img_url" ^loading='i > 0 ? "lazy" : false' />
+                    <div>
+                        <slot pl-is='i == 0 ? "h1" : "h2"'>
+                            <a ^href="c.links_to">{{c.title}}</a>
+                        </slot>
+                        <template pl-html="c.content"></template>
+                        <ul pl-if="c.links">
+                            <li pl-for="l in c.links"><i ^class="l.icon"></i><a ^href="l.href">{{l.label}}</a></li>
+                        </ul>
+                        <date pl-if="c.date">{{c.date}}</date>
+                    </div>
+                </article>
+                <script async type="module" src="/thumbhash.mjs"></script>
+            </main>
+            <script src="/transitions.mjs"></script>
+        </template>
+        <template pl-if="blog">
+            <header>
+                <a href="/">angusjf</a>
+            </header>
+            <main class="blog">
+                <article pl-html="blog.content"></article>
+            </main>
+            <footer>
+                <date>{{blog.date}}</date>
+            </footer>
+        </template>
+    </body>
 </html>

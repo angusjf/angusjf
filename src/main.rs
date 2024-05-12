@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate serde_derive;
-extern crate tinytemplate;
 
 #[path = "js.rs"]
 mod js;
@@ -20,7 +19,6 @@ use std::{
     time::Instant,
 };
 use thumbhash::rgba_to_thumb_hash;
-use tinytemplate::TinyTemplate;
 
 const TITLE: &str = "Angus Findlay";
 const DESCRIPTION: &str = "Angus Findlay's Blog - angusjf";
@@ -75,6 +73,7 @@ struct Index {
 
 #[derive(Serialize)]
 struct Blog {
+    #[serde(serialize_with = "serialize_markdown")]
     content: Box<str>,
     #[serde(serialize_with = "serialize_date")]
     date: NaiveDate,
@@ -85,6 +84,7 @@ struct Card {
     img_url: Box<str>,
     img_alt: Box<str>,
     title: Box<str>,
+    #[serde(serialize_with = "serialize_markdown")]
     content: Box<str>,
     links_to: Box<str>,
     #[serde(serialize_with = "serialize_optional_date")]
@@ -107,6 +107,16 @@ where
         Some(date) => serialize_date(date, s),
         _ => s.serialize_none(),
     }
+}
+
+pub fn serialize_markdown<S>(markdown: &Box<str>, s: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let parser = pulldown_cmark::Parser::new(&markdown);
+    let mut buf = String::new();
+    pulldown_cmark::html::push_html(&mut buf, parser);
+    s.serialize_str(&buf)
 }
 
 pub fn serialize_date<S>(date: &NaiveDate, s: S) -> Result<S::Ok, S::Error>
@@ -281,9 +291,9 @@ fn optimize_assets(html: &str, thumbhashes: HashMap<Box<str>, (String, u32)>) ->
                     let src = el.get_attribute("src").unwrap();
                     let src = src.as_str();
 
-                    let image_width = thumbhashes[src].1;
+                    let (thumbhash, image_width) = &thumbhashes[src];
 
-                    let true_scale: f32 = image_width as f32 / ROOT_IMG_RENDERED_SIZE as f32;
+                    let true_scale: f32 = *image_width as f32 / ROOT_IMG_RENDERED_SIZE as f32;
 
                     fn filesize(path: &Path) -> u64 {
                         File::open(path).unwrap().metadata().unwrap().len()
@@ -324,6 +334,8 @@ fn optimize_assets(html: &str, thumbhashes: HashMap<Box<str>, (String, u32)>) ->
                     srcset.push_str(&format!("{src} {true_scale}x"));
 
                     el.set_attribute("srcset", &srcset).unwrap();
+
+                    el.set_attribute("data-thumbhash", thumbhash).unwrap();
 
                     Ok(())
                 }),
@@ -428,15 +440,6 @@ async fn main() -> std::io::Result<()> {
     let start_ = Instant::now();
     let root_template = fs::read_to_string("templates/root.html")?;
 
-    let mut tt = TinyTemplate::new();
-    tt.add_template("root", &root_template).unwrap();
-    tt.add_formatter("markdown", |md, str| {
-        let md = md.as_str().unwrap();
-        let parser = pulldown_cmark::Parser::new(&md);
-        pulldown_cmark::html::push_html(str, parser);
-        Ok(())
-    });
-
     let mut cards: Vec<_> = files_in_dir("./content/experiments")
         .iter()
         .map(|path| {
@@ -459,8 +462,15 @@ async fn main() -> std::io::Result<()> {
                         ..serde_yaml::from_str(&frontmatter).unwrap()
                     };
 
-                    let html = blogpost(metadata.clone(), md.into());
-                    let html = &tt.render("root", &html).unwrap();
+                    let blogpost_data = blogpost(metadata.clone(), md.into());
+                    println!(
+                        "rendering {}",
+                        filename.file_stem().unwrap().to_str().unwrap()
+                    );
+                    let html = platelet::render_string(
+                        root_template.clone(),
+                        &serde_json::to_value(blogpost_data).unwrap(),
+                    );
 
                     fs::create_dir(format!("./dist/{}", name)).unwrap();
                     fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
@@ -482,7 +492,7 @@ async fn main() -> std::io::Result<()> {
             img_url: "/images/me.jpeg".into(),
             img_alt: "Picture of me".into(),
             title: "Angus Findlay".into(),
-            content: "Fullstack Engineer based in London.".into(),
+            content: "<p>Fullstack Engineer based in London.</p>".into(),
             links_to: "https://github.com/angusjf/".into(),
             date: None,
             links: vec![
@@ -503,15 +513,12 @@ async fn main() -> std::io::Result<()> {
     println!("optimized images in {}s", start.elapsed().as_secs_f32());
     let start = Instant::now();
 
-    {
-        let thumbhashes = thumbhashes.clone();
-        tt.add_formatter("thumbhash", move |img_url, str| {
-            str.push_str(&thumbhashes[img_url.as_str().unwrap()].0);
-            Ok(())
-        });
-    }
+    let index_cards_data = index(cards);
 
-    let index = tt.render("root", &index(cards)).unwrap();
+    let index = platelet::render_string(
+        root_template,
+        &serde_json::to_value(index_cards_data).unwrap(),
+    );
 
     println!("built root page in {}s", start.elapsed().as_secs_f32());
     let start = Instant::now();

@@ -58,8 +58,9 @@ You can imagine a system of "function-style" document-building taken to the extr
 One complaint Ben makes in his article is that traditional templating engines essentially build strings, unaware that they are producing HTML. In his approach, the Lua 'function components' return a tree data structure, which can be manipulated.
 
 This raises two questions:
- - Is string manipulation less or more powerful than HTML manipulation?
- - Could we have a 'low-power' templating language which achieved all the benefits of dumb templates and HTML manipulation?
+
+- Is string manipulation less or more powerful than HTML manipulation?
+- Could we have a 'low-power' templating language which achieved all the benefits of dumb templates and HTML manipulation?
 
 In React, you cannot manipulate HTML. You can't assign a React node to a variable and then check what kind of element it is. In my experience, you never really find yourself reaching for this ability.
 

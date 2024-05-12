@@ -33,7 +33,7 @@ The argument to the function will be stored in the map as the key.
 
 Next, define these two functions:
 
-_(I've use the type variables `x` & `y` to represent the input and output of the function f :: x -> y respectively)_
+_(I've used the type variables `x` & `y` to represent the input and output of the function f :: x -> y respectively)_
 
 ```haskell
 import qualified Data.Map as M
