@@ -31,13 +31,6 @@ customElements.define('draw-canvas', class extends HTMLElement {
 		canvas.style.width = `${rect.width}px`;
 		canvas.style.height = `${rect.height}px`;
 
-		let down = false;
-
-		let old = null;
-
-		document.addEventListener("mouseup", () => { down = false; old = null; })
-		document.addEventListener("mousedown", () => { down = true; old = null; })
-
 		const width = 30;
 
 		ctx.lineWidth = width;
@@ -47,16 +40,16 @@ customElements.define('draw-canvas', class extends HTMLElement {
 			ctx.fillStyle = color;
 		}
 
-
 		let rt = 0;
 		let gt = 0;
 		let bt = 0;
-
+		let old = null;
+		
 		document.addEventListener('mousemove', (event) => {
 			let x = event.x;
 			let y = event.y;
 
-			if (down) {
+			if (event.buttons == 1) {
 				ctx.beginPath();
 				if (old) {
 					ctx.moveTo(old.x, old.y);
@@ -66,6 +59,8 @@ customElements.define('draw-canvas', class extends HTMLElement {
 				ctx.moveTo(x, y);
 				ctx.ellipse(x, y, width / 2, width / 2, 0, 0, 2 * Math.PI)
 				ctx.fill();
+			} else {
+			  old = null;
 			}
 
 			if (old) {
