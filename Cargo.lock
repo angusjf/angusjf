@@ -1388,19 +1388,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "kuchikiki"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f29e4755b7b995046f510a7520c42b2fed58b77bd94d5a87a8eb43d2fd126da8"
-dependencies = [
- "cssparser",
- "html5ever",
- "indexmap 1.9.3",
- "matches",
- "selectors",
-]
-
-[[package]]
 name = "lazy-regex"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1984,15 +1971,13 @@ checksum = "26072860ba924cbfa98ea39c8c19b4dd6a4a25423dbdf219c1eca91aa0cf6964"
 [[package]]
 name = "platelet"
 version = "0.1.0"
-source = "git+https://github.com/angusjf/platelet.git#29beb43e697f5f9aa3e526dd964ee2971b25fd3b"
+source = "git+https://github.com/angusjf/platelet.git?rev=dd0fcc0#dd0fcc0d4acac9cb0d3937c1863ccab2fdc24c7d"
 dependencies = [
  "html5ever",
- "kuchikiki",
  "markup5ever",
  "regex",
  "serde",
  "serde_json",
- "wasm-bindgen",
  "winnow 0.6.8",
 ]
 

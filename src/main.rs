@@ -467,10 +467,11 @@ async fn main() -> std::io::Result<()> {
                         "rendering {}",
                         filename.file_stem().unwrap().to_str().unwrap()
                     );
-                    let html = platelet::render_string(
-                        root_template.clone(),
+                    let html = platelet::render(
                         &serde_json::to_value(blogpost_data).unwrap(),
-                    );
+                        root_template.clone(),
+                    )
+                    .unwrap();
 
                     fs::create_dir(format!("./dist/{}", name)).unwrap();
                     fs::write(format!("./dist/{}/index.html", name), &html).unwrap();
@@ -515,10 +516,11 @@ async fn main() -> std::io::Result<()> {
 
     let index_cards_data = index(cards);
 
-    let index = platelet::render_string(
-        root_template,
+    let index = platelet::render(
         &serde_json::to_value(index_cards_data).unwrap(),
-    );
+        root_template,
+    )
+    .unwrap();
 
     println!("built root page in {}s", start.elapsed().as_secs_f32());
     let start = Instant::now();
