@@ -34,6 +34,16 @@
         <meta name="twitter:title" ^content="title" />
         <meta name="view-transition" content="same-origin" />
         <link pl-if="index" rel="stylesheet" href="/index.css" />
+        <script pl-if="index" type="speculationrules">
+            {
+                "prerender": [
+                    {
+                        "where": { "href_matches": "/*" },
+                        "eagerness": "moderate"
+                    }
+                ]
+            }
+        </script>
         <template pl-if="blog">
             <link rel="stylesheet" href="/blogpost.css" />
             <meta name="article:published_time" ^content="blog.date" />

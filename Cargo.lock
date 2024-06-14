@@ -1970,8 +1970,9 @@ checksum = "26072860ba924cbfa98ea39c8c19b4dd6a4a25423dbdf219c1eca91aa0cf6964"
 
 [[package]]
 name = "platelet"
-version = "0.1.0"
-source = "git+https://github.com/angusjf/platelet.git?rev=dd0fcc0#dd0fcc0d4acac9cb0d3937c1863ccab2fdc24c7d"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "215d58482c2b37fedec27aef5dcb419b406bc326febb228f9157ee100b89a32d"
 dependencies = [
  "html5ever",
  "markup5ever",
