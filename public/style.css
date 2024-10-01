@@ -58,3 +58,7 @@ pre {
 code {
   padding: 0px 0.2rem;
 }
+
+@view-transition {
+  navigation: auto;
+}

@@ -1,45 +1,28 @@
-const hosts = ["angusjf.com", "[::]:8000"];
-const names = ["title", "article", "hero"];
+async function viewTransitions(incoming, e) {
+  if (e.viewTransition) {
+    const from = new URL(navigation.activation.from.url);
+    const to = new URL(navigation.activation.entry.url);
 
-const clearViewTransitions = () =>
-  names.forEach((name) => {
-    document
-      .querySelectorAll(`h2[style='view-transition-name: ${name};']`)
-      .forEach((h2) => {
-        h2.style.viewTransitionName = "";
-        let card = h2.closest(".card");
-        let img = card.querySelector("img");
-        img.style.viewTransitionName = "";
-        card.style.viewTransitionName = "";
-      });
-  });
+    if (from.hostname != "angusjf.com" || to.hostname != "angusjf.com") return;
 
-const setupViewTransitions = (h2) => {
-  h2.style.viewTransitionName = "title";
-  let card = h2.closest(".card");
-  let img = card.querySelector("img");
-  img.style.viewTransitionName = "hero";
-  card.style.viewTransitionName = "article";
-};
+    const h2 = document
+      .querySelector(`.card h2 a[href$='${from.pathname}']`)
+      ?.closest("h2");
+    h2.style.viewTransitionName = "title";
 
-document.querySelectorAll(".card h2 a").forEach((a) => {
-  let h2 = a.closest("h2");
-  h2.onclick = () => {
-    clearViewTransitions();
-    setupViewTransitions(h2);
-  };
-});
+    let card = h2.closest(".card");
+    img.style.viewTransitionName = "hero";
 
-const prev = window
-  .navigation
-  ?.entries()
-  .reverse()
-  .map(({ url }) => new URL(url))
-  .find((url) => hosts.some((host) => host == url.host) && url.pathname != "/")
-  ?.pathname.replace(/\/$/, "");
+    let img = card.querySelector("img");
+    card.style.viewTransitionName = "article";
 
-if (prev) {
-  clearViewTransitions();
-  let h2 = document.querySelector(`.card h2 a[href$='${prev}']`)?.closest("h2");
-  if (h2) setupViewTransitions(h2);
+    await (incoming ? e.viewTransition.ready : e.viewTransition.finished);
+
+    h2.style.viewTransitionName = "none";
+    card.style.viewTransitionName = "none";
+    img.style.viewTransitionName = "none";
+  }
 }
+
+window.addEventListener("pageswap", (e) => viewTransitions(false, e));
+window.addEventListener("pagereveal", (e) => viewTransitions(true, e));
