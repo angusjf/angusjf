@@ -6,15 +6,15 @@ async function viewTransitions(incoming, e) {
     if (from.hostname != "angusjf.com" || to.hostname != "angusjf.com") return;
 
     const h2 = document
-      .querySelector(`.card h2 a[href$='${from.pathname}']`)
+      .querySelector(`.card h2 a[href$='${from.pathname.replace(/\/$/, "")}']`)
       ?.closest("h2");
     h2.style.viewTransitionName = "title";
 
     let card = h2.closest(".card");
-    img.style.viewTransitionName = "hero";
+    card.style.viewTransitionName = "article";
 
     let img = card.querySelector("img");
-    card.style.viewTransitionName = "article";
+    img.style.viewTransitionName = "hero";
 
     await (incoming ? e.viewTransition.ready : e.viewTransition.finished);
 
