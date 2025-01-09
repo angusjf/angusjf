@@ -1,12 +1,14 @@
 ---
-title: "Expiring Feature Flags"
-img_url: /images/junk.jpg
-img_alt: River of Junk
-date: "2022-10-15"
-seo_description: "Keeping feature flags under control one tiny eslint plugin."
-summary: "Keeping feature flags under control one tiny eslint plugin."
-tags: ["eslint", "js", "maintainability"]
-hidden: false
+{
+  "title": "Expiring Feature Flags",
+  "img_url": "/images/junk.jpg",
+  "img_alt": "River of Junk",
+  "date": "2022-10-15",
+  "seo_description": "Keeping feature flags under control one tiny eslint plugin.",
+  "summary": "Keeping feature flags under control one tiny eslint plugin.",
+  "tags": [ "eslint", "js", "maintainability" ],
+  "hidden": false
+}
 ---
 
 ![Jake Cleaning up the desk in Adventure Time](/images/cleaning.gif)

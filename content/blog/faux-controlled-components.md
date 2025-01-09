@@ -1,12 +1,14 @@
 ---
-title: Faux-Controlled Components
-img_url: /images/npm.jpg
-img_alt: Faux-Controlled Components
-date: "2022-05-13"
-seo_description: "Faux-Controlled Components: What my team learned about React's useMemo after spending 2 days fixing npm's worst React calendar component."
-summary: "What my team learned after spending 2 days fixing npm's worst React calendar component."
-tags: ["react"]
-hidden: false
+{
+  "title": "Faux-Controlled Components",
+  "img_url": "/images/npm.jpg",
+  "img_alt": "Faux-Controlled Components",
+  "date": "2022-05-13",
+  "seo_description": "Faux-Controlled Components: What my team learned about React's useMemo after spending 2 days fixing npm's worst React calendar component.",
+  "summary": "What my team learned after spending 2 days fixing npm's worst React calendar component.",
+  "tags": [ "react" ],
+  "hidden": false
+}
 ---
 
 ![Node Package Manager](/images/npm.jpg)

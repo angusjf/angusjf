@@ -1,12 +1,14 @@
 ---
-title: Simple Haskell Memoization
-img_url: /images/fib100.png
-img_alt: Generating the 100th fibonacci number
-date: "2023-12-12"
-seo_description: "Python @functools.cache style Memoization in Haskell"
-summary: "`@functools.cache`-style Memoization in Haskell"
-tags: ["code", "functional programming"]
-hidden: false
+{
+  "title": "Simple Haskell Memoization",
+  "img_url": "/images/fib100.png",
+  "img_alt": "Generating the 100th fibonacci number",
+  "date": "2023-12-12",
+  "seo_description": "Python @functools.cache style Memoization in Haskell",
+  "summary": "<code>@functools.cache</code>-style Memoization in Haskell",
+  "tags": [ "code", "functional programming" ],
+  "hidden": false
+}
 ---
 
 # `@functools.cache`-style Memoization in Haskell

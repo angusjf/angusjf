@@ -1,12 +1,14 @@
 ---
-title: "How to Uninstall VS Code"
-img_url: /images/vim.webp
-img_alt: "Visual Studio Code being replaced with Neovim"
-date: "2022-03-25"
-seo_description: "How I Replaced VS Code with Neovim (for JS Development)"
-tags: ["neovim", "vscode", "vim"]
-summary: How to replace Visual Studio Code with Neovim.
-hidden: false
+{
+  "title": "How to Uninstall VS Code",
+  "img_url": "/images/vim.webp",
+  "img_alt": "Visual Studio Code being replaced with Neovim",
+  "date": "2022-03-25",
+  "seo_description": "How I Replaced VS Code with Neovim (for JS Development)",
+  "tags": [ "neovim", "vscode", "vim" ],
+  "summary": "How to replace Visual Studio Code with Neovim.",
+  "hidden": false
+}
 ---
 ![VS Code to Vim](/images/uninstall.webp)
 

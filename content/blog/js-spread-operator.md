@@ -1,12 +1,14 @@
 ---
-title: "On the Embarrassingly Poor Performance of JavaScript's Spread Operator"
-img_url: /images/sign.jpg
-img_alt: No alt
-date: "2022-08-05"
-seo_description: "On the Embarrassingly Poor Performance of JavaScript's Spread Operator"
-summary: "On the Embarrassingly Poor Performance of JavaScript's Spread Operator"
-tags: ["javascript", "typescript", "performance"]
-hidden: true
+{
+  "title": "On the Embarrassingly Poor Performance of JavaScript's Spread Operator",
+  "img_url": "/images/sign.jpg",
+  "img_alt": "No alt",
+  "date": "2022-08-05",
+  "seo_description": "On the Embarrassingly Poor Performance of JavaScript's Spread Operator",
+  "summary": "On the Embarrassingly Poor Performance of JavaScript's Spread Operator",
+  "tags": [ "javascript", "typescript", "performance" ],
+  "hidden": true
+}
 ---
 # On the Embarrassingly Poor Performance of JavaScript's Spread Operator
 

@@ -1,12 +1,14 @@
 ---
-title: "Fixing Dan and Aydın's Pyright Error"
-img_url: /images/pyright.webp
-img_alt: The Pyright Logo on Fire
-date: "2022-08-04"
-seo_description: "How learning about Variance helped me fix a Pyright error."
-summary: "How learning about Variance helped me fix a Pyright error."
-tags: ["rust", "variance", "java", "javascript", "typescript"]
-hidden: false
+{
+  "title": "Fixing Dan and Ayd\u0131n's Pyright Error",
+  "img_url": "/images/pyright.webp",
+  "img_alt": "The Pyright Logo on Fire",
+  "date": "2022-08-04",
+  "seo_description": "How learning about Variance helped me fix a Pyright error.",
+  "summary": "How learning about Variance helped me fix a Pyright error.",
+  "tags": [ "rust", "variance", "java", "javascript", "typescript" ],
+  "hidden": false
+}
 ---
 
 ![Pyright](/images/pyright.webp)

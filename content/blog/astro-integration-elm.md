@@ -1,12 +1,14 @@
 ---
-title: "Introducing the Elm integration for Astro"
-img_url: /images/elm_astro.webp
-img_alt: The Elm logo and the Astro logo
-date: "2022-12-05"
-seo_description: "A new integration for server side rendered, hydrated Elm island components in your Astro project."
-summary: "A new integration for server side rendered, hydrated Elm island components in your Astro project."
-tags: ["elm", "web", "performance", "ssr", "astro", "javascript"]
-hidden: false
+{
+  "title": "Introducing the Elm integration for Astro",
+  "img_url": "/images/elm_astro.webp",
+  "img_alt": "The Elm logo and the Astro logo",
+  "date": "2022-12-05",
+  "seo_description": "A new integration for server side rendered, hydrated Elm island components in your Astro project.",
+  "summary": "A new integration for server side rendered, hydrated Elm island components in your Astro project.",
+  "tags": [ "elm", "web", "performance", "ssr", "astro", "javascript" ],
+  "hidden": false
+}
 ---
 
 ![Astro logo coloured blue](/images/astro_elm_long.webp)

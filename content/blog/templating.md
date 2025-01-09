@@ -1,12 +1,14 @@
 ---
-title: Templating & Power
-img_url: /images/django.jpg
-img_alt: Zoomed in Django template code
-date: "2024-01-07"
-seo_description: "Evaluating different approaches to templating for the web"
-summary: "Reflecting on different ways of rendering HTML pages"
-tags: ["web"]
-hidden: false
+{
+  "title": "Templating & Power",
+  "img_url": "/images/django.jpg",
+  "img_alt": "Zoomed in Django template code",
+  "date": "2024-01-07",
+  "seo_description": "Evaluating different approaches to templating for the web",
+  "summary": "Reflecting on different ways of rendering HTML pages",
+  "tags": [ "web" ],
+  "hidden": false
+}
 ---
 
 # Templating & Power

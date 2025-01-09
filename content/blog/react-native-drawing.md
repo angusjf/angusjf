@@ -1,12 +1,14 @@
 ---
-title: "Drawing with React Native"
-img_url: /images/drawings.webp
-img_alt: "some drawings from five-seven-five"
-date: "2023-03-12"
-seo_description: "Creating a touch/drawing input in React Native with Expo"
-summary: "Creating a touchscreen drawing input from scratch in less than 100 lines of code"
-tags: ["react"]
-hidden: false
+{
+  "title": "Drawing with React Native",
+  "img_url": "/images/drawings.webp",
+  "img_alt": "some drawings from five-seven-five",
+  "date": "2023-03-12",
+  "seo_description": "Creating a touch/drawing input in React Native with Expo",
+  "summary": "Creating a touchscreen drawing input from scratch in less than 100 lines of code",
+  "tags": [ "react" ],
+  "hidden": false
+}
 ---
 
 # Drawing with React Native
