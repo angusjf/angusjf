@@ -72,7 +72,7 @@
                         <slot pl-is='i == 0 ? "h1" : "h2"'>
                             <a ^href="c.links_to">{{c.title}}</a>
                         </slot>
-                        <template pl-html="c.content"></template>
+                        <p pl-html="c.content"></p>
                         <ul pl-if="c.links">
                             <li pl-for="l in c.links"><i ^class="l.icon"></i><a ^href="l.href">{{l.label}}</a></li>
                         </ul>

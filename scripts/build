@@ -1,2 +1,80 @@
-#!/bin/bash
-(rm -r dist || true) && mkdir dist && ./target/debug/angusjf-blog $@ && cp -r public/* dist/
+#!/bin/sh
+
+set -e
+
+rm -r dist
+mkdir dist
+cp -r public/* dist/
+
+TITLE="Angus Findlay"
+DESCRIPTION="Angus Findlay's Blog - angusjf"
+CANONICAL_ORIGIN="https://angusjf.com"
+IMG="/images/plants.webp"
+
+cards=()
+
+for file in content/blog/*.md
+do
+    id="$(basename ${file%.md})"
+
+    echo "- /$id"
+
+    mkdir dist/$id
+
+    cat $file \
+        | sed -n '1,/^---$/ { /^---$/d; p; }'\
+        | jq --arg path "/$id" --arg html "$(cat $file | sed -e '1,/^---$/d' $file | markdown)" '. + {path: $path, html: $html}' \
+        | jq "{
+                img_url: .img_url,
+                img_alt: .img_alt,
+                canonical_origin: \"$CANONICAL_ORIGIN\",
+                path: .path,
+                description: .seo_description,
+                title: .title,
+                index: null,
+                blog: { content: .html, date: .date }
+            }" \
+        | $PLATELET templates/root.html > dist/$id/index.html &
+
+    cards+=$(cat $file | sed -n '1,/^---$/ { /^---$/d; p; }' | jq --arg path "/$id" '.links_to = .path')
+done
+
+wait
+
+echo "- /"
+
+# me='{
+#   "img_url": "/images/me.jpeg",
+#   "img_alt": "Picture of me",
+#   "title": "Angus Findlay",
+#   "content": "Fullstack Engineer based in London.",
+#   "links_to": "https://github.com/angusjf/",
+#   "date": null,
+#   "links": [
+#     {
+#       "href": "https://github.com/angusjf/",
+#       "icon": "fab fa-github",
+#       "label": "github/angusjf"
+#     },
+#     {
+#       "href": "https://www.linkedin.com/in/angus-findlay/",
+#       "icon": "fab fa-linkedin",
+#       "label": "linkedin/angus-findlay"
+#     }
+#   ]
+# }'
+
+cards+=$( cat content/experiments/*.json | jq '.links = .urls | .links_to = .urls[0].href' )
+
+echo "${cards[*]}" \
+| jq -s 'sort_by(.date) | reverse | map(.content = .summary)' \
+| jq "{
+        img_url: \"$IMG\",
+        img_alt: \"$TITLE\",
+        canonical_origin: \"$CANONICAL_ORIGIN\",
+        path: \"\",
+        description: \"$DESCRIPTION\",
+        title: \"$TITLE\",
+        index: { cards: . },
+        blog: null
+      }" | $PLATELET templates/root.html > dist/index.html # | cargo run

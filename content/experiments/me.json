@@ -1,0 +1,19 @@
+{
+  "img_url": "/images/me.jpeg",
+  "img_alt": "Picture of me",
+  "title": "Angus Findlay",
+  "summary": "Fullstack Engineer based in London.",
+  "date": null,
+  "urls": [
+    {
+      "href": "https://github.com/angusjf/",
+      "icon": "fab fa-github",
+      "label": "github/angusjf"
+    },
+    {
+      "href": "https://www.linkedin.com/in/angus-findlay/",
+      "icon": "fab fa-linkedin",
+      "label": "linkedin/angus-findlay"
+    }
+  ]
+}
