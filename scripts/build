@@ -6,10 +6,7 @@ rm -rf dist
 mkdir dist
 cp -r public/* dist/
 
-TITLE="Angus Findlay"
-DESCRIPTION="Angus Findlay's Blog - angusjf"
 CANONICAL_ORIGIN="https://angusjf.com"
-IMG="/images/plants.webp"
 
 cards=()
 
@@ -36,45 +33,22 @@ do
             }" \
         | $PLATELET templates/root.html > dist/$id/index.html &
 
-    cards+=$(cat $file | sed -n '1,/^---$/ { /^---$/d; p; }' | jq --arg path "/$id" '.links_to = .path')
+    cards+=$(cat $file | sed -n '1,/^---$/ { /^---$/d; p; }' | jq --arg path "/$id" '.links_to = $path')
 done
 
-wait
-
 echo "- /"
-
-# me='{
-#   "img_url": "/images/me.jpeg",
-#   "img_alt": "Picture of me",
-#   "title": "Angus Findlay",
-#   "content": "Fullstack Engineer based in London.",
-#   "links_to": "https://github.com/angusjf/",
-#   "date": null,
-#   "links": [
-#     {
-#       "href": "https://github.com/angusjf/",
-#       "icon": "fab fa-github",
-#       "label": "github/angusjf"
-#     },
-#     {
-#       "href": "https://www.linkedin.com/in/angus-findlay/",
-#       "icon": "fab fa-linkedin",
-#       "label": "linkedin/angus-findlay"
-#     }
-#   ]
-# }'
 
 cards+=$( cat content/experiments/*.json | jq '.links = .urls | .links_to = .urls[0].href' )
 
 echo "${cards[*]}" \
-| jq -s 'sort_by(.date) | reverse | map(.content = .summary)' \
+| jq -s --argjson me "$(cat me.json)" 'sort_by(.date) | reverse | [$me] + . | map(.content = .summary)' \
 | jq "{
-        img_url: \"$IMG\",
-        img_alt: \"$TITLE\",
+        img_url: \"/images/plants.webp\",
+        img_alt: \"Angus Findlay\",
         canonical_origin: \"$CANONICAL_ORIGIN\",
         path: \"\",
-        description: \"$DESCRIPTION\",
-        title: \"$TITLE\",
+        description: \"Angus Findlay's Blog - angusjf\",
+        title: \"Angus Findlay\",
         index: { cards: . },
         blog: null
       }" | $PLATELET templates/root.html > dist/index.html # | cargo run
