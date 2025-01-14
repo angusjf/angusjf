@@ -1,5 +1,5 @@
 .DS_Store
 /dist
-/target
+rustutils/target
 public/images/*_1x.*
 public/images/*_2x.*
