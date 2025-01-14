@@ -6,7 +6,9 @@ rm -rf dist
 mkdir dist
 cp -r public/* dist/
 
-platelet () { "${PLATELET:?ERROR: PLATELET not set}" $@ }
+platelet () {
+    "${PLATELET:?ERROR: PLATELET not set}" $@
+}
 
 CANONICAL_ORIGIN="https://angusjf.com"
 
