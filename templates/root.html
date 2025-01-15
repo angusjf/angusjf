@@ -73,8 +73,8 @@
                             <a ^href="c.links_to">{{c.title}}</a>
                         </slot>
                         <p pl-html="c.content"></p>
-                        <ul pl-if="c.links">
-                            <li pl-for="l in c.links"><i ^class="l.icon"></i><a ^href="l.href">{{l.label}}</a></li>
+                        <ul pl-if="c.urls">
+                            <li pl-for="l in c.urls"><a ^href="l.href">{{l.label}}</a></li>
                         </ul>
                         <date pl-if="c.date">{{c.date}}</date>
                     </div>

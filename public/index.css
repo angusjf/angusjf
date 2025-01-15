@@ -26,11 +26,6 @@
   }
 }
 
-.card i {
-  width: 2rem;
-  display: inline-block;
-}
-
 .card img {
   height: 14rem;
   width: 14rem;
@@ -38,11 +33,11 @@
 }
 
 .card ul {
-  padding-inline: 0;
-  list-style: none;
+  padding-left: 1rem;
 }
 
 .card li {
+  list-style-type: square;
   line-height: 2;
 }
 

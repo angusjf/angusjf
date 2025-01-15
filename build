@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 rm -rf dist
 mkdir dist
 cp -r public/* dist/
@@ -42,7 +40,7 @@ done
 
 echo "- /"
 
-cards+=$( cat content/experiments/*.json | jq '.links = .urls | .links_to = .urls[0].href' )
+cards+=$( cat content/experiments/*.json | jq '.links_to = .urls[0].href' )
 
 echo "${cards[*]}" \
 | jq -s --argjson me "$(cat me.json)" 'sort_by(.date) | reverse | [$me] + . | map(.content = .summary)' \
