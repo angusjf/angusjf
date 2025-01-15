@@ -33,7 +33,7 @@ do
                 index: null,
                 blog: { content: .html, date: .date }
             }" \
-        | platelet templates.html > dist/$id/index.html &
+        | platelet template.html > dist/$id/index.html &
 
     cards+=$(cat $file | sed -n '1,/^---$/ { /^---$/d; p; }' | jq --arg path "/$id" '.links_to = $path')
 done
@@ -53,4 +53,4 @@ echo "${cards[*]}" \
         title: \"Angus Findlay\",
         index: { cards: . },
         blog: null
-      }" | platelet templates.html > dist/index.html # | cargo run
+      }" | platelet template.html > dist/index.html # | cargo run
