@@ -24,7 +24,7 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: cargo install pulldown-cmark
+      - run: command -v pulldown-cmark || cargo install pulldown-cmark
       - uses: actions/checkout@v3
         with:
           repository: 'angusjf/platelet'
