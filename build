@@ -43,7 +43,7 @@ echo "- /"
 cards+=$( cat content/experiments/*.json | jq '.links_to = .urls[0].href' )
 
 echo "${cards[*]}" \
-| jq -s --argjson me "$(cat me.json)" 'sort_by(.date) | reverse | [$me] + . | map(.content = .summary)' \
+| jq -s --argjson me "$(cat content/me.json)" 'sort_by(.date) | reverse | [$me] + . | map(.content = .summary)' \
 | jq "{
         img_url: \"/images/plants.webp\",
         img_alt: \"Angus Findlay\",

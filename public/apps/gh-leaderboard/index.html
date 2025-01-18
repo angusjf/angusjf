@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+    <head>
+        <title>github PR leaderboard</title>
+        <style>
+            :root {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>github PR leaderboard</h1>
+        </header>
+        <main>
+            <canvas id="chart"></canvas>
+            <form>
+                <label>
+                    owner
+                    <input name="owner" required placeholder="facebook" />
+                </label>
+                <label>
+                    repo
+                    <input name="repo" required placeholder="react" />
+                </label>
+                <label>
+                    github token (<code>gh auth token</code>):
+                    <input
+                        name="token"
+                        type="password"
+                        required
+                        placeholder="gho_aAaaAAaAaAAa..."
+                    />
+                </label>
+                <label>
+                    cutoff date:
+                    <input
+                        name="cutoff"
+                        required
+                        placeholder="YYYY-MM-DD"
+                        type="date"
+                        value="2025-01-01"
+                    />
+                </label>
+                <input type="submit" value="🔄" />
+                <progress id="api-loading" hidden></progress>
+            </form>
+        </main>
+        <footer>
+            use responsibly - made by <a href="http://angusjf.com">angusjf</a>
+        </footer>
+        <script type="module">
+            import { Octokit } from "https://esm.sh/octokit";
+            import * as chartjs from "https://esm.sh/chart.js/auto";
+
+            async function getAllPrs(token, cutoff, owner, repo) {
+                // const cache = localStorage.getItem("all-prs");
+
+                // if (cache) {
+                //     return JSON.parse(cache);
+                // }
+
+                const octokit = new Octokit({ auth: token });
+                const allPRs = [];
+                let page = 1;
+                const perPage = 100;
+                const max = 50;
+
+                const apiLoading = document.querySelector(
+                    "progress#api-loading"
+                );
+
+                apiLoading.hidden = false;
+
+                apiLoading.value = 0;
+
+                // Fetch PRs in a loop to get up to 5000 (50 pages)
+                while (page <= max) {
+                    const resp = await octokit.rest.pulls.list({
+                        owner,
+                        repo,
+                        per_page: perPage,
+                        page,
+                        state: "closed",
+                    });
+
+                    apiLoading.value = page / max;
+
+                    if (resp.data.length === 0) break;
+
+                    allPRs.push(
+                        ...resp.data.map((pr) => ({
+                            number: pr.number,
+                            author: pr.user.login,
+                            title: pr.title,
+                            mergedAt: pr.merged_at,
+                        }))
+                    );
+                    page++;
+
+                    if (
+                        resp.data.some(
+                            (pr) =>
+                                pr.merged_at &&
+                                new Date(pr.merged_at) < new Date(cutoff)
+                        )
+                    ) {
+                        break;
+                    }
+                }
+
+                // localStorage.setItem("all-prs", JSON.stringify(allPRs));
+
+                apiLoading.hidden = true;
+
+                return allPRs.filter(
+                    (pr) => new Date(pr.mergedAt) > new Date(cutoff)
+                );
+            }
+
+            function generateDateRange(startDate, endDate) {
+                const dates = [];
+                let currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    dates.push(currentDate.toISOString().split("T")[0]);
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                return dates;
+            }
+
+            function prepareCumulativeData(prs) {
+                const authors = {};
+                const earliestDate = new Date(
+                    Math.min(...prs.map((pr) => new Date(pr.mergedAt)))
+                );
+                const today = new Date();
+                const dateRange = generateDateRange(earliestDate, today);
+
+                prs.forEach((pr) => {
+                    const date = new Date(pr.mergedAt)
+                        .toISOString()
+                        .split("T")[0];
+                    if (!authors[pr.author]) authors[pr.author] = {};
+                    if (!authors[pr.author][date]) authors[pr.author][date] = 0;
+                    authors[pr.author][date]++;
+                });
+
+                const labels = dateRange;
+                const datasets = [];
+
+                for (const author in authors) {
+                    const data = [];
+                    let cumulativeCount = 0;
+                    labels.forEach((date) => {
+                        if (authors[author][date]) {
+                            cumulativeCount += authors[author][date];
+                        }
+                        data.push(cumulativeCount);
+                    });
+
+                    datasets.push({
+                        label: author,
+                        data,
+                        fill: false,
+                        borderColor:
+                            "#" +
+                            Math.floor(Math.random() * 16777215).toString(16),
+                        tension: 0.1,
+                    });
+                }
+
+                return { labels, datasets };
+            }
+
+            document.forms[0].onsubmit = async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+
+                let allPRs;
+                try {
+                    allPRs = await getAllPrs(
+                        formData.get("token"),
+                        formData.get("cutoff"),
+                        formData.get("owner"),
+                        formData.get("repo")
+                    );
+                } catch (e) {
+                    alert(e.toString());
+                    return;
+                }
+
+                console.log(allPRs)
+
+                const ctx = document.getElementById("chart");
+
+                const { labels, datasets } = prepareCumulativeData(allPRs);
+
+                if (ctx.chart) ctx.chart.destroy()
+
+                ctx.chart = new chartjs.Chart(ctx, {
+                    type: "line",
+                    data: { labels, datasets },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { title: { display: true, text: "Date" } },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: "Cumulative PRs",
+                                },
+                            },
+                        },
+                        plugins: {
+                            legend: { display: true, position: "top" },
+                        },
+                    },
+                });
+            };
+        </script>
+    </body>
+</html>

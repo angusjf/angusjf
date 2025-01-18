@@ -1,0 +1,14 @@
+{
+  "title": "gh-leaderboard",
+  "summary": "turn merging PRs into a fun game",
+  "urls": [
+    {
+      "href": "https://angusjf.com/apps/gh-leaderboard",
+      "label": "/gh-leaderboard",
+      "icon": "fas fa-chart-simple"
+    }
+  ],
+  "img_url": "/images/gh-leaderboard.jpg",
+  "img_alt": "github logo with charts on top",
+  "date": "2025-01-18"
+}
